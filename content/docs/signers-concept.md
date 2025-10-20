@@ -23,6 +23,12 @@ The Ledger is designed as a secure, auditable environment for financial data. To
 
 **Signer** is the identity you assume when authenticating and signing requests to the Ledger APIs. This role ensures that every interaction is both secure and verifiable.
 
+- Authentication: First, you authenticate with the system to prove your identity.
+
+- Request Signing: Next, you sign the request payload. This digital signature guarantees that the request originates from you and has not been altered in transit.
+
+- Verification: The Ledger then validates the signature against your authenticated identity. If the verification succeeds, the operation proceeds; if it fails, the request is rejected.
+
 It is critical to understand the two-step process the Ledger uses when it receives your signed request.
 
 ### 1. Authentication
