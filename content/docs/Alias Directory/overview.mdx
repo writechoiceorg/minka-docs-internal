@@ -4,30 +4,28 @@ title: Alias Directory
 
 import { Step, Steps } from 'fumadocs-ui/components/steps';
 
-## Overview
-
-The Alias Directory is a Minka solution designed to provide a simple, secure way to link `an Alias Key` (a user-friendly identifier) to `Payment Credentials` (the necessary payment information). 
+The Alias Directory is designed to provide a simple, secure way to link an Alias Key (a user-friendly identifier) to Payment Credentials (the necessary payment information). 
 
 It acts as a system for information retrieval designed to simplify the process of identifying payment recipients. This involves:
 
 - Registering payment credentials to a specific key alias.
 
-- Using a simple, real-world identifier as the key alias
+- Using a simple, real-world identifier as the key alias.
 
 - Link this information using a single type of Ledger record called anchors.
 
 
-<Callout type="note" title="NOTE">
-  - It allows clients to obtain payment information that can then be used with any payment system, not just Minka's.
+<Callout type="note">
+It allows clients to obtain payment information that can then be used with any payment system, not just Minka's.
 </Callout>
 
 ## Purpose
 
-The Alias Directory solves the problem of requiring complex account details by allowing transactions using simple identifiers. 
+The Alias Directory simplifies payment initiation by focusing on two key actions for participants:
 
-- **Enables Alias-Based Payments:** It provides a mechanism for registering payment information to a user-friendly key.
+- Registering User Keys: It provides a mechanism for registering payment information (credentials) to a simple, user-friendly key (alias).
 
-- **Information Retrieval:** It allows participants to look up the necessary payment information based on alias key before confirming the transaction with the end user.
+- Resolving Payments: It allows participants to look up the necessary payment information based on the alias key before confirming the transaction with the end user.
 
 ## Workflow
 
