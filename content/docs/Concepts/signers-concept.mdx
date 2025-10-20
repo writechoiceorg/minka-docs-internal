@@ -18,8 +18,11 @@ The Ledger is designed as a secure, auditable environment for financial data. To
   
 * **Auditability & Non-Repudiation:** Because every successful operation is tied to a verified Signer, the Ledger maintains a complete, immutable audit trail. This creates **non-repudiation**: a Signer cannot deny having performed an action.
 
-> [!WARNING]
-> The Ledger **will reject** any request that is not signed by an authorized Signer. This is a fundamental security control.
+
+<Callout type="warn" title="WARNING">
+  The Ledger **will reject** any request that is not signed by an authorized Signer. This is a fundamental security control.
+</Callout>
+
 
 ## Signing Workflow
 
@@ -35,15 +38,16 @@ It is critical to understand the two-step process the Ledger uses when it receiv
 
 ### Authentication vs. Authorization
 
-#### 1. Authentication
+#### Authentication
 
 First, you use your **private key** to generate a unique digital signature for your request.
 
 When the Ledger receives the request, it uses your public key to perform **authentication**. It validates the signature to prove two things:
-1.  The request was signed by the holder of the matching private key.
-2.  The request data has not been altered.
 
-#### 2. Authorization
+- The request was signed by the holder of the matching private key or;
+- The request data has not been altered.
+
+#### Authorization
 
 Once you are authenticated, the Ledger performs **authorization**.
 

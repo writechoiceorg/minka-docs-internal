@@ -1,0 +1,45 @@
+---
+title: Alias Directory
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+## Overview
+
+The Alias Directory is a Minka solution designed to provide a simple, secure way to link `an Alias Key` (a user-friendly identifier) to `Payment Credentials` (the necessary payment information). 
+
+It acts as a system for information retrieval designed to simplify the process of identifying payment recipients. This involves:
+
+- Registering payment credentials to a specific key alias.
+
+- Using a simple, real-world identifier as the key alias
+
+- Link this information using a single type of Ledger record called anchors.
+
+
+<Callout type="note" title="NOTE">
+  - It allows clients to obtain payment information that can then be used with any payment system, not just Minka's.
+</Callout>
+
+## Purpose
+
+The Alias Directory solves the problem of requiring complex account details by allowing transactions using simple identifiers. 
+
+- **Enables Alias-Based Payments:** It provides a mechanism for registering payment information to a user-friendly key.
+
+- **Information Retrieval:** It allows participants to look up the necessary payment information based on alias key before confirming the transaction with the end user.
+
+## Workflow
+
+The Alias Directory relies on a two-step workflow initiated by a participant:
+
+<Steps>
+<Step>
+### Lookup: 
+- The participant calls the alias directory endpoint with the alias key and receives back the associated payment information.
+</Step>
+<Step>
+### Confirmation & Payment: 
+- This information is then shown to the end-user for confirmation. Upon user confirmation, the bank sends a second request, using the retrieved payment information, to the system to execute the actual payment.
+</Step>
+</Steps>
