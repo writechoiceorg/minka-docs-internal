@@ -19,7 +19,7 @@ The Ledger is designed as a secure, auditable environment for financial data. To
 > [!WARNING]
 > The Ledger **will reject** any request that is not signed by an authorized Signer. This is a fundamental security control.
 
-## Signing Workflow: Authentication vs. Authorization
+## Signing Workflow
 
 **Signer** is the identity you assume when authenticating and signing requests to the Ledger APIs. This role ensures that every interaction is both secure and verifiable.
 
@@ -31,7 +31,9 @@ The Ledger is designed as a secure, auditable environment for financial data. To
 
 It is critical to understand the two-step process the Ledger uses when it receives your signed request.
 
-### 1. Authentication
+### Authentication vs. Authorization
+
+#### 1. Authentication
 
 First, you use your **private key** to generate a unique digital signature for your request.
 
@@ -39,7 +41,7 @@ When the Ledger receives the request, it uses your public key to perform **authe
 1.  The request was signed by the holder of the matching private key.
 2.  The request data has not been altered.
 
-### 2. Authorization
+#### 2. Authorization
 
 Once you are authenticated, the Ledger performs **authorization**.
 
