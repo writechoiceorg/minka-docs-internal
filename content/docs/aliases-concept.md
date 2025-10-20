@@ -87,5 +87,5 @@ Your request is only accepted if your signature is valid (authentication) **and*
 
 ## Related Concepts
 
-* **Aliases:** [Learn how Aliases link user-friendly keys to Anchors.](./aliases-concept.md)
 * **Anchors:** [Learn about Anchors and how they represent external accounts.](./anchors-concept)
+* **Signers:** [Learn about signing and the basic security concept needed for authenticating to the system and cryptographically signing requests.](./signers-concept) 
