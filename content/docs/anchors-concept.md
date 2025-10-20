@@ -25,4 +25,4 @@ You create an Anchor by sending a request that contains both the `Alias Key` (e.
 ## Related Concepts
 
 * **Aliases:** [Learn how Aliases link user-friendly keys to Anchors.](./anchors-concept)
-* **Signers:** [Learn about Signers and the basic security concept needed for authenticating to the system and cryptographically signing requests.] (./signers-concept)
+* **Signers:** [Learn about signing and the basic security concept needed for authenticating to the system and cryptographically signing requests.](./signers-concept) 
