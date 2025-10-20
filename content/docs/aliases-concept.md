@@ -7,8 +7,6 @@ An **Alias** is a core concept within the Minka Ledger used to create a simple, 
 
 This concept enables participants, such as banks or financial institutions, to input a key and receive the necessary account details without having to manage complex data lookups themselves.
 
-This page explains the components of an Alias and the typical workflow for using one.
-
 ## Components of an Alias
 
 An Alias record is composed of two primary parts: the `Alias Key` and the `Payment Credential`.
