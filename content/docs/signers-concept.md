@@ -53,4 +53,4 @@ Your request is only accepted if your signature is valid (authentication) **and*
 ## Related Concepts
 
 * **Aliases:** [Learn how Aliases link user-friendly keys to Anchors.](./aliases-concept.md)
-* **Anchors:** [Learn about Anchors and how they represent external accounts.](./anchors-concept)
+* **Anchors:** [Learn about Anchors and how they represent external accounts.](./anchors-concept.md)
