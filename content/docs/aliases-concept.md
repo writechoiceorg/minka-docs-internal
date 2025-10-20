@@ -3,7 +3,7 @@
 
 ## Overview
 
-An **Alias** is a core concept within the Minka Ledger used to create a simple, user-friendly link between an identifier and the payment information required to complete a transaction.
+An **Alias** is a core concept within the Minka Ledger used to create a simple, user-friendly nickname to store the payment information required to complete a transaction.
 
 This concept enables participants, such as banks or financial institutions, to input a key and receive the necessary account details without having to manage complex data lookups themselves.
 
