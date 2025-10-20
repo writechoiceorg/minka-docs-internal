@@ -39,4 +39,4 @@ The Alias concept enables a two-step process for payments. This separates the ac
 ## Related Concepts
 
 * **Anchors:** [Learn about Anchors and how they represent external accounts.](./anchors-concept)
-* **Signers:** [Learn about Signers and the basic security concept needed for authenticating to the system and cryptographically signing requests.] (content/docs/signers-concept.md# Signers
+* **Signers:** [Learn about Signers and the basic security concept needed for authenticating to the system and cryptographically signing requests.](./signers-concept)
