@@ -1,0 +1,42 @@
+---
+title: Bridges
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+A Bridge acts as the integration point between client internal systems and the core payment network.
+
+It is a necessary mechanism for customers who require connections to external services such as bank cores or centralized services.
+
+## Integration Workflow
+
+For participants, the Bridge is the first technical touch point for integrating with the system.
+
+The integration process involves the following steps:
+
+<Steps>
+<Step>
+### Registration
+You must register your Bridge, which you can do through the dashboard.
+</Step>
+
+<Step>
+### Implementation
+You must start by programming the Bridge. 
+    This process requires understanding the necessary endpoints and how to sign the payloads (data) being transmitted.
+</Step>
+
+<Step>
+### API Interaction
+The Bridge provides the interfaces for essential payment operations, including: 
+    - Debits
+    - Credits
+    - Intent Status Notifications
+</Step>
+</Steps>
+
+## Related Concepts
+
+[Wallets](): ...
+
+[Intent](): ...
