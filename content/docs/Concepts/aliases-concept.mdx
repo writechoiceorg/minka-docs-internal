@@ -2,37 +2,38 @@
 title: Aliases
 ---
 
-An Alias is used to create a simple, user-friendly nickname to store the payment information required to complete a transaction.
+import { Step, Steps } from 'fumadocs-ui/components/steps';
 
-This enables participants, such as banks or financial institutions, to input a key and receive the necessary account details without having to manage complex data lookups themselves.
+An Alias is a simple, user-friendly nickname used to securely store the payment information required to complete a transaction. It allows participants (banks or financial institutions) to input a key and instantly retrieve the necessary account details without having to manage complex data lookups themselves.
 
 ## Components of an Alias
 
 An Alias record is composed of two primary parts: 
-- The Alias Key: A public, user-friendly identifier that you use to look up the Alias record.
+- **The Alias Key (Public Identifier):** A public, user-friendly identifier that you use to look up the Alias record. Alias keys are typically real-world identifiers, such as email addresses or phone numbers.
 
-<Callout type="note">
-  Alias keys are typically real-world identifiers, such as email addresses or phone numbers.
-</Callout>
+- **The Payment Credential (Private Data):** The set of private financial information required to execute a payment. It is the target data returned when you successfully look up an Alias Key. Examples include an account number, routing code, or wallet ID.
 
-- The Payment Credential: The set of private financial information required to execute a payment. It is the target data returned when you successfully look up an Alias Key.
+## Alias Payment Workflow
 
-<Callout type="note">
-  Examples of data in a Payment Credentials include an account number or a routing code.
-</Callout>
+The Alias enables a secure, two-step process for making a payment based on an identifier:
 
-## Alias Workflow
+<Steps>
+    <Step>
+    ### Resolution (Lookup and Retrieval)
+    
+    Your application sends a request to the Minka Ledger using a known Alias Key (e.g., a phone number). The system finds the matching Alias record and returns the corresponding Payment Credential. Your application can then display these details to the user for confirmation.
 
-The Alias enables a two-step process for payments:
+      <Callout>
+      Because the lookup and payment steps are separate, your system is not tied to a single payment channel.
+      </Callout>
+    </Step>
 
-1.  **Lookup:** Your application sends a request to the Minka ledger using a known Alias Key.
-2.  **Resolution:** The system finds the matching Alias record and returns the corresponding Payment Credential. Your application can then display these details to the user for confirmation.
-3.  **Payment:** Your application uses the retrieved Payment Credential to send a separate request to finalize the payment.
+     <Step>
+     ### Payment Execution
 
-<Callout type="note">
-  - Because the lookup and payment steps are separate, you are not tied to a specific payment system.
-  - You can use the retrieved credential to make a transaction within Minka or in an external system (e.g., Transfiya).
-</Callout>
+     Your application uses the retrieved Payment Credential to send a separate request that finalizes the payment. This transaction can be executed within the Minka network or sent to an external system (e.g., Transfiya).
+    </Step>
+ </Steps>
 
 ## Related Concepts
 

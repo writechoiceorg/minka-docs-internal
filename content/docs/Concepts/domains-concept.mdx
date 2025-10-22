@@ -2,22 +2,26 @@
 title: Domains
 ---
 
-Domains function as a namespace designed to segment and constrain data and operations into designated areas.
+A Domain functions as a container designed to segment and constrain data and operations into designated areas within the Minka Ledger. By enforcing boundaries, Domains are used to manage complexity and significantly lower the risk associated with granting permissions in large systems. 
 
-They are used to manage complexity and lower the risk associated with granting permissions in large systems by enforcing boundaries.
-
-<Callout type="note">
-    If domains are not used, all operations and data are considered global and flat. 
+<Callout>
+    If Domains are not used, all operations and data are considered global and flat, meaning any rule or participant could potentially access or affect the entire system.
 </Callout>
 
 ## Key Benefits
 
 Domains provide structural benefits across data management and access control:
 
-- Data Separation and Constraint: Domains segment different parts of a complex system, ensuring that participants (users or organizations) cannot access data or operate outside their specific domain.
+- **Segmentation and Constraint (Technical Function):** Domains ensure that data is cleanly separated and that rules are targeted.
+    - **Data Isolation:** Domains segment different parts of a complex system, ensuring that participants (users or organizations) cannot access data or operate outside their specific Domain.
+    - **Targeted Enforcement:** Domains allow you to apply different Policies, rules, and routes to distinct subsets of data, customizing behavior without affecting the global system.
 
-- Organizational Management: You can use Domains to manage different organizations within a system, limiting each organization to its own set of data.
+- **Organizational Management and Risk Mitigation (Business Benefit):** Domains allow for safe, scalable management of multiple parties and limited permissions.
+    - **Organizational Management:** You can use Domains to manage different organizations within a system, limiting each organization to its own set of data and operations.
+    - **Risk Containment:** If you grant a user permissions (even unlimited permissions) within a Domain, the risk is contained. The system guarantees the user cannot view, modify, or perform actions outside that specific Domain.
 
-- Policy and Rule Enforcement: Domains allow you to apply different rules, policies, and routes to different subsets of data.
+## Related Concepts
 
-- Risk Mitigation: If you grant a user unlimited permissions within a domain, the risk is contained because the system guarantees the user cannot perform actions outside that specific domain.
+[Wallets](): ...
+
+[Intent](): ...

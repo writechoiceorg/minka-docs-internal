@@ -2,25 +2,27 @@
 title: Anchors
 ---
 
-An Anchor is a single, auditable record in the Minka Ledger that registers payment credentials to an alias key.
+An Anchor is an auditable record in the Minka Ledger that securely establishes a connection between a user's internal Wallet or Account and an external identifier, or Alias Key. This record is the non-fungible source of truth that enables the Alias Directory to function.
 
-This record is fundamental to the Alias Directory solution, which allows participants to look up payment details using a simple key, enabling the start of a transaction.
+## Anchor Structure and Data Fields
 
-## Attributes of an Anchor
+The Anchor record manages the relationship between the key pieces of data required for alias resolution:
 
-Because Anchors store sensitive financial data, the Ledger enforces these core security features:
+- **The Alias Key (Public Identifier):** The public, user-friendly identifier (e.g., email address, phone number) used to initiate the lookup.
 
-* **Secure:** The record holds the specific financial details required for a transaction.
-* **Versioned & Auditable:** Every change to an Anchor is cryptographically signed and versioned, creating an immutable audit trail.
+- **The Payment Credential (Private Data):** The set of private financial details (e.g., account details, routing code) required to execute the final payment.
 
-## Components
+## Integrity and Creation
 
-The Anchor record manages the relationship between the two key pieces of data required for alias resolution:
+Because Anchors store sensitive financial data, they inherit the Ledger's core security guarantees:
 
-- The Alias Key (e.g., email address)
-- Payment Credentials (e.g., account details)
+- **Immutability:** The Anchor record is Versioned & Auditable. Every change is cryptographically signed and tracked, leveraging the Ledger's Immutable History guarantee.
 
-You create an Anchor by sending a request that contains both the Alias Key  and the fields describing the Payment Credential.
+- **Security:** Access to the Anchor and its sensitive Payment Credentials is strictly governed by the Security Policies defined in your Configuration.
+
+<Callout>
+    You create an Anchor by sending a request that contains both the Alias Key and the fields describing the Payment Credential.
+</Callout>
 
 ## Related Concepts
 

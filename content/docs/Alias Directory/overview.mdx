@@ -4,40 +4,51 @@ title: Alias Directory
 
 import { Step, Steps } from 'fumadocs-ui/components/steps';
 
-The Alias Directory is designed to provide a simple, secure way to link an Alias Key (a user-friendly identifier) to Payment Credentials (the necessary payment information). 
+The Alias Directory is a service that provides a simple, secure method for resolving payment recipients by linking a user-friendly identifier to the necessary financial details.
 
-It acts as a system for information retrieval designed to simplify the process of identifying payment recipients. This involves:
+It acts as a layer over the Ledger's Anchor records to simplify payment initiation.
 
-- Registering payment credentials to a specific key alias.
+## Components
 
-- Using a simple, real-world identifier as the key alias.
+The Alias Directory relies on three pre-existing concepts working together:
 
-- Link this information using a single type of Ledger record called anchors.
-
-
-<Callout type="note">
-It allows clients to obtain payment information that can then be used with any payment system, not just Minka's.
-</Callout>
+- **Alias Key:** A simple, public identifier (e.g., phone number or email address) used to initiate the lookup.
+- **Payment Credentials:** The private financial information (e.g., account details) required to execute the transaction.
+- **Anchor:** The single Ledger record used to register and link a specific Key to its Credentials.
 
 ## Purpose
 
-The Alias Directory simplifies payment initiation by focusing on two key actions for participants:
+The Alias Directory simplifies the payment flow for participants by focusing on two key actions:
 
-- Registering User Keys: It provides a mechanism for registering payment information (credentials) to a simple, user-friendly key (alias).
+- **Registering User Keys:** Provides a mechanism for customers to register their payment information to a simple key via an Anchor record.
 
-- Resolving Payments: It allows participants to look up the necessary payment information based on the alias key before confirming the transaction with the end user.
+- **Payments Resolution:** Allows participants to look up the necessary payment information based on the Alias Key before confirming the transaction with the end user.
 
 ## Workflow
 
-The Alias Directory relies on a two-step workflow initiated by a participant:
+The Alias Directory relies on a two-step workflow that separates information retrieval from payment execution, ensuring security and maximum flexibility:
 
 <Steps>
 <Step>
-### Lookup: 
-- The participant calls the alias directory endpoint with the alias key and receives back the associated payment information.
+### Lookup and Resolution
+1. The participant's application calls the Alias Directory endpoint using a known Alias Key. 
+
+2. The Directory resolves the request by querying its Anchor records and returns the associated Payment Credential.
 </Step>
 <Step>
-### Confirmation & Payment: 
-- This information is then shown to the end-user for confirmation. Upon user confirmation, the bank sends a second request, using the retrieved payment information, to the system to execute the actual payment.
+### Confirmation & Payment Execution
+3.  The retrieved Payment Credential is shown to the end-user for confirmation.
+
+4. Upon user confirmation, the bank sends a separate request using the retrieved credential.
 </Step>
 </Steps>
+
+<Callout>
+  The payment can then be executed either within the Minka Ledger or through any external payment system (e.g., a banking core or third-party network). 
+</Callout>
+
+## Related Concepts
+
+[Wallets](): ...
+
+[Intent](): ...

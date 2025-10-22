@@ -2,33 +2,79 @@
 title: Configuration and Data Integrity
 ---
 
-In the Minka ecosystem, Configuration and Data Integrity work together to ensure the platform is both flexible for diverse use cases and trustworthy for financial operations.
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+This guide explains the two fundamental aspects of the Minka Ledger: how you customize it for your use case (Configuration) and the financial guarantees it provides (Data Integrity).
 
 ## Configuration
 
-Configuration refers to the structural setup and adaptability of the Minka system, enabling you to customize and manage your deployed solutions. Minka's Ledger provides you with a robust framework for managing your system.
+Configuration refers to the structural setup and adaptability of the Minka system, enabling you to customize and manage your deployed financial solutions.
 
-### Key Elements
+ <Steps>
+    <Step>
+    ### Setting Up Your Ledger's Rules (The Core Structure)
+    
+    These elements define the schema, rules, and data standards for your customized financial solution.
 
-- Ledger Layouts (Pre-configuration): A Layout is a preconfigured Ledger that automatically sets up the system for a specific solution. Layouts can include test data to create a sandbox experience.
+        - **Ledger Layouts (Solution Templates):** A Layout is a pre-configured Ledger template that automatically sets up the system for a specific solution. Layouts can include test data to create a sandbox experience.
 
-- Policies (Configurable Rules): Policies are rules that govern operations, including Security, Label, and Status Policies. Domains are used to apply these policies to specific subsets of data.
+        - **Policies (Configurable Rules):*** Policies are rules that govern operational behavior, including:
+            - Security Policies
+            - Status Policies (rules for transactional lifecycle)
+            - Label Policies (rules for custom data grouping)
+            
+            Domains are used to group and apply these policies to specific subsets of data.
+        
+        - **Custom Fields (Metadata):** Defines the metadata required on transactions and records for specific regulatory bodies or regions (e.g., SEPA, Colombia), ensuring regional compliance.
+    </Step>
 
-- Custom Fields (Metadata): Defines the metadata that endpoints require for specific regulatory bodies or regions (e.g., SEPA, Colombia), ensuring regional compliance.
+     <Step>
+     ### Connecting to External Systems (The Bridge Workflow)
+
+     To integrate your Ledger with external services, such as a banking core, you must configure a Bridge. A Bridge acts as the connector between the Ledger and a remote system. This process is completed in three steps:
+
+        1. **Registration:** You must register your Bridge, which you can do through the dashboard.
+
+        2. **Implementation:** You must then program the Bridge. This process requires understanding the necessary endpoints and how to sign the payloads (data) being transmitted.
+
+        3. **API Interaction:** The Bridge provides the interfaces for essential payment operations, including:
+            - Debits
+            - Credits
+            - Intent Status Notifications
+    </Step>
+ </Steps>
 
 ## Data Integrity
 
-Data integrity guarantees that all transaction records and balances are accurate, secure, and tamper-proof. This is achieved by using blockchain principles within a centralized system.
+Data integrity guarantees that all transaction records and balances are accurate, secure, and tamper-proof. This is achieved by combining cryptographic chaining (blockchain principles) with the control of a centralized, auditable platform.
 
-### Key Elements
+<Steps>
+    <Step>
+    ### Immutable History (Cryptographic Chaining)
+    
+    The Ledger enforces a security layer where the entire transaction history is tamper-proof.
 
-- Cryptographic Security: The Ledger provides an security layer where every operation is cryptographically signed and verified. This ensures all stored information is authenticated.
+        - **Cryptographic Chaining:** Every operation is cryptographically signed, verified, and versioned. The system links the records by including the previous record's hash in the next, creating a complete and immutable history of every operation.
 
-- Versioning and Auditability: Everything stored is versioned, creating a complete and immutable history of every operation. This ensures complete auditability and tracing for the financial system.
+        - **Auditability:*** This structural guarantee ensures complete auditability and tracing for the financial system.
+    </Step>
 
-- Atomicity via Claims: Data integrity is enforced at the transactional level. Claims within an Intent ensure atomicity: multiple actions must either all succeed or all fail, guaranteeing there is never a partial operation.
+     <Step>
+     ### Transactional Atomicity (The Guarantee)
 
-- Certification Process: A series of tests and confirmation steps ensure elements like transactions, rejections, and timeouts behave as expected, upholding operational integrity before production.
+     Data integrity is enforced at the transaction level to ensure actions are always correct and complete.
+
+        - **The Components (Intents & Claims):** A transaction in Minka is called an Intent, which packages one or more individual actions known as Claims.
+
+        - **The Result (Atomicity):** The Intent guarantees atomicity: all associated Claims must either all succeed or all fail together. This ensures there is never a partial operation or an inconsistent balance.
+    </Step>
+    
+     <Step>
+     ### Operational Assurance (Certification)
+
+     The Certification Process is an operational gate that upholds integrity before production deployment. It consists of a series of tests and confirmation steps to ensure that configured elements (transactions, rejections, timeouts) behave exactly as expected.
+    </Step>
+ </Steps>
 
 ## Related Concepts
 

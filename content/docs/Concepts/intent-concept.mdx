@@ -2,33 +2,33 @@
 title: Intents
 ---
 
-An Intent represents a user's desire or idea to perform an action.
+An Intent represents a formal request to perform a financial action. It is the necessary step a client takes, often via a single API call, to initiate an operation.
 
-When a user initiates an operation, they create an intent. When this operation is sent to the system, the sender is not immediately sure if the action will occur; they will only see the outcome later once the intent has been processed. 
+When an Intent is created, the operation is sent to the system for processing, meaning the final outcome (success or failure) is asynchronous and resolved later. The ability to create an Intent is central to the End-to-End Transaction Flow.
 
-For a client wishing to make a transaction, creating an intent is the necessary step, often achieved via a single API call.
-
-The ability to create an intent is central to the End-to-End Transaction Flow and Payment Initiation processes.
-
-## Intents and Claims
+## Intents & Claims
 
 The concept of Intent is closely linked to Claims, which provide the specific details of the actions being requested.
 
-- An Intent represents the purpose behind an action.
+- **The Intent (The Container):** Represents the user's purpose or desire for the action (e.g., "I want to pay $100").
 
-- An intent includes several statements, called Claims, that describe the actions the user wants to perform.
+- **The Claims (The Actions):** Individual, verifiable statements within the Intent that describe the steps the system must execute (e.g., "Debit account A by $100" and "Credit account B by $100").
 
-The relationship between intents and claims is key to keeping financial operations reliable.
+The relationship between Intents and Claims is critical for ensuring data integrity:
 
-Claims allow operations to be grouped together to ensure atomicity, meaning that they will either all succeed or all fail together. This prevents partial or incomplete operations in the system.
+- **Atomicity:** An Intent guarantees atomicity, meaning that all associated Claims must either all succeed or all fail together. 
 
-## Application
+<Callout>
+    This prevents partial, incomplete, or inconsistent operations in the system.
+</Callout>
 
-Claims are used in scenarios where multiple actions must be finalized together:
+## Application of Claims
 
-- Taxes: If a payment requires collecting a tax, multiple claims might be used. The system ensures that if the payment goes through, the taxes must also be paid; otherwise, the entire payment cannot be completed, preventing a partial operation.
+Claims are essential in scenarios where multiple actions must be finalized together to maintain financial accuracy:
 
-- Exchanges: For currency exchange (e.g., giving $100 and receiving €80), placing both parts into two claims ensures that the exchange is atomic, meaning the user is guaranteed to receive the euros if they provide the dollars.
+- **Taxes & Fees:** If a payment requires collecting a tax or fee, multiple Claims are used. The system ensures that if the primary payment is successfully recorded, the tax debit must also be recorded. This prevents the primary payment from occurring without the fee being collected.
+
+- **Currency Exchanges:** For currency exchange (e.g., giving $100 and receiving €80), placing both parts into two claims ensures that the exchange is atomic, meaning the user is guaranteed to receive the euros if they provide the dollars.
 
 ## Related Concepts
 
