@@ -1,0 +1,73 @@
+---
+title: Integrate an Alias with a Centralized Directory
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+This tutorial guides you through the process of integrating your Alias Directory solution with a Centralized Directory (such as DICE or a national registry). This is required in regulated Real-Time Payment (RTP) environments to ensure third-party validation and compliance for all alias operations.
+
+## Requirements
+
+Before implementing this integration flow, make sure you have the following in place:
+
+- **API Access:** You have the base URL for the Ledger's API `/v2`
+- **Bridge Configuration:** You have a configured Bridge record that connects your Ledger to the external Centralized Directory service.
+- **Signer Setup:** You have an authenticated Signer with permissions to perform `POST` and `GET` operations on Anchor records.
+- **Regulatory Knowledge:** You understand the data requirements (e.g., owner data, account data) and timestamp requirements of the external Centralized Directory.
+
+## Flow 1: Alias Creation with Third-Party Validation
+
+When you create a new alias in a regulated environment, the Ledger performs a necessary third-party validation step before confirming the alias registration.
+
+<Steps>
+    <Step>
+    ### Submit the Anchor Creation Request
+    
+    You initiate the process by submitting the new Anchor record via the standard creation endpoint `POST /v2/anchors`
+    </Step>
+     <Step>
+     ### Third-Party Validation (Ledger Action)
+
+     Upon receiving your request, the Ledger automatically manages the third-party integration workflow:
+
+     1. **Ledger forwards validation request:** The Ledger uses the configured Bridge to forward the alias details to the Centralized Directory (e.g., DICE) for validation.
+     2. **Validation Check:** The Centralized Directory validates the submitted account and user data.
+     3. **Ledger adds Timestamps:** If the validation is successful, the Ledger adds compliance-required Timestamps to the Anchor record, fulfilling regulatory mandates.
+     4. **Confirmation:** The Ledger completes the Anchor registration and returns a success status to your system.
+    </Step>
+    </Steps>
+
+## Flow 2: Alias Lookup and Resolution
+
+Alias lookups (resolution) must prioritize local data access while ensuring you can still resolve payments for accounts registered in the centralized system.
+
+<Steps>
+    <Step>
+    ### Submit the Lookup Request
+    
+    You submit the resolution request using the Alias Key (`:handle`) using the endpoint `GET /v2/anchors/:handle`
+    </Step>
+     <Step>
+     ### Local-First Check
+
+     The Ledger executes a local-first check to resolve the alias as quickly as possible:
+
+     1. **Check Federated Directory:** The Ledger first attempts to find the matching Anchor record in your local, federated Ledger environment.
+     2. **If Found:** If the alias is found locally and is Active, the Ledger immediately returns the Payment Credential.
+     3. **If Not Found:** If the alias is not found locally, the Ledger automatically uses the Bridge to look for it in the Centralized Directory. This is crucial for mapping Aliases that exist in DICE but not in the Federated Directory.
+    </Step>
+    <Step>
+    ### Submit the Lookup Request
+
+    If the Centralized Directory successfully resolves the alias, the Ledger retrieves the data and returns the full Anchor details to your system, completing the lookup.
+    </Step>
+    </Steps>
+
+## Compliance Requirements: Third-Party Timestamps
+
+In environments with a Centralized Directory, Timestamps are required as part of the integration and are essential for compliance and auditability.
+
+- **Purpose:** Timestamps (such as R101 or C110) are added to the Anchor record during the creation and update flows to provide a verifiable record of the moment regulatory checks or updates occurred.
+- **Mechanism:** The Ledger automatically adds these timestamps upon successful third-party validation, ensuring that the final Anchor record meets the requirements of the Centralized Directory.
+- **Audit Trail:** These timestamps establish an immutable audit trail for compliance purposes.
