@@ -1,0 +1,41 @@
+---
+title: What is Minka?
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+Minka provides the technology layer for organizations to securely publish and transfer money and balances on the web. Our core product is the Minka Ledger, a unified transaction model designed to allow diverse companies to communicate and exchange value using a common language and a small set of foundational primitives.
+
+The Ledger acts as the engine upon which Minka builds specialized solutions, such as Real-Time Payments (RTP) and Payments Hubs, enabling organizations to manage complex financial ecosystems.
+
+## Network Payments
+
+Minka facilitates network payments by ensuring that money and balances published through one Minka Ledger can be moved securely to any other connected Ledger in real time.
+
+This seamless movement of value between connected systems is guaranteed by using digital signatures for every transaction, establishing trust and non-repudiation across the network.
+
+## Fundamental Principles of Minka Solutions
+
+All Minka's solutions are built on a set of core principles that govern security, reliability, and flexibility. These principles ensure the platform is both trustworthy for financial operations and adaptable for diverse use cases.
+
+### Data Integrity and Trust
+
+The Minka Ledger ensures that all transaction records and balances are accurate, secure, and tamper-proof.
+
+- **Mechanism:** This integrity is achieved by implementing cryptographic chaining (blockchain principles) to secure transaction history within a centralized, auditable system.
+- **Auditability:** Every operation is cryptographically signed and verified, creating a complete and immutable audit trail.
+
+### Transactional Atomicity
+
+Reliability is enforced at the transactional level to prevent partial operations.
+- **Intent and Claims:** Every transaction is submitted as an Intent, which packages one or more individual actions known as Claims.
+- **Guarantee:** The Intent ensures atomicity (all associated Claims must either all succeed or all fail together). This guarantee prevents situations where one part of an operation (like a debit) completes while another part (like a tax collection) fails.
+
+### Configuration and Adaptability
+
+Minka's solutions are designed for structural flexibility, allowing you to tailor the platform to your specific business and regulatory needs.
+
+- **Purpose:** Configuration refers to the structural setup and adaptability of the system, enabling you to customize and manage your deployed financial solutions.
+
+-**Customization:** You define operational rules, compliance requirements, and external connections (via Bridges) to customize the Ledger for specific regional or business requirements.
