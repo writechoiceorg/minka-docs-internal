@@ -9,13 +9,11 @@ This guide teaches you step-by-step how to create a new Alias by submitting an A
 ## Requirements
 
 Before you begin this tutorial, ensure you have the following in place:
-    - **API Access:** You must have the correct URL for the Ledger's API endpoint `/v2`
-    - **Signer Setup:** You must have a functioning Signer identity and the associated private key to cryptographically sign the `POST` request. 
-        <Callout type="warn">
-        Unsigned requests are rejected.
-        </Callout>
-    - **Required Data:** You must have the necessary Payment Credential details, Alias Type, and Wallet ID you intend to link.
 
+    - **API Access:** You have the base URL for the Ledger's API `/v2`
+    - **Signer Setup:** You have an authenticated Signer identity and the necessary private key for signing requests.
+    - **Existing Alias Handle:** You must know the Alias Key of the Anchor record you intend to modify or delete.
+    - **Authorization:** Your Signer must have the necessary permissions (defined by Policies and Circles) to execute `PUT` and `DEL` operations on Anchor records.
 
 ## Creating and Registering a new Alias
 
@@ -26,6 +24,26 @@ Follow these steps to successfully create and register a new Alias in the Direct
     ### Define the Anchor Payload
     
     Construct the JSON payload for the Anchor record. The payload must include the unique identifier, the target financial account, and the associated payment credentials.
+<Callout title="Anchor Creation Payload">
+        ```json
+        {
+        "handle": "alias_key@example.com",
+        "alias_type": "email",
+        "target": "wlt_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "account_data": {
+            "account_number": "1234567890",
+            "routing_code": "999"
+        },
+        "owner_data": {
+            "name": "Jane Doe",
+            "national_id": "1000000000"
+        },
+        "custom_fields": {
+            // Add any region-specific or policy-required custom data here
+        }
+        }
+        ```
+  </Callout>
 
     You must define the following required fields in the request body:
 
@@ -34,10 +52,7 @@ Follow these steps to successfully create and register a new Alias in the Direct
         - `target`: The unique identifier of the user's Wallet or account in the Ledger that the alias should direct to.
         - `account_data`: The detailed, private financial information (Payment Credentials) required to execute a payment.
         - `owner_data`: Any necessary Custom Data about the user (e.g., owner name, ID number).
-
-(MISSING JSON HERE)
-
-    </Step>
+   </Step>
 
      <Step>
      ### Sign the Request
