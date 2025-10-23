@@ -1,0 +1,63 @@
+---
+title: Retrieve Alias Information
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+This tutorial teaches you how to look up an existing Alias to retrieve its details (the Payment Credential). This process, known as resolution, is fundamental for initiating a payment.
+
+## Requirements
+
+Before attempting to retrieve an alias, ensure you have the following:
+     - **API Access:** You have the base URL for the Ledger's API `/v2`
+     - **Signer Setup:** You have an authenticated Signer identity with the required permissions to perform `GET` operations on Anchor records.
+     - **Alias Key:** You know the specific Alias Key `:handle` you wish to look up (e.g., a phone number or email address).
+
+## Retrieving an Alias
+
+Follow these steps to successfully resolve an alias and retrieve the associated financial information:
+
+<Steps>
+    <Step>
+    ### Construct the Request URL
+    
+    To look up a specific alias, append the unique Alias Key to the endpoint path  `GET /v2/anchors/` using `GET /v2/anchors/:handle`
+
+    If the alias key is user@example.com, the full URL would look like this:
+    
+(MISSING HTTP URL HERE)
+    </Step>
+
+     <Step>
+     ### Submit the Resolution Request
+
+    Send a `GET` request to the constructed URL. This `GET` request requires a signed payload in the body, but it does require authentication (e.g., a Bearer token) to ensure the request comes from an authorized party.
+
+    If the request is successful and an Active Anchor record matches the handle, the Ledger returns a `200 OK` status with the full Anchor details.
+    </Step>
+    
+     <Step>
+     ### Interpret the Response
+
+     The response body contains the resolved alias details, which include the Payment Credential necessary to execute a transaction.
+
+     Key data points in the response include:
+        - `handle`: The requested Alias Key.
+        - `alias_type`: The type of identifier used (e.g., email, phone_number).
+        - `account_data`: The detailed, private financial information (Payment Credentials).
+        - `status`: The current state of the alias (must be `active` for use in new payments).
+
+    <Callout title="Example Success Response" type="success">
+    The response provides the linked account information, which you use in a subsequent request to initiate the actual payment.
+    </Callout>
+    
+    (MISSING JSON CODE HERE)
+    </Step>
+ </Steps>
+
+ ## Handling Third-Party Integration and Failures
+
+ In environments integrated with a Centralized Directory (like DICE), the Ledger performs a local-first check. If the alias is not found in your local federated directory, the Ledger may forward the resolution request to the third-party system.
+
+If the alias is not found or is in the Suspended or Cancelled state, the Ledger returns an error status (e.g., `404 Not Found` or a specific error code indicating the alias is inactive).

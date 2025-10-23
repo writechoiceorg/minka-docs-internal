@@ -1,0 +1,65 @@
+---
+title: Create a New Alias
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+This guide teaches you step-by-step how to create a new Alias by submitting an Anchor record to the Ledger. Creating an Anchor establishes the critical linkage between a user's wallet and a simple external identifier (like a phone number or email address), enabling payment resolution.
+
+## Requirements
+
+Before you begin this tutorial, ensure you have the following in place:
+    - **API Access:** You must have the correct URL for the Ledger's API endpoint `/v2`
+    - **Signer Setup:** You must have a functioning Signer identity and the associated private key to cryptographically sign the `POST` request. 
+        <Callout type="warn">
+        Unsigned requests are rejected.
+        </Callout>
+    - **Required Data:** You must have the necessary Payment Credential details, Alias Type, and Wallet ID you intend to link.
+
+
+## Creating and Registering a new Alias
+
+Follow these steps to successfully create and register a new Alias in the Directory:
+
+<Steps>
+    <Step>
+    ### Define the Anchor Payload
+    
+    Construct the JSON payload for the Anchor record. The payload must include the unique identifier, the target financial account, and the associated payment credentials.
+
+    You must define the following required fields in the request body:
+
+        - `handle`: The unique, user-friendly Alias Key (e.g., +573001234567).
+        - `alias_type`: Specifies the type of the alias (e.g., phone_number, email, national_id).
+        - `target`: The unique identifier of the user's Wallet or account in the Ledger that the alias should direct to.
+        - `account_data`: The detailed, private financial information (Payment Credentials) required to execute a payment.
+        - `owner_data`: Any necessary Custom Data about the user (e.g., owner name, ID number).
+
+(MISSING JSON HERE)
+
+    </Step>
+
+     <Step>
+     ### Sign the Request
+
+    The Ledger requires that every operation be cryptographically signed by an authorized Signer to prove both identity and data integrity.
+
+    Use your private key to generate a digital signature for the entire request payload constructed in Step 1.
+        
+    <Callout type="warn">
+    The Ledger will reject any request that is not signed by an authorized Signer or if the payload has been altered after signing.
+    </Callout>
+    </Step>
+    
+     <Step>
+     ### Submit the Anchor
+
+     Send the signed payload to the Ledger using the endpoint `POST /v2/anchors`
+
+     If the request is successful, the Ledger returns a `201 Created` status, and the new Anchor record is immediately available in the Active state for resolution by other participants.
+
+    <Callout>
+    In regulated environments (e.g., Centralized Directory like DICE), the Ledger performs additional steps, including third-party validation and adding compliance-required Timestamps to the record before completion.
+    </Callout>
+    </Step>
+ </Steps>
