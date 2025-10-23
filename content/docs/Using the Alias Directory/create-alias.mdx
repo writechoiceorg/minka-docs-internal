@@ -4,16 +4,15 @@ title: Create a New Alias
 
 import { Step, Steps } from 'fumadocs-ui/components/steps';
 
-This guide teaches you step-by-step how to create a new Alias by submitting an Anchor record to the Ledger. Creating an Anchor establishes the critical linkage between a user's wallet and a simple external identifier (like a phone number or email address), enabling payment resolution.
+This guide teaches you step-by-step how to create a new Alias by submitting an Anchor record to the Ledger. Creating an Anchor establishes the critical linkage between a user's wallet and a simple external identifier, enabling payment resolution.
 
 ## Requirements
 
-Before you begin this tutorial, ensure you have the following in place:
+Before you start, ensure you have the following resources:
 
-    - **API Access:** You have the base URL for the Ledger's API `/v2`
-    - **Signer Setup:** You have an authenticated Signer identity and the necessary private key for signing requests.
-    - **Existing Alias Handle:** You must know the Alias Key of the Anchor record you intend to modify or delete.
-    - **Authorization:** Your Signer must have the necessary permissions (defined by Policies and Circles) to execute `PUT` and `DEL` operations on Anchor records.
+- **API Access:** You have the base URL for the Ledger's API (`/v2`).
+- **Signer Setup:** You have an authenticated Signer identity and the required private key with permissions to perform creation (`POST`) operations on Anchor records.
+- **Required Data:** You have the specific Alias Key, the Wallet ID, and the Payment Credential details you intend to link.
 
 ## Creating and Registering a new Alias
 
@@ -24,10 +23,11 @@ Follow these steps to successfully create and register a new Alias in the Direct
     ### Define the Anchor Payload
     
     Construct the JSON payload for the Anchor record. The payload must include the unique identifier, the target financial account, and the associated payment credentials.
+
 <Callout title="Anchor Creation Payload">
         ```json
         {
-        "handle": "alias_key@example.com",
+        "handle": "carlos6@minka.io",
         "alias_type": "email",
         "target": "wlt_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
         "account_data": {
@@ -35,7 +35,7 @@ Follow these steps to successfully create and register a new Alias in the Direct
             "routing_code": "999"
         },
         "owner_data": {
-            "name": "Jane Doe",
+            "name": "Carlos Jose Andino Nunez",
             "national_id": "1000000000"
         },
         "custom_fields": {
@@ -70,6 +70,64 @@ Follow these steps to successfully create and register a new Alias in the Direct
      ### Submit the Anchor
 
      Send the signed payload to the Ledger using the endpoint `POST /v2/anchors`
+
+    <Callout title="Example Response">
+    ```json
+    {
+    "hash":"9084396379b9c1d48cb2a66847edef1c4f5441460d4f7e0e09c59abb5b98d7cb",
+    "data":{
+        "handle":"carlos6@minka.io",
+        "wallet":"DICE",
+        "target":"svgs:123458@lulobank.com",
+        "symbol":"cop",
+        "custom":{
+            "aliasType":"tel",
+            "documentType":"nidn",
+            "documentNumber":"0801198607268",
+            "accountType":"svgs",
+            "accountNumber":"123457",
+            "firstName":"Carlos",
+            "secondName":"Jose",
+            "lastName":"Andino",
+            "secondLastName":"Nunez",
+            "entityType":"individual",
+            "targetSpbviCode":"SRV",
+            "participantCode":"123123"
+        },
+        "access":[
+            {
+                "action":"any",
+                "signer":{
+                "$record":"owner"
+                }
+            }
+        ],
+        "schema":"person"
+    },
+    "meta":{
+        "proofs":[
+            {
+                "method":"ed25519-v2",
+                "public":"ak40/ebXaPHdSwypXWHDlFaZZx0zdajPBz/dijLvdaE=",
+                "digest":"2f34a270823568486be5fd4cf02d387821f5183b5b386ed7f6dcea94ffb45f7d",
+                "result":"Swk6tcVgBB4XrywOAWyzKhMLuegGsF6iEoJLXEnVcTM5XuWerzHOl2OrQB4Cq3gjRNwncPpxAEjrn5Noj89jBQ==",
+                "custom":{
+                "moment":"2025-04-14T18:16:51.994Z",
+                "domain":null,
+                "consentDate":"2025-04-14T14:23:45.123Z",
+                "received":"2025-04-14T14:23:45.123Z",
+                "dispatched":"2025-04-14T14:23:45.123Z",
+                "status":"created"
+                }
+            }
+        ],
+        "labels":[
+            "ndin:0801198607268"
+        ]
+    }
+    }
+    ```
+    </Callout>
 
      If the request is successful, the Ledger returns a `201 Created` status, and the new Anchor record is immediately available in the Active state for resolution by other participants.
 
