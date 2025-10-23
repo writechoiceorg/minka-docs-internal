@@ -1,0 +1,27 @@
+---
+title: Alias Lifecycle Management
+---
+
+You manage the lifecycle of an alias by changing the status of its Anchor which determines wether it can be used for payment resolution or not, ensuring that the directory accurately reflects the availability and validity of the linked account information.
+
+## The Alias Statuses
+
+All aliases in the Alias Directory have three possible statuses to determine their availability for payments, these are:
+
+- **Active**: An Anchor in the Active state is fully functional and available for resolution. Meaning, it is discoverable by other participants in the network and can be used to successfully retrieve the associated Payment Credential for payment initiation.
+
+        <Callout>
+        This is the default state upon successful creation of the Anchor.
+        </Callout>
+
+- **Suspended**: An Anchor in the Suspended status allows you to temporarily deactivate an alias without permanently deleting the underlying record. The alias is flagged as inactive due to operational, legal, or customer service requirements. The alias is not resolvable for new payment lookups. However, the full history and data of the Anchor record remain intact in the Ledger.
+
+        <Callout>
+        You change an alias to the Suspended status or back to Active by sending an update request to the Anchor record, modifying its status field.
+        </Callout>
+
+- **Cancelled**: The Cancelled status permanently removes the alias linkage from the directory. This is typically used when a user explicitly closes the associated account or requests the alias be removed permanently. The alias is no longer resolvable, and you cannot reactivate the record. If the user wishes to use the same Alias Key later, they must create an entirely new Anchor record.
+
+    <Callout>
+    Even when an Anchor is Cancelled, the Ledger's core data integrity model ensures that the history of its creation and cancellation remains immutable and fully auditable.
+    </Callout>
