@@ -3,26 +3,25 @@ title: What is the Alias Directory
 sidebarlabel: Overview
 ---
 
-The Alias Directory enables you to simplify payment initiation by linking complex financial data to simple, human-readable identifiers. It is the core component for Real-Time Payment (RTP) environments where users expect to initiate transfers using an email, phone number, or national ID number instead of a bank account number. It is composed of the following:
+The Alias Directory is the core component for Real-Time Payment (RTP) environments, enabling you to simplify payment initiation by securely linking complex financial data to simple, human-readable identifiers. This allows users to initiate transfers using familiar details like an email, phone number, or national ID instead of a bank account number. 
 
-- **Alias Key:** The simple, user-friendly identifier used for lookups.
-- **Payment Credentials:** The complex, private financial information required to execute a payment (e.g., account number).
-- **Anchor:** The auditable ledger record that securely links the Alias Key to the Payment Credential.
+The Directory is built upon three auditable elements that manage this linkage: the Alias Key, which is the simple, user-friendly identifier used for lookups; the Payment Credentials, which are the complex, private financial details required to execute a payment (e.g., the account number); and the Anchor, which is the Ledger record that securely links the Alias Key to the Payment Credential.
 
 With the Alias Directory you can manage the entire lifecycle of these linkages, ensuring that payment recipients can be reliably and securely resolved.
 
 ## Architectural Models
 
-The Alias Directory can operate in different ways depending on the ecosystem's needs:
+The Alias Directory's architecture is flexible, supporting both decentralized and centralized requirements depending on the ecosystem's needs:
 
-- **Federated Directory:** Each participating financial institution (or group) manages its own local set of aliases for its customers. 
-- **Centralized Directory:** To ensure an alias is unique across the entire financial ecosystem and to allow payments between customers of different institutions, the Federated Directory often integrates with a third-party Centralized Directory.
+The Federated Directory model enables each participating financial institution to manage its own local set of aliases for its customers directly within the Minka Ledger environment. Conversely, the Centralized Directory model integrates with an external, authoritative third-party registry. This integration is vital to ensure an alias is unique across the entire financial ecosystem and to allow payments between customers of different institutions.
 
 Read more about these models in the [Federated and Centralized Alias Directories](/docs/alias-directory/fed-cen-dir) page.
 
 ## Working with Aliases
 
-The Alias Directory allows you to perform the following:
+The process begins with Registering and Linking an Alias (connecting a simple key to secure Payment Credentials). Once linked, the Directory's primary function is Look Up and Resolution, retrieving the necessary Payment Credential when a payment is initiated. Throughout the life of the record, you Manage the Alias Lifecycle to ensure data integrity and compliance by updating the Anchor's status as required.
+
+The Directory allows you to perform the following:
 
 - **Register and Link Aliases:** You register a new payment recipient by creating an Anchor record. This action links a simple Alias Key to the recipient's secure Payment Credentials.
 - **Look Up Account Information:** The primary function of the Directory is to resolve an alias. When you need to send a payment, you look up the recipient using their Alias Key to retrieve the necessary Payment Credential before confirming the transaction with the user.
