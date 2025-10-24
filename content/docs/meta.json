@@ -4,6 +4,7 @@
     "---Introduction to Minka---",
     "...Introduction to Minka",
     "---Alias Directory---",
-    "...alias-directory"],
+    "...alias-directory",
+    "alias-directory/alias-directory-guides"],
   "root": true
 }
