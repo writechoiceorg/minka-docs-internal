@@ -1,0 +1,30 @@
+---
+title: Anchors
+---
+
+An Anchor is an auditable record in the Minka Ledger that securely establishes a connection between a user's internal Wallet or Account and an external identifier, or Alias Key. This record is the non-fungible source of truth that enables the Alias Directory to function.
+
+## Anchor Structure and Data Fields
+
+The Anchor record manages the relationship between the key pieces of data required for alias resolution:
+
+- **The Alias Key (Public Identifier):** The public, user-friendly identifier (e.g., email address, phone number) used to initiate the lookup.
+
+- **The Payment Credential (Private Data):** The set of private financial details (e.g., account details, routing code) required to execute the final payment.
+
+## Integrity and Creation
+
+Because Anchors store sensitive financial data, they inherit the Ledger's core security guarantees:
+
+- **Immutability:** The Anchor record is Versioned & Auditable. Every change is cryptographically signed and tracked, leveraging the Ledger's Immutable History guarantee.
+
+- **Security:** Access to the Anchor and its sensitive Payment Credentials is strictly governed by the Security Policies defined in your Configuration.
+
+<Callout>
+    You create an Anchor by sending a request that contains both the Alias Key and the fields describing the Payment Credential.
+</Callout>
+
+## Related Concepts
+
+* [Aliases](./anchors-concept.mdx): Learn how Aliases link user-friendly keys to Anchors.
+* [Signers](./signers-concept.mdx): Learn how to cryptographically sign requests and the basic security concept needed for authenticating to the system.

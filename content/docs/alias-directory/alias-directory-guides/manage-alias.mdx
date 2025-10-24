@@ -1,0 +1,62 @@
+---
+title: Manage an Alias
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+This tutorial teaches you how to manage an existing Alias (Anchor record) in the Ledger. You will learn how to use the `PUT` endpoint to update its status or custom data, and the `DEL` endpoint to permanently cancel the alias.
+
+## Pre-requisites
+
+Before you begin this tutorial, ensure you have the following in place:
+
+    - **API Access:** You have the base URL for the Ledger's API `/v2`
+    - **Signer Setup:** You have an authenticated Signer identity and the necessary private key for signing requests.
+    - **Existing Alias Handle:** You must know the Alias Key of the Anchor record you intend to modify or delete.
+    - **Authorization:** Your Signer must have the necessary permissions (defined by Policies and Circles) to execute `PUT` and `DEL` operations on Anchor records.
+
+## Manage an Alias
+
+Follow these steps to successfully update or cancel an Alias in the Directory:
+
+<Steps>
+    <Step>
+    ### Update an Alias Record 
+    
+    Use the `PUT /v2/anchor/:handle` endpoint when you need to change the alias's operational status (e.g., from `active` to `suspended`) or update its non-critical custom data (like the owner's name).
+
+    - **Endpoint:** `PUT /v2/anchor/:handle`
+    - **Action:** Modify the existing Anchor record, where `:handle` is the unique alias key.
+    ### Execute the Update
+
+        1. **Construct the Payload:** Define the fields you want to change in the request body. You can update the alias's status and custom data simultaneously.
+        2. **Sign the Request:** Use your private key to cryptographically sign the entire `PUT` request payload.
+        3. **Submit the Request:** Send the signed request to the Ledger.
+
+    <Callout title="Update Data and Status" type="info">
+    The `PUT` operation handles both data changes and status changes. For instance, you can submit a request body to change the `owner_data` while simultaneously setting the `status` field to `suspended`. 
+
+    This endpoint is also used for a **sync update check** in integrated environments.
+    </Callout>
+
+    <Callout title="Third-Party Integration and Validation" type="info">
+    In regulated environments that require Third-Party Integration (e.g., a Centralized Directory like DICE), the Ledger performs additional steps, including third-party validation and adding compliance-required Timestamps to the record before the update completes.
+    </Callout>
+    </Step>
+
+     <Step>
+     ### Cancel an Alias Record
+
+     Use the `DEL /v2/anchor/:handle` endpoint to permanently remove the alias linkage from the directory. This transitions the record to the Cancelled state.
+
+    <Callout title="Permanent Cancellation" type="warn">
+    A Cancelled alias cannot be reactivated. This action is irreversible. If the user wishes to use the same Alias Key later, they must create an entirely new Anchor record using the `POST /v2/anchors` endpoint.
+    </Callout>
+    
+    ### Execute the Update
+    1.  **Construct the Request:** Use the `DEL` method targeting the specific handle in the URL (e.g., `/v2/anchor/user@example.com`).
+    2.  **Sign the Request:** Sign the request using your private key.
+    3.  **Submit the Request:** Send the signed `DEL` request to the Ledger. The Ledger will return a success status upon permanent deactivation.
+    </Step>
+    </Steps>

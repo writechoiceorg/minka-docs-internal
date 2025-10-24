@@ -1,0 +1,47 @@
+---
+title: Signers
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+A Signer represents a participant (a person, your system, or your client) that is authorized to submit operations to the Minka Ledger. A Signer is defined by a cryptographic key pair and acts as the identity for all interactions.
+
+## Purpose
+
+Every operation submitted to the Ledger must be cryptographically signed to maintain the system's secure, auditable environment for financial data. This digital signature provides two critical guarantees:
+
+- **Data Integrity:** Confirms that the request payload (e.g., payment amount, destination) has not been altered since the Signer submitted it.
+
+- **Immutable Audit Trail:** Tying every successful operation to a verified Signer ensures a complete, immutable audit trail, establishing non-repudiation (the Signer cannot deny the action).
+
+<Callout type="warn" title="WARNING">
+  The Ledger will reject any request that is not signed by an authorized Signer.
+</Callout>
+
+## Two-Phase Security Check (Authentication & Authorization)
+
+When the Ledger receives a request, it performs a two-phase security check to ensure both the identity and permission are valid before processing the operation.
+
+<Steps>
+<Step>
+### Authentication
+You first authenticate to prove your identity to the system.
+  - **Request Signing:** The Signer uses their private key to generate a unique digital signature based on the request payload.
+
+  - **Verification:** The Ledger uses the Signer's public key to validate the signature. A successful validation proves the request was signed by the holder of the private key and that the request data has not been altered in transit.
+</Step>
+
+<Step>
+### Authorization
+Once the Signer is authenticated, the Ledger performs authorization to check if the Signer has the necessary permissions to perform the requested operation. Permissions are defined by two other Minka elements:
+- **Policies:** The rules that define what actions are allowed (e.g., "can create a wallet," "can transfer funds").
+- **Circles:** These are groups that link Signers to specific Policies.
+</Step>
+</Steps>
+
+Your request is only accepted if your signature is valid (Authentication) and your Signer is part of a Circle that has a Policy granting permission for the action (Authorization).
+
+## Related Concepts
+
+* [Aliases](./anchors-concept.mdx): Learn how Aliases link user-friendly keys to Anchors.
+* [Anchors](./anchors-concept.mdx): Learn how Anchors represent external accounts.

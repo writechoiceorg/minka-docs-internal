@@ -1,0 +1,38 @@
+---
+title: Federated and Centralized Alias Directories
+---
+
+When operating a Real-Time Payment (RTP) system, you must implement a strategy for managing alias-to-account linkages. The Minka Ledger supports two primary models for directory management, these are:
+
+- Federated Directory
+- Centralized Directory 
+
+The models differ primarily in where the alias record is maintained and who is responsible for its validation.
+
+| Feature | Federated Directory (Minka Ledger) | Centralized Directory (External Authority) |
+| :--- | :--- | :--- |
+| **Source of Truth** | Local Minka Ledger | External, authoritative third-party registry (e.g., DICE, national entity) |
+| **Management** | Participant institution (You) via standard **Anchor API** calls | Third-Party Authority/Registry |
+| **Key Benefit** | **Full control** over alias lifecycle, flexibility, and custom data. | **Compliance** with regulated RTP environments; single source of truth for the entire nation/network. |
+
+See the sections below for more details of each of the models.
+
+## The Federated Model
+
+The Federated Directory model places the responsibility for alias creation and maintenance directly with the participant institution, leveraging Anchors within their own Minka Ledger environment. 
+
+This decentralized approach offers participants full control and flexibility over the alias lifecycle, security policies, and custom data fields related to their users. You manage these alias records using standard Ledger API calls, which are then immediately available for payment resolution by other connected participants within the Minka ecosystem.
+
+## The Centralized Model
+
+The Centralized Directory model involves integrating your system with an external, authoritative, third-party registry, such as DICE or a national entity, which maintains a single, comprehensive alias database for a regulated region. This model is typically required in regulated RTP environments. 
+
+When a user provides consent for external registration, the local system must perform a mandatory pre-validation step: calling the Centralized Directory to confirm or register the alias at a broader level. Local Anchor creation proceeds only if the third party accepts the alias; rejection (due to a duplicate alias or missing data) immediately stops the process, and no local record is created.
+
+## Co-existence and Mapping
+
+In many regulated environments, the two models must co-exist. The Minka Ledger is designed to manage the local Federated Directory while providing the necessary integration mechanisms for validation against the Centralized Directory. 
+
+This complex interaction is managed to ensure that your local system remains fast and authoritative for your customers' alias lookups, while simultaneously guaranteeing that all transactions comply with the mandatory rules and data requirements of the national Centralized Directory. 
+
+You must therefore handle scenarios where an alias exists in one system but not the other, or where the central system must validate the creation or lookup of a local Anchor record.

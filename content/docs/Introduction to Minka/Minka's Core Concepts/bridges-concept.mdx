@@ -1,0 +1,39 @@
+---
+title: Bridges
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+A Bridge is a configuration record in the Minka Ledger that acts as the essential connector between your internal client systems and the core payment network. It is the necessary mechanism for extending the Ledger's functionality to interact with external services, such as bank cores or centralized payment networks.
+
+## Integration Workflow
+
+For participants, the Bridge is the first technical touch point for integrating with the system.
+
+The integration process involves the following steps:
+
+<Steps>
+<Step>
+### Registration
+You must register your Bridge, which you can typically do quickly through the dashboard.
+</Step>
+
+<Step>
+### Implementation
+You must then develop and configure the Bridge service. This requires setting up the necessary endpoints and understanding the security protocols for signing the payloads (data) being transmitted to the Ledger.
+</Step>
+
+<Step>
+### Defining API Interaction
+Once implemented, the Bridge provides the secure interfaces necessary for core payment operations, including: 
+    - Debits
+    - Credits
+    - Intent Status Notifications
+</Step>
+</Steps>
+
+## Related Concepts
+
+[Wallets](): ...
+
+[Intent](): ...
