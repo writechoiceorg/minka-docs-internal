@@ -18,7 +18,7 @@ Configuration refers to the structural setup and adaptability of the Minka syste
 
         - **Ledger Layouts (Solution Templates):** A Layout is a pre-configured Ledger template that automatically sets up the system for a specific solution. Layouts can include test data to create a sandbox experience.
 
-        - **Policies (Configurable Rules):*** Policies are rules that govern operational behavior, including:
+        - **Policies (Configurable Rules):** Policies are rules that govern operational behavior, including:
             - Security Policies
             - Status Policies (rules for transactional lifecycle)
             - Label Policies (rules for custom data grouping)
@@ -56,7 +56,7 @@ Data integrity guarantees that all transaction records and balances are accurate
 
         - **Cryptographic Chaining:** Every operation is cryptographically signed, verified, and versioned. The system links the records by including the previous record's hash in the next, creating a complete and immutable history of every operation.
 
-        - **Auditability:*** This structural guarantee ensures complete auditability and tracing for the financial system.
+        - **Auditability:** This structural guarantee ensures complete auditability and tracing for the financial system.
     </Step>
 
      <Step>
@@ -66,13 +66,13 @@ Data integrity guarantees that all transaction records and balances are accurate
 
         - **The Components (Intents & Claims):** A transaction in Minka is called an Intent, which packages one or more individual actions known as Claims.
 
-        - **The Result (Atomicity):** The Intent guarantees atomicity: all associated Claims must either all succeed or all fail together. This ensures there is never a partial operation or an inconsistent balance.
+        - **The Result (Atomicity):** The Intent guarantees atomicity, meaning that all associated Claims must either all succeed or all fail together. This ensures there is never a partial operation or an inconsistent balance.
     </Step>
     
      <Step>
      ### Operational Assurance (Certification)
 
-     The Certification Process is an operational gate that upholds integrity before production deployment. It consists of a series of tests and confirmation steps to ensure that configured elements (transactions, rejections, timeouts) behave exactly as expected.
+     The Certification Process is an operational gate that upholds integrity before production deployment. It consists of a series of tests and confirmation steps to ensure that configured elements (transactions, rejections, and timeouts) behave exactly as expected.
     </Step>
  </Steps>
 
