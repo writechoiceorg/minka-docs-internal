@@ -1,0 +1,50 @@
+---
+title: Update an Alias
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+This tutorial teaches you how to manage an existing Alias (Anchor record). You will learn how to use the `PUT` endpoint to update its status or custom data  in the Ledger.
+
+## Pre-requisites
+
+Before you begin this tutorial, ensure you have the following in place:
+
+    - **API Access:** You have the base URL for the Ledger's API `/v2`
+    - **Signer Setup:** You have an authenticated Signer identity and the necessary private key for signing requests.
+    - **Existing Alias Handle:** You must know the Alias Key of the Anchor record you intend to modify or delete.
+    - **Authorization:** Your Signer must have the necessary permissions (defined by Policies and Circles) to execute `PUT` and `DEL` operations on Anchor records.
+
+    <Callout type="info">
+    For information on setting up your Signer and the security protocols, see Authentication and Security Basics.
+    </Callout>
+
+## Update an Alias Record 
+    
+Use the `PUT /v2/anchor/:handle` endpoint when you need to change the alias's operational status (e.g., from `active` to `suspended`) or update its non-critical custom data (like the owner's name).
+
+    - **Endpoint:** `PUT /v2/anchor/:handle`
+    - **Action:** Modify the existing Anchor record, where `:handle` is the unique alias key.
+
+## Execute the Update
+
+    1. **Construct the Payload:** Define the fields you want to change in the request body. You can update the alias's status and custom data simultaneously.
+    2. **Sign the Request:** Use your private key to cryptographically sign the entire `PUT` request payload.
+    3. **Submit the Request:** Send the signed request to the Ledger.
+
+ ## Updating and Validating Alias Records
+
+    ### Simultaneous Updates
+     The `PUT` operation handles both data changes and status changes, allowing you to update both non-critical custom data (like the owner's name) and the operational status simultaneously in a single request body.
+
+     For instance, you can submit a request body to change the `owner_data` while simultaneously setting the `status` field to `suspended`. 
+ 
+     ### Sync Update check
+    In addition to transactional changes, thie `PUT` operation is also used to perform a sync update check in integrated environments. This is a mechanism where a client validates that their local record state matches the latest state recorded in the Ledger.
+
+
+    ### Third-Party Integration and Validation
+     In regulated environments that require Third-Party Integration (e.g., a Centralized Directory like DICE), the Ledger performs additional steps after receiving your signed request. 
+    
+    This may include third-party validation and adding compliance-required Timestamps to the record before the update is finalized. You only need to submit the request; the Ledger handles the compliance workflow.

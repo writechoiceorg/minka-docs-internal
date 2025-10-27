@@ -1,0 +1,37 @@
+---
+title: Cancel an Alias
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+This guide teaches you how to permanently deactivate an existing Anchor record (alias linkage) using the API. This process transitions the record to a Cancelled state. 
+
+You will learn how to use the `DEL` endpoint to permanently cancel the alias in the Minka Ledger.
+
+## Pre-requisites
+
+Before you begin this tutorial, ensure you have the following in place:
+
+    - **API Access:** You have the base URL for the Ledger's API `/v2`
+    - **Signer Setup:** You have an authenticated Signer identity and the necessary private key for signing requests.
+    - **Existing Alias Handle:** You must know the Alias Key of the Anchor record you intend to modify or delete.
+    - **Authorization:** Your Signer must have the necessary permissions (defined by Policies and Circles) to `DEL` operations on Anchor records.
+
+    <Callout type="info">
+    For information on setting up your Signer and the security protocols, see Authentication and Security Basics.
+    </Callout>
+
+## Cancel an Alias Record
+
+     Use the `DEL /v2/anchor/:handle` endpoint to permanently remove the alias linkage from the directory. This transitions the record to the Cancelled state.
+
+    <Callout title="Permanent Cancellation" type="warn">
+    A Cancelled alias cannot be reactivated. This action is irreversible. If the user wishes to use the same Alias Key later, they must create an entirely new Anchor record using the `POST /v2/anchors` endpoint.
+    </Callout>
+    
+### Execute the Update
+    1. **Retrieve the Current Record:** Before canceling the record, use the `GET` endpoint to retrieve the latest version of the Anchor.
+    2. **Construct the Request:** Use the `DEL` method targeting the specific handle in the URL (e.g., `/v2/anchor/user@example.com`).
+    3.  **Sign the Request:** Sign the request using your private key.
+    4.  **Submit the Request:** Send the signed `DEL` request to the Ledger. The Ledger will return a success status upon permanent deactivation.
