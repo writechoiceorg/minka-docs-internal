@@ -17,8 +17,32 @@ The flow generally follows four stages:
 This conceptual guide assumes you are familiar with Minka's core solutions. For a detailed breakdown of each component, please read the [Our Solutions](our-solutions.mdx) page first.
 
 ## Understanding the Transaction Flow
+The following diagram illustrates the path of a typical transaction, originating from a Central Bank's user and moving through various institutional layers to its final destination.
+
+This flow is broken down into the following steps:
+
+    1. **Origination (Minka Channels)**
+    2. **Network Processing (Minka Rails)**
+    3. **Intermediary Routing (Minka Gateway)**
+    4. **Final Settlement (Minka Ledger)**
 
 
 ## Roles 
+The product flow highlights two distinct roles for institutions within the ecosystem: Provider and Participant.
+
+### Provider
+A Provider is responsible for the core network infrastructure, such as a central bank or ACH operator. Their responsibilities include:
+    - Ensuring the network can communicate with any centralized systems.
+    - Connecting to local channels.
+    - Testing and processing both credits and debits.
+
+### Participant
+A Participant is a member of the network, such as a bank, that connects to the provider's infrastructure. Their role is to:
+    - Test connections to channels.
+    - Processing debits received from the network. 
 
 ## Tools and Components
+While the diagram shows the high-level flow between packaged products, several underlying tools are required to make this flow functional. These include:
+    - **Bridges:** Most Minka Ledgers are not standalone. They use Bridges to connect to other services, such as legacy bank cores or external centralized directories.
+    - **Security:** A universal transaction flow requires security protocols to be in place. This is handled by Ledger components like Circles and Policies, which define permissions and access rules.
+    - **CLI/SDK:** You use tools like the Minka CLI or SDKs to build, test, and integrate with this transaction flow.

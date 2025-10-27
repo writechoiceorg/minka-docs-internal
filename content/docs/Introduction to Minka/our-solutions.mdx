@@ -7,7 +7,7 @@ import { Step, Steps } from 'fumadocs-ui/components/steps';
 
 The Minka platform provides a suite of solutions for building real-time payment ecosystems. These solutions handle everything from the core system of record to payment initiation and network interoperability.
 
-These solutions and the platform work together to serve various use cases. The Ledger serves as the foundational system of record where transactions are ultimately registered. Rails and Gateway act as intermediary routing and network layers. Channels provide user-facing ways to initiate payments (like QR codes or aliases).
+These solutions and the platform work together to serve various use cases. The [Ledger](#ledger) serves as the foundational system of record where transactions are ultimately registered. [Rails](#rails) and [Gateway](#gateway) act as intermediary routing and network layers. [Channels](#channels) provide user-facing ways to initiate payments (like QR codes or aliases).
 
 ## Ledger
 The Minka Ledger is the core component of Minka’s payment platform. It records and manages real-time transactions between users and financial institutions, supports multiple participants, and ensures security and transparency using cryptographic methods.
@@ -34,15 +34,6 @@ This solution distinguishes between two primary roles: Provider and Participant.
 - A **Provider** (e.g., a central bank or ACH operator) is responsible for the core network infrastructure. This includes ensuring the network can communicate with any centralized systems, connect to local channels, and test both credits and debits.
 - A **Participant** (e.g., a member bank) has a more specific role. They typically only need to test connections to channels and the processing of debits.
 
-## Gateway
-The Minka Gateway solution functions as an intermediary, connecting different payment networks and systems. It is responsible for routing transactions from an external network (like an ACH) to the correct downstream Minka Ledger instances (such as those for an Enterprise, a PSP, or a Merchant).
-
-Like Rails, the Gateway solution also defines Provider and Participant roles and includes documentation for connecting to various Payment Networks. The solution flow diagram shows the Gateway in a critical routing position, receiving transactions from a network (like an ACH) and directing them to the correct downstream Minka Ledger instances, such as those for an Enterprise, a PSP (Payment Service Provider), or a Merchant.  
-
-    <Callout type="info">
-    The Gateway supports multiple payment types and networks, ensuring secure and efficient transaction processing.
-    </Callout>
-   
 ## Gateway
 The Minka Gateway solution functions as an intermediary, connecting different payment networks and systems. It is responsible for routing transactions from an external network (like an ACH) to the correct downstream Minka Ledger instances (such as those for an Enterprise, a PSP, or a Merchant).
 
