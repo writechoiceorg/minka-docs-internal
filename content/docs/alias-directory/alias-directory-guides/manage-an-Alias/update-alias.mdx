@@ -33,7 +33,7 @@ Use the `PUT /v2/anchor/:handle` endpoint when you need to change the alias's op
     2. **Sign the Request:** Use your private key to cryptographically sign the entire `PUT` request payload.
     3. **Submit the Request:** Send the signed request to the Ledger.
 
- ## Updating and Validating Alias Records
+ ## Anchor Update Behavior and Context
 
     ### Simultaneous Updates
      The `PUT` operation handles both data changes and status changes, allowing you to update both non-critical custom data (like the owner's name) and the operational status simultaneously in a single request body.
