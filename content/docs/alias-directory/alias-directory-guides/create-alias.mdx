@@ -17,8 +17,7 @@ Before you start, ensure you have the following resources:
 Follow these steps to successfully create and register a new Alias in the Directory:
 
 1. **Define the Anchor Payload**
-    
-    Construct the JSON payload for the Anchor record. The payload must include the unique identifier, the target financial account, and the associated payment credentials.
+     Construct the JSON payload for the Anchor record. The payload must include the unique identifier, the target financial account, and the associated payment credentials.
 
     <Callout title="Anchor Creation Payload">
             ```json
@@ -49,18 +48,29 @@ Follow these steps to successfully create and register a new Alias in the Direct
         - `account_data`: The detailed, private financial information (Payment Credentials) required to execute a payment.
         - `owner_data`: Any necessary Custom Data about the user (e.g., owner name, ID number).
 
-2. **Sign the Request**
-
+2. **Sign and Submit the Anchor to the Ledger**
     The Ledger requires that every operation be cryptographically signed by an authorized Signer to prove both identity and data integrity.
 
-    Use your private key to generate a digital signature for the entire request payload constructed in Step 1.
-        
+    ### Submit using the Minka CLI
+    The Minka CLI automatically handles signing the request with your configured Signer private key before transmission.
+    
+        1. Save the payload from Step 1 to a local file (e.g., anchor.json).
+        2. Execute the minka anchor create command, referencing the payload file:
+
+            ```bash
+            # Assuming 'anchor.json' contains the payload from Step 1
+            minka anchor create --payload-file ./anchor.json
+            ```
+    ### Submit using the API
+    If you are not using the Minka CLI, you must manually sign the request payload from Step 1. Use your private key to generate a digital signature, and then send the signed payload to the Ledger using the endpoint `POST /v2/anchors`.
+    
     <Callout type="warn">
     The Ledger will reject any request that is not signed by an authorized Signer or if the payload has been altered after signing.
     </Callout>
 
-3. **Submit the Anchor to the Ledger**
-    
+3. **Review the Successful Response**
+    If the request is successful, the Ledger returns a `201 Created` status, and the new Anchor record is immediately available in the Active state for resolution by other participants.
+
     Send the signed payload to the Ledger using the endpoint `POST /v2/anchors`
 
         <Callout title="Example Response">
@@ -120,8 +130,6 @@ Follow these steps to successfully create and register a new Alias in the Direct
         }
         ```
         </Callout>
-
-     If the request is successful, the Ledger returns a `201 Created` status, and the new Anchor record is immediately available in the Active state for resolution by other participants.
 
     <Callout>
     In regulated environments (e.g., Centralized Directory like DICE), the Ledger performs additional steps, including third-party validation and adding compliance-required Timestamps to the record before completion.

@@ -5,7 +5,7 @@ title: Update an Alias
 import { Callout } from 'fumadocs-ui/components/callout';
 import { Step, Steps } from 'fumadocs-ui/components/steps';
 
-This tutorial teaches you how to manage an existing Alias (Anchor record). You will learn how to use the `PUT` endpoint to update its status or custom data  in the Ledger.
+This tutorial teaches you how to manage an existing Alias (which is an Anchor record). You will learn how to use the Minka CLI or the API to update its status or custom data in the Ledger.
 
 ## Pre-requisites
 
@@ -22,10 +22,21 @@ Before you begin this tutorial, ensure you have the following in place:
 
 ## Update an Alias Record 
     
-Use the `PUT /v2/anchor/:handle` endpoint when you need to change the alias's operational status (e.g., from `active` to `suspended`) or update its non-critical custom data (like the owner's name).
+    ### Update using the Minka CLI
+    The Minka CLI provides an interactive prompt to help you build the update payload. It automatically handles fetching the latest record, signing the new payload, and submitting the request.
 
-    - **Endpoint:** `PUT /v2/anchor/:handle`
-    - **Action:** Modify the existing Anchor record, where `:handle` is the unique alias key.
+        1. Run the `minka anchor update` command, specifying the alias you want to change:
+        
+        ```bash
+        minka anchor update <alias-handle>
+        # Example: minka anchor update carlos6@minka.io
+        ```
+
+        2. The CLI will prompt you to select which fields you want to update (e.g., custom_data, status).
+        3. Confirm the changes and provide your Signer credentials when prompted.
+
+    ### Update using the API
+    You can manually construct and send a `PUT` request to the `/v2/anchors/{handle}` endpoint, using the unique alias key to modify the existing Anchor record.
 
 ## Execute the Update
 

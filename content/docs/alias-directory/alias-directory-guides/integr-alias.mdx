@@ -5,6 +5,7 @@ title: Integrate an Alias with a Centralized Directory
 import { Callout } from 'fumadocs-ui/components/callout';
 import { Step, Steps } from 'fumadocs-ui/components/steps';
 
+
 This tutorial guides you through the process of integrating your Alias Directory solution with a Centralized Directory (such as DICE or a national registry). This is required in regulated Real-Time Payment (RTP) environments to ensure third-party validation and compliance for all alias operations.
 
 ## Pre-requisites
@@ -25,6 +26,12 @@ When you create a new alias in a regulated environment, the Ledger performs a ne
     ### Submit the Anchor Creation Request
     
     You initiate the process by submitting the new Anchor record via the standard creation endpoint `POST /v2/anchors`
+
+You can use the Minka CLI to create the anchor and submit the request:
+
+    ```bash
+    minka anchor create
+    ```
     </Step>
      <Step>
      ### Third-Party Validation (Ledger Action)
@@ -47,6 +54,13 @@ Alias lookups (resolution) must prioritize local data access while ensuring you 
     ### Submit the Lookup Request
     
     You submit the resolution request using the Alias Key (`:handle`) using the endpoint `GET /v2/anchors/:handle`
+
+    You can use the Minka CLI to perform the lookup:
+
+    ```bash
+    minka anchor show <alias-handle>
+    # Example: minka anchor show tel:1234555555
+    ```
     </Step>
      <Step>
      ### Local-First Check
