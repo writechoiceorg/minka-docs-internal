@@ -164,3 +164,40 @@ This method requires you to manually construct the entire JSON payload, includin
 3. A successful request will return a 201 Created status code and the full anchor object that was created.
 
 ## Create an Alias via CLI
+    You can use the Minka CLI to create new Anchor records directly from your terminal. This method is useful for scripting and automation. It typically involves preparing a JSON file with the Anchor data and then passing that file to the CLI `create` command.
+
+        1. Create a JSON file (e.g., `new-alias.json`) that contains the data for the new Anchor. The structure is similar to the `data` object used in the API method.
+           
+    ```json
+        {
+        "handle": "tel:5551234567",
+        "target": "svgs:12345@mybank.io",
+        "custom": {
+            "aliasType": "PHONE",
+            "documentType": "NIDN",
+            "documentNumber": "0801198607268",
+            "accountType": "SAVINGS",
+            "accountNumber": "123456789",
+            "firstName": "Carlos",
+            "lastName": "Andino",
+            "entityType": "individual"
+        },
+        "access": [
+            { "action": "any", "signer": { "$record": "owner" } }
+        ],
+        "schema": "person"
+        }
+        ```
+
+        2. Use the Minka CLI `anchors create` command to submit the new record. The CLI handles the hashing and signing using your configured Signer credentials.
+        
+        ```bash
+        minka anchors create \
+        --file new-alias.json \
+        --signer <your-signer-handle> \
+        --label "nidn:0801198607268" \
+        --status "ACTIVE"
+        ```
+
+        3. If successful, the CLI returns the newly created Anchor object in JSON format, confirming that it was registered on the Ledger.
+
