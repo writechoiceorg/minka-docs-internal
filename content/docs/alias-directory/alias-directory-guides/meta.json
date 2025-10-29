@@ -1,0 +1,11 @@
+{
+  "title": "Alias Directory Guides",
+  "pages": [
+    "create-alias",
+    "retrieve-alias",
+    "update-alias",
+    "cancel-alias",
+    "integr-alias"
+    ],
+  "defaultOpen": false
+}
