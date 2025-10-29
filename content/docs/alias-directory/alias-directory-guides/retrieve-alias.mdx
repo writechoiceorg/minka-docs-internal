@@ -15,7 +15,7 @@ Before you start, ensure you have the following:
      - **Alias Key:** You know the specific Alias Key `{handle}` you wish to look up (e.g., a phone number or email address).
 
 ## Resolve the Alias and Retrieve Details
-Follow these steps to successfully resolve an alias and retrieve the associated financial information (the Payment Credential).
+You can retrieve the details using either the Minka CLI for a simple command or the Ledger API for a direct integration. Choose the method that fits your use case. Follow these steps to successfully resolve an alias and retrieve the associated financial information (the Payment Credential).
 
     ### Resolve using the Minka CLI
     Use the Minka CLI's `anchor show` command to quickly resolve the alias. The CLI constructs the request and uses your configured Signer credentials for authentication.
@@ -80,7 +80,7 @@ If the request is successful and an Active Anchor record matches the handle, the
       luid: '$anc.-0C9sXIPUG1b6LHQz',
       meta: {
         proofs: [ [Object], [Object] ],
-        status: 'INACTIVE',
+        status: 'ACTIVE',
         moment: '2025-04-14T17:23:55.779Z',
         owners: [ 'ak40/ebXaPHdSwypXWHDlFaZZx0zdajPBz/dijLvdaE=' ],
         labels: [ 'ndin:0801198607268' ]
@@ -89,10 +89,10 @@ If the request is successful and an Active Anchor record matches the handle, the
     ```
 
 The response body contains the resolved alias details, which include the payment credentials necessary to execute a transaction. The key parameters in the response include:
-            - `handle`: The requested Alias Key.
-            - `alias_type`: The type of identifier used (e.g., email, phone_number).
-            - `account_data`: The detailed, private financial information (Payment Credentials).
-            - `status`: The current state of the alias (must be `active` for use in new payments).
+            - `data.handle`: The requested Alias Key.
+            - `data.target`: The core Payment Credential (e.g., the destination account)
+            - `data.custom`: The detailed, private financial information such as aliasType and accountNumber.
+            - `meta.status`: The current state of the alias (must be `active` for use in new payments).
 
 
   ## Third-Party Integration

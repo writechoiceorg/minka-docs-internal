@@ -10,7 +10,6 @@ The Directory is built upon three auditable elements that manage this linkage: t
 With the Alias Directory you can manage the entire lifecycle of these linkages, ensuring that payment recipients can be reliably and securely resolved.
 
 ## Architectural Models
-
 The Alias Directory's architecture is flexible, supporting both decentralized and centralized requirements depending on the ecosystem's needs:
 
 The Federated Directory model enables each participating financial institution to manage its own local set of aliases for its customers directly within the Minka Ledger environment. Conversely, the Centralized Directory model integrates with an external, authoritative third-party registry. This integration is vital to ensure an alias is unique across the entire financial ecosystem and to allow payments between customers of different institutions.
@@ -18,9 +17,6 @@ The Federated Directory model enables each participating financial institution t
 Read more about these models in the [Federated and Centralized Alias Directories](/docs/alias-directory/fed-cen-dir) page.
 
 ## Working with Aliases
-
-The process begins with Registering and Linking an Alias (connecting a simple key to secure Payment Credentials). Once linked, the Directory's primary function is Look Up and Resolution, retrieving the necessary Payment Credential when a payment is initiated. Throughout the life of the record, you Manage the Alias Lifecycle to ensure data integrity and compliance by updating the Anchor's status as required.
-
 The Directory allows you to perform the following:
 
 - **Register and Link Aliases:** You register a new payment recipient by creating an Anchor record. This action links a simple Alias Key to the recipient's secure Payment Credentials.

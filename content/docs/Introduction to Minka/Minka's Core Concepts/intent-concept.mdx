@@ -4,7 +4,7 @@ title: Intents
 
 An Intent represents a formal request to perform a financial action. It is the necessary step a client takes, often via a single API call, to initiate an operation.
 
-When an Intent is created, the operation is sent to the system for processing, meaning the final outcome (success or failure) is asynchronous and resolved later. The ability to create an Intent is central to the End-to-End Transaction Flow.
+When an Intent is created, the operation is sent to the system for processing, meaning the final outcome (success or failure) is asynchronous and resolved later. The ability to create an Intent is central to the End-to-End [Transaction Flow](../transaction-flow.mdx).
 
 ## Intents & Claims
 
@@ -28,10 +28,4 @@ Claims are essential in scenarios where multiple actions must be finalized toget
 
 - **Taxes & Fees:** If a payment requires collecting a tax or fee, multiple Claims are used. The system ensures that if the primary payment is successfully recorded, the tax debit must also be recorded. This prevents the primary payment from occurring without the fee being collected.
 
-- **Currency Exchanges:** For currency exchange (e.g., giving $100 and receiving €80), placing both parts into two claims ensures that the exchange is atomic, meaning the user is guaranteed to receive the euros if they provide the dollars.
-
-## Related Concepts
-
-[Wallets](): ...
-
-[Bridges](): ...
+- **Currency Exchanges:** For currency exchange (e.g., giving $100 and receiving €80), placing both parts into two claims ensures that the exchange is atomic, meaning the user is guaranteed to receive the euros if they provide the dollars.  

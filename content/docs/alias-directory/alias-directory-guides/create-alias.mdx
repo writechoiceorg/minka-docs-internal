@@ -23,30 +23,31 @@ Follow these steps to successfully create and register a new Alias in the Direct
             ```json
             {
             "handle": "carlos6@minka.io",
-            "alias_type": "email",
-            "target": "wlt_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-            "account_data": {
-                "account_number": "1234567890",
-                "routing_code": "999"
-            },
-            "owner_data": {
-                "name": "Carlos Jose Andino Nunez",
-                "national_id": "1000000000"
-            },
-            "custom_fields": {
-                // Add any region-specific or policy-required custom data here
+            "wallet": "DICE",
+            "target": "svgs:123458@lulobank.com",
+            "symbol": "cop",
+            "schema": "person",
+            "custom": {
+                "aliasType": "tel",
+                "documentType": "nidn",
+                "documentNumber": "0801198607268",
+                "accountType": "svgs",
+                "accountNumber": "123457",
+                "firstName": "Carlos",
+                "lastName": "Andino"
             }
             }
+
             ```
     </Callout>
 
     You must define the following required fields in the request body:
 
-        - `handle`: The unique, user-friendly Alias Key (e.g., +573001234567).
-        - `alias_type`: Specifies the type of the alias (e.g., phone_number, email, national_id).
-        - `target`: The unique identifier of the user's Wallet or account in the Ledger that the alias should direct to.
-        - `account_data`: The detailed, private financial information (Payment Credentials) required to execute a payment.
-        - `owner_data`: Any necessary Custom Data about the user (e.g., owner name, ID number).
+        - `handle`: The unique, user-friendly Alias Key (e.g., carlos6@minka.io).
+        - `target`: The full Payment Credential string (e.g., svgs:123458@lulobank.com).
+        - `symbol`: The currency or asset this alias is tied to (e.g., cop).
+        - `schema`: The data schema this Anchor adheres to (e.g., person).
+        - `custom`: An object containing all other required metadata, such as aliasType, accountNumber, and documentNumber.
 
 2. **Sign and Submit the Anchor to the Ledger**
     The Ledger requires that every operation be cryptographically signed by an authorized Signer to prove both identity and data integrity.
@@ -70,8 +71,6 @@ Follow these steps to successfully create and register a new Alias in the Direct
 
 3. **Review the Successful Response**
     If the request is successful, the Ledger returns a `201 Created` status, and the new Anchor record is immediately available in the Active state for resolution by other participants.
-
-    Send the signed payload to the Ledger using the endpoint `POST /v2/anchors`
 
         <Callout title="Example Response">
         ```json

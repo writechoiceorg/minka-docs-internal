@@ -63,7 +63,7 @@ The first phase is the Alias Look-up. Before a payment is sent, the user's appli
 Once the recipient is confirmed, the user initiates Phase 2, the Payment, by creating a transaction Intent. This action triggers a two-phase commit orchestrated by Minka Rails to ensure the transaction is atomic (meaning it either fully succeeds or fully fails). Rails first instructs all parties to enter a Prepare phase, where funds are held and accounts are validated. After all parties report back that they are ready, Rails issues the Commit command. The Gateway forwards this to the Minka Ledger for final settlement. A confirmation is then sent back up the chain to notify the user that the transaction is complete.
 
 ## Roles 
-The product flow highlights two distinct roles for institutions within the ecosystem: Provider and Participant.
+The product flow highlights two distinct roles for institutions within the ecosystem: 
 
 ### Provider
 A Provider is responsible for the core network infrastructure, such as a central bank or ACH operator. Their responsibilities include:
