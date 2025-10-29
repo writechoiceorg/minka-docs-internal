@@ -1,0 +1,81 @@
+---
+title: Cancel an Alias
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+This guide teaches you how to permanently deactivate an existing Anchor record (alias linkage) using either the Minka CLI or the API. This process transitions the record to a `Cancelled` state, making it unusable for future transactions.
+
+    <Callout title="Permanent Cancellation" type="warn">
+    A Cancelled alias cannot be reactivated. This action is irreversible. If the user wishes to use the same Alias Key later, they must create an entirely new Anchor record using the `POST /v2/anchors` endpoint.
+    </Callout>
+
+## Pre-requisites
+Before you begin this tutorial, ensure you have the following in place:
+
+    - **API Access:** You have the base URL for the Ledger's API `/v2`
+    - **Signer Setup:** You have an authenticated Signer identity and the necessary private key for signing requests.
+    - **Existing Alias Handle:** You must know the Alias Key of the Anchor record you intend to modify or delete.
+    - **Authorization:** Your Signer must have the necessary permissions (defined by Policies and Circles) to `DEL` operations on Anchor records.
+
+    <Callout type="info">
+    For information on setting up your Signer and the security protocols, see Authentication and Security Basics.
+    </Callout>
+
+### Cancel using the Minka CLI
+The Minka CLI simplifies this process by handling the request construction and signing automatically.
+
+    1. Execute the minka anchor drop command, specifying the Alias Key you wish to cancel.
+         
+         ```bash
+         minka anchor drop <alias-handle>
+         # Example: minka anchor drop user@example.com
+         ``` 
+
+    2. The CLI will prompt you for confirmation before proceeding due to the irreversible nature of this action.
+    3. Upon success, the Ledger returns a status confirming the permanent deactivation.
+
+### Cancel using the API
+You can use the `DEL /v2/anchors/{handle}` endpoint to permanently cancel the alias.
+   1. Send a `DEL` request to the /v2/anchors/:handle endpoint, replacing :handle with the alias you want to cancel.
+   2. Include required attributes in your signed request. You must set `sign.custom.status` to `CANCELLED`. You should also include `sign.custom.moment` and a `sign.custom.reason` code (e.g., "01" for normal cancellation).
+   3. A successful cancellation returns a `204 No Content` HTTP response.
+
+### Cancel using the SDK
+The Ledger SDK provides a dedicated `drop()` method to simplify this process. This method constructs and signs the required DELETE request for you.
+   1. First, get the handle of the alias you intend to cancel. It's also best practice to define a reasonCode for the operation, which is stored in the ledger's history.
+        
+    ```typescript
+    const handleToCancel = 'tel:+15551234567';
+    const reasonCode = '01';
+    ```
+   2. Use the `sdk.anchor.drop()` method to cancel the alias, passing in the `handletoCancel`. In the `.sign()` method, you must set the `custom.status` to `CANCELLED`. You must also include the `reason` and a `moment` (an ISO 8601 timestamp) for the signature.
+        
+    ```typescript
+    try {
+        const dropResponse = await sdk.anchor
+            .drop(handleToCancel)
+            .sign([
+            {
+                keyPair,
+                custom: {
+                status: 'CANCELLED',
+                reason: reasonCode,
+                moment: new Date().toISOString(),
+                },
+            },
+            ])
+            .send();
+        
+        // A successful drop returns an HTTP 204 status
+        console.log('Successfully cancelled alias:', handleToCancel);
+        console.log('Status Code:', dropResponse.status); // Expected: 204
+
+        } catch (error) {
+        console.error('Error cancelling alias:', error.message);
+        // Handle errors, such as 404 Not Found if the alias doesn't exist
+        }
+    ```
+    
+   3. A successful cancellation returns a `204 No Content` HTTP response.

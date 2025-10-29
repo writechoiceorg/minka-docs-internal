@@ -3,14 +3,29 @@ title: What is the Alias Directory
 sidebarlabel: Overview
 ---
 
-The Alias Directory is the core component for Real-Time Payment (RTP) environments, enabling you to simplify payment initiation by securely linking complex financial data to simple, human-readable identifiers. This allows users to initiate transfers using familiar details like an email, phone number, or national ID instead of a bank account number. 
+The Alias Directory is a key component of a regulated real-time payment (RTP) environment. It allows you to simplify payment initiation by enabling users to use simple, human-readable aliases such as phone numbers, email addresses, or ID numbers instead of complex account details. Each alias is securely mapped to a financial account. This mapping is registered as an anchor on Minka’s ledger infrastructure.
 
-The Directory is built upon three auditable elements that manage this linkage: the Alias Key, which is the simple, user-friendly identifier used for lookups; the Payment Credentials, which are the complex, private financial details required to execute a payment (e.g., the account number); and the Anchor, which is the Ledger record that securely links the Alias Key to the Payment Credential.
+The Alias Directory is built on a few core concepts:
 
-With the Alias Directory you can manage the entire lifecycle of these linkages, ensuring that payment recipients can be reliably and securely resolved.
+- **Handle**: The alias identifier itself (e.g., tel:+15551234567 or email:user@example.com).
+- **Target**: The financial account associated with the alias that the alias maps to for transaction routing.
+- **Anchor**: The foundational ledger record that securely and immutably links the Handle to the Target. Anchors store this linkage and associated metadata but do not hold balances.
+- **Custom Data**: Optional metadata linked to the account or its owner, such as name or other domain-specific fields.
+- **Labels**: A set of key-value tags used for regulatory and institutional identification, such as participant codes or document numbers.
+
+## High-Level architecture
+
+The Minka Alias Directory Solution is built on top of the Minka Ledger and provides a secure, auditable, and scalable system for managing aliases.
+
+The solution involves three main areas:
+
+- **Participant Ecosystem**: This includes your end-users interacting with your digital channels (apps or portals) , your core banking systems , and a secure middleware bridge that signs and sends requests to the Minka ledger.
+- **Alias Directory Solution** : This provides the core services of Anchors API to manage alias records, exposes metrics and logs for audits and operational insight and broadcasts alias-related events (e.g., create, update) to subscribers in real time.
+- **Support & Monitoring**: Includes a graphical UI (Studio) for support staff to securely query and manage anchors.
+
+All operations are authorized via JWT tokens and digitally signed, ensuring every change is tamper-evident and fully auditable on the ledger.
 
 ## Architectural Models
-
 The Alias Directory's architecture is flexible, supporting both decentralized and centralized requirements depending on the ecosystem's needs:
 
 The Federated Directory model enables each participating financial institution to manage its own local set of aliases for its customers directly within the Minka Ledger environment. Conversely, the Centralized Directory model integrates with an external, authoritative third-party registry. This integration is vital to ensure an alias is unique across the entire financial ecosystem and to allow payments between customers of different institutions.
@@ -18,10 +33,7 @@ The Federated Directory model enables each participating financial institution t
 Read more about these models in the [Federated and Centralized Alias Directories](/docs/alias-directory/fed-cen-dir) page.
 
 ## Working with Aliases
-
-The process begins with Registering and Linking an Alias (connecting a simple key to secure Payment Credentials). Once linked, the Directory's primary function is Look Up and Resolution, retrieving the necessary Payment Credential when a payment is initiated. Throughout the life of the record, you Manage the Alias Lifecycle to ensure data integrity and compliance by updating the Anchor's status as required.
-
-The Directory allows you to perform the following:
+The Alias Directory provides a complete API to manage the entire lifecycle of an alias.
 
 - **Register and Link Aliases:** You register a new payment recipient by creating an Anchor record. This action links a simple Alias Key to the recipient's secure Payment Credentials.
 - **Look Up Account Information:** The primary function of the Directory is to resolve an alias. When you need to send a payment, you look up the recipient using their Alias Key to retrieve the necessary Payment Credential before confirming the transaction with the user.

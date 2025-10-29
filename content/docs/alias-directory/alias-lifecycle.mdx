@@ -4,34 +4,31 @@ title: Alias Lifecycle Management
 
 An Anchor establishes the crucial link between a user's Wallet in the Ledger and an Alias (external identifier  like a phone number or email). Managing its lifecycle involves updating its status to control whether the Alias can be used for payment resolution, ensuring the directory accurately reflects the availability and validity of the linked account information.
 
-## The Alias Statuses
+Some of the standard statuses for anchors are:
 
-All aliases in the Alias Directory have three possible statuses to determine their availability for payments, these are:
+- Active
+- Suspended
+- Cancelled
 
- ### Active 
+<Callout title="Custom Statuses">
+Status types are customizable and can vary depending on regulations and needs of the participants.
+</Callout>
+
+
+
+## Active 
+    An Anchor in the Active state is fully functional and ready for payment resolution. This is the default state upon the successful creation of the Anchor.
+
+    In this state, the alias is discoverable by other network participants and can be used to successfully retrieve the associated Payment Credential. This credential is required for initiating a payment, making the Anchor entirely operational within the network.
  
- An Anchor in the Active state is fully functional and ready for payment resolution. This is the default state upon the successful creation of the Anchor.
+## Suspended
+    The Suspended status is used to temporarily deactivate an alias without permanently deleting its record from the Ledger. This state is typically employed for operational, legal, or customer service requirements. While suspended, the alias is not resolvable for new payment lookups, effectively putting the Anchor on hold.
 
- In this state, the alias is discoverable by other network participants and can be used to successfully retrieve the associated Payment Credential. This credential is required for initiating a payment, making the Anchor entirely operational within the network.
- 
-### Suspended
+    However, the full history and data of the underlying Anchor record remain intact. This allows the alias to be easily toggled between Suspended and Active states by sending an update request to the Anchor record and modifying its status field. The ability to reactivate the alias distinguishes the Suspended state from the permanent Cancelled status.
 
-The Suspended status is used to temporarily deactivate an alias without permanently deleting its record from the Ledger. This state is typically employed for operational, legal, or customer service requirements. While suspended, the alias is not resolvable for new payment lookups, effectively putting the Anchor on hold.
+## Cancelled
+    The Cancelled status represents the permanent removal of the alias linkage from the directory. This status is typically applied when a user closes the associated external account or explicitly requests the alias be permanently dropped. 
 
-However, the full history and data of the underlying Anchor record remain intact. This allows the alias to be easily toggled between Suspended and Active states by sending an update request to the Anchor record and modifying its status field. The ability to reactivate the alias distinguishes the Suspended state from the permanent Cancelled status.
+    Once an Anchor is Cancelled, it is no longer resolvable for any payment lookups, and the record cannot be reactivated. If the user later wishes to use the same Alias Key, they must initiate the process to create an entirely new Anchor record. 
 
-
-### Cancelled
-
-The Cancelled status represents the permanent removal of the alias linkage from the directory. This status is typically applied when a user closes the associated external account or explicitly requests the alias be permanently dropped. 
-
-Once an Anchor is Cancelled, it is no longer resolvable for any payment lookups, and the record cannot be reactivated. If the user later wishes to use the same Alias Key, they must initiate the process to create an entirely new Anchor record. 
-
-This action, however, does not erase the history: the Ledger's core data integrity model ensures that the record of its creation and subsequent cancellation remains immutable and fully auditable for compliance and history tracking.
-
----
-
-## Related Concepts
-
-* [Creating Aliases](./create-alias.mdx): Learn how to create a new Alias (Anchor record) on the Minka Ledger.
-* [Managing Aliases](./manage-alias.mdx): Learn how to update, execute or cancel an Alias record on the Minka Ledger.
+    This action, however, does not erase the history: the Ledger's core data integrity model ensures that the record of its creation and subsequent cancellation remains immutable and fully auditable for compliance and history tracking.

@@ -2,29 +2,47 @@
 title: Anchors
 ---
 
-An Anchor is an auditable record in the Minka Ledger that securely establishes a connection between a user's internal Wallet or Account and an external identifier, or Alias Key. This record is the non-fungible source of truth that enables the Alias Directory to function.
+An Anchor is the foundational, auditable record in the Minka Ledger that securely connects a user's alias to their financial account. It is the immutable, authoritative source of truth that enables the Alias Directory to function. 
+
+When you create an alias (like a phone number or email), you are registering a new anchor on the ledger.  This anchor serves several critical purposes:
+
+- Links a simple, public alias to a specific target account for payment routing. 
+- Persists identity and routing data in a consistent, verifiable format. 
+- Defines the access controls and business rules for that specific alias. 
+- Provides a complete, tamper-evident audit trail for all changes to the alias. 
+
+<Callout title="Anchors do not Hold Balances"> 
+Anchors do not hold balances. Their sole purpose is to describe the identity, rules, and routing information for a reference, such as an account or alias. 
+A single wallet or account can have multiple anchors associated with it (e.g., one for a phone number and one for an email, both pointing to the same account).
+</Callout> 
+
+The Anchor record is cersioned and auditable. Every change is cryptographically signed and tracked, leveraging the Ledger's Immutable History guarantee.
 
 ## Anchor Structure and Data Fields
 
-The Anchor record manages the relationship between the key pieces of data required for alias resolution:
+An anchor is a JSON-based ledger record that manages the relationship between the key pieces of data required for alias resolution. See an example in the codeblock below:
 
-- **The Alias Key (Public Identifier):** The public, user-friendly identifier (e.g., email address, phone number) used to initiate the lookup.
+```json
+"data": {
+    "handle": "email@example.com",
+    "wallet": "wallet1",
+    "target": "target@example.com",
+    "symbol": "usd",
+    "custom": {
+      "name": "Chaz",
+      "idType": "nidn",
+      "idNumber": "IJdEsSmS",
+      "entityType": "individual"
+    }
+```
+The key fields are as follows:
 
-- **The Payment Credential (Private Data):** The set of private financial details (e.g., account details, routing code) required to execute the final payment.
-
-## Integrity and Creation
-
-Because Anchors store sensitive financial data, they inherit the Ledger's core security guarantees:
-
-- **Immutability:** The Anchor record is Versioned & Auditable. Every change is cryptographically signed and tracked, leveraging the Ledger's Immutable History guarantee.
-
-- **Security:** Access to the Anchor and its sensitive Payment Credentials is strictly governed by the Security Policies defined in your Configuration.
+- ``handle``: Registers the public alias tel:+15559876543.
+- ``target``: Defines the private account details where payments to this alias will be routed
+- ``custom``: Adds extra, non-indexed details about the owner, "John Smith".
+- ``labels``: Applies searchable tags. An application can now find this anchor by querying for documentNumber: "987654321".
+- ``status``: Sets the anchor to ACTIVE immediately upon creation, making it available for lookups and transactions.
 
 <Callout>
     You create an Anchor by sending a request that contains both the Alias Key and the fields describing the Payment Credential.
 </Callout>
-
-## Related Concepts
-
-* [Aliases](./anchors-concept.mdx): Learn how Aliases link user-friendly keys to Anchors.
-* [Signers](./signers-concept.mdx): Learn how to cryptographically sign requests and the basic security concept needed for authenticating to the system.

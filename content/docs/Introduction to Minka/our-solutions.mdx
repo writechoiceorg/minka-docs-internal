@@ -1,0 +1,53 @@
+---
+title: Our Solutions
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+The Minka platform provides you with a suite of solutions for building real-time payment ecosystems. These solutions handle everything from the core system of record to payment initiation and network interoperability. This guide provides a high-level overview of each solution to help you understand which components you'll use.
+
+These solutions and the platform work together to serve various use cases. The [Ledger](#ledger) serves as the foundational system of record where transactions are ultimately registered. [Rails](#rails) and [Gateway](#gateway) act as intermediary routing and network layers. [Channels](#channels) provide user-facing ways to initiate payments (like QR codes or aliases).
+
+## Ledger
+The Minka Ledger is the core component of Minka’s payment platform. It records and manages real-time transactions between users and financial institutions, supports multiple participants, and ensures security and transparency using cryptographic methods.
+
+You can customize the ledger to comply with regional regulations and operational requirements. It is the core system of record and is exposed via a comprehensive API.
+
+The Ledger API documentation includes components essential for building a complete financial system, such as:
+
+    - [**Anchor**](./anchors-concept.mdx) (for the Alias Directory)
+    - [**Bridge**](./bridges-concept.mdx) (for connecting to external services)
+    - **Circle and Policy** (for managing security and permissions)
+    - [**Wallet and Symbol**](./wallet-symbol-concept.mdx) (for managing accounts and currencies)
+    - [**Intent and Effect**](./intent-concept.mdx) (for tracking transaction flows)
+
+    <Callout type="info">
+    While some customers may build standalone ledgers, most use the Minka Ledger with Bridges to connect to other services, such as bank cores or centralized directories.
+    </Callout>
+
+## Rails
+The Minka Rails is what powers Minka’s payment solutions designed for ACHs (Automated Clearing Houses) and national payment networks, designed to manage a payment network. It enables secure and efficient transactions between banks, payment processors, and users, supporting multiple payment types and networks.
+
+When using Rails, you will encounter two primary roles: 
+- A **Provider** (e.g., a central bank or ACH operator) is responsible for the core network infrastructure. This includes ensuring the network can communicate with any centralized systems, connect to local channels, and test both credits and debits.
+- A **Participant** (e.g., a member bank) has a more specific role. They typically only need to test connections to channels and the processing of debits.
+
+## Gateway
+The Minka Gateway solution functions as an intermediary, connecting different payment networks and systems. Its primary role is to route transactions from an external network (like an ACH) to the correct downstream Minka Ledger instances, such as those for an Enterprise, a PSP (Payment Service Provider), or a Merchant.
+
+Like Rails, the Gateway solution also defines Provider and Participant roles and includes documentation for connecting to various Payment Networks.
+
+    <Callout type="info">
+    The Gateway supports multiple payment types and networks, ensuring secure and efficient transaction processing.
+    </Callout>
+
+## Channels
+The Minka Channels solution is focused on the origination or initiation of payments. It provides the various user-facing methods for starting a transaction within the Minka platform.
+
+The Channels solution includes several key services:
+
+- **Alias Directory Services:** Allows users to link simple identifiers (like a phone number or email) to an account using an Anchor record.
+- **QR Code:** Enables payment initiation by scanning a QR code.
+- **Payment Links:** Allows payments to be sent or requested via a simple URL.
+- **NFC:** Supports tap-to-pay or other near-field communication use cases.

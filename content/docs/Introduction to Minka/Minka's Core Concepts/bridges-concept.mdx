@@ -10,30 +10,24 @@ A Bridge is a configuration record in the Minka Ledger that acts as the essentia
 
 For participants, the Bridge is the first technical touch point for integrating with the system.
 
-The integration process involves the following steps:
+To successfully integrate a Bridge follow the process below:
 
 <Steps>
 <Step>
 ### Registration
-You must register your Bridge, which you can typically do quickly through the dashboard.
+You must register your Bridge, which you can typically do quickly through the dashboard. This associates your external service with a secure configuration record in the Minka Ledger.
 </Step>
 
 <Step>
 ### Implementation
-You must then develop and configure the Bridge service. This requires setting up the necessary endpoints and understanding the security protocols for signing the payloads (data) being transmitted to the Ledger.
+You must then develop and configure your external Bridge service. This involves setting up the necessary API endpoints on your end and implementing Minka's security protocols for signing the payloads that are sent to and from the Ledger.
 </Step>
 
 <Step>
 ### Defining API Interaction
-Once implemented, the Bridge provides the secure interfaces necessary for core payment operations, including: 
-    - Debits
-    - Credits
-    - Intent Status Notifications
+Once your Bridge is implemented, the Ledger can use it to securely interact with your external service. The primary operations a Bridge enables are:
+    - **Debits:** Instructing your external system (e.g., a bank core) to debit an account.
+    - **Credits:** Instructing your external system to credit an account.
+    - **Intent Status Notifications:** Receiving status updates from your Bridge (e.g., completed, failed) about the state of a transaction.
 </Step>
 </Steps>
-
-## Related Concepts
-
-[Wallets](): ...
-
-[Intent](): ...

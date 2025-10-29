@@ -1,0 +1,178 @@
+---
+title: Update an Alias Status
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+In the Minka Ledger, an anchor's status determines its availability and operational validity. This allows you to manage an alias's lifecycle, such as temporarily disabling it for security reasons or reactivating it.
+
+This operation is used to set the following statuses :
+
+- ``ACTIVE``: The anchor is valid and available for use.
+- ``SUSPENDED``: The anchor is temporarily disabled and cannot be used in new transactions.
+
+All status changes are written to the ledger, ensuring traceability.
+
+<Callout title="Third-Party Integration">
+In regulated environments that require Third-Party Integration, the Ledger performs additional steps after receiving your signed request. This may include third-party validation and adding compliance-required Timestamps to the record before the update is finalized. You only need to submit the request, the Ledger handles the compliance workflow.
+</Callout>
+
+## Pre-requisites
+
+Before you begin, ensure you have the following in place:
+
+    - **API Access:** You have the base URL for the Ledger's API `/v2`
+    - **Signer Setup:** You have an authenticated Signer identity and the necessary private key for signing requests.
+    - **Existing Alias Handle:** You must know the Alias Key of the Anchor record you intend to modify or delete.
+    - **Authorization:** Your Signer must have the necessary permissions (defined by Policies and Circles) to execute `PUT` and `DEL` operations on Anchor records.
+
+## Update Alias Status via SDK
+
+This method uses the SDK to read the existing record, modify it in memory, and send the update. Follow the steps below to do so:
+
+1. First, initialize the ``LedgerSdk`` with your server configuration and secure signer credentials.
+
+        ```typescript
+        async function createAnchor() {
+        const sdk = new LedgerSdk({
+            ledger: '<ledger-handle>',
+            server: '<server-url>',
+            timeout: 15000,
+            verifyResponseProofs: true,
+            signer: {
+            format: 'ed25519-raw',
+            public: '<signer-public-key>',
+            },
+            secure: {
+            iss: '<signer-handle>',
+            sub: 'signer:<signer-handle>',
+            aud: '<ledger-handle>',
+            exp: 60,
+            keyPair: {
+                format: 'ed25519-raw',
+                public: '<signer-public-key>',
+                secret: '<signer-private-key>',
+            },
+            },
+        });
+
+        const keyPair = {
+            format: 'ed25519-raw',
+            public: '<signer-public-key>',
+            secret: '<signer-private-key>',
+        };
+        ```
+2. Before you can update an anchor, you must first retrieve its current record.
+    ```typescript
+    const record = (await sdk.anchor.read('<alias-value>')).response.data;
+    ```
+3. Set the new status and send the update. To change the status, you use the ``.meta()`` builder to set the new status value (e.g., ``SUSPENDED``). You must also sign the request with a ``custom.status`` field that matches your new status.
+
+    <Callout>
+    When updating the status, you must preserve 100% of the existing data within the anchor. The SDK's ``.data(record.data)`` method handles this.
+    </Callout>
+
+    ```typescript
+      await sdk.anchor
+        .from(record)
+        .data( // Preserve all existing data
+            {
+                ...record.data
+            }
+        )
+        .meta( { // Set the new status in the meta object
+            status: "<status-value>", // e.g., "SUSPENDED"
+            proofs: []
+        }
+        )
+        .hash()
+        .sign([{ // Sign with the new status
+            keyPair,
+            custom:{
+                status: "<status-value>", // e.g., "SUSPENDED"
+                moment:"2025-04-14T14:23:45.123Z" // ISO 8601 datetime
+            }
+        }])
+        .send();
+    }
+    ```
+
+4. A successful request returns a ``200 OK`` status and the newly updated anchor object.
+
+## Update Alias Status via API
+
+You can update the data by sending a PUT request to the ``PUT /v2/anchor/{handle}`` endpoint.
+
+The request body must contain the full anchor object, including the data (which must be preserved) and the ``meta`` object updated with the new status. The signature in ``meta.proofs`` must also include a ``custom.status`` field set to the new status (e.g., ``SUSPENDED``) and a ``custom.moment`` field. See the example below:
+
+```json
+{
+  "hash": "5831f42bd15da1cafa5a4a4623a398389a734766ad169fb4f3b6bdf80418712f",
+  "luid": "$anc.-0847869HxNkGI2-Z",
+  "data": {
+    "handle": "svgs:-vqibKLJKikP@teslabank.io",
+    "wallet": "tel:70271566",
+    "target": "tran:254085257323@minka.io",
+    "symbol": "usd",
+    "custom": {
+      "name": "Keyon",
+      "idType": "nidn",
+      "idNumber": "IJdEsSmS",
+      "entityType": "individual",
+      "lastUpdated": "2025-04-02T05:10:30.822Z",
+      "status": "verified"
+    },
+    "access": [
+      {
+        "action": "any",
+        "signer": {
+          "public": "gef6OID0o7ZFGTXutV62mh+zv5kgkFP3QLiR+N7syck="
+        }
+      },
+      {
+        "action": "read",
+        "bearer": {
+          "$signer": {
+            "$record": "owner"
+          }
+        }
+      }
+    ],
+    "parent": "6fbba0181fc0177365b62541ed7e94d8532ca6dd40651f23387d4c17d00967ec"
+  },
+  "meta": {
+    "status": "SUSPENDED", // Example: Setting the new status
+    "proofs": [
+      {
+        "method": "ed25519-v2",
+        "public": "gef6OID0o7ZFGTXutV62mh+zv5kgkFP3QLiR+N7syck=",
+        "digest": "482d687c0719d02eff65be40cafb9fbfb35a850fdc95e82c90765791ea6c52b8",
+        "result": "HSx4A9sj1DwwiX71pjEI5eyJGvBpV8ViBF9dCLM4nmLfK8exRB4AA47lQe1w4QrdronMUBRq+rMSYx+yzTqrCw==",
+        "custom": {
+          "moment": "2025-04-14T14:23:45.123Z", // ISO 8601 datetime
+          "status": "SUSPENDED" // Signature must also reflect the new status
+        }
+      }
+    ]
+  }
+}'
+```
+
+If successful, the server returns a ``200 OK status`` and the updated anchor object, reflecting the new status.
+
+The `PUT` operation handles both data changes and status changes, allowing you to update both non-critical custom data (like the owner's name) and the operational status simultaneously in a single request body. For instance, you can submit a request body to change the `owner_data` while simultaneously setting the `status` field to `suspended`. 
+
+## Update Alias Status via CLI
+
+The Minka CLI provides an interactive prompt to help you build the update payload. It automatically handles fetching the latest record, signing the new payload, and submitting the request. Follow the steeps below:
+
+    1. Run the `minka anchor update` command, specifying the alias you want to change:
+        
+        ```bash
+        minka anchor update <alias-handle>
+        # Example: minka anchor update example@email.com
+        ```
+
+    2. The CLI will prompt you to select which fields you want to update (e.g., custom_data, status).
+    3. Confirm the changes and provide your Signer credentials when prompted.

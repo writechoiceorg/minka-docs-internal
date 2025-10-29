@@ -7,7 +7,6 @@ import { Step, Steps } from 'fumadocs-ui/components/steps';
 A Signer represents a participant (a person, your system, or your client) that is authorized to submit operations to the Minka Ledger. A Signer is defined by a cryptographic key pair and acts as the identity for all interactions.
 
 ## Purpose
-
 Every operation submitted to the Ledger must be cryptographically signed to maintain the system's secure, auditable environment for financial data. This digital signature provides two critical guarantees:
 
 - **Data Integrity:** Confirms that the request payload (e.g., payment amount, destination) has not been altered since the Signer submitted it.
@@ -40,8 +39,3 @@ Once the Signer is authenticated, the Ledger performs authorization to check if 
 </Steps>
 
 Your request is only accepted if your signature is valid (Authentication) and your Signer is part of a Circle that has a Policy granting permission for the action (Authorization).
-
-## Related Concepts
-
-* [Aliases](./anchors-concept.mdx): Learn how Aliases link user-friendly keys to Anchors.
-* [Anchors](./anchors-concept.mdx): Learn how Anchors represent external accounts.

@@ -5,10 +5,7 @@ title: Wallets and Symbols
 These two concepts are fundamental building blocks of the Minka Ledger: Wallets are the accounts that hold balances, and Symbols define the unit of value (asset or currency) being held.
 
 ## Wallets
-
-A Wallet represents an account or participant in Minka's finalcial ecosystem and adapts to the use case and organizational layer (bank, enterprise, etc.) in which it operates.
-
-Wallets enable the creation, transfer, and management of virtual funds between different entities using the Minka ledger platform. 
+A Wallet represents a participant (like a bank, enterprise, or person) in your financial ecosystem. Its primary job is to hold balances of one or more Symbols. Wallets enable the creation, transfer, and management of these balances between different entities.
 
 <Callout type="note">
   They are not tied to a particular user interface or technology but underpin the movement of balances regardless of whether access is through CLI, API, or UI Studio. 
@@ -22,16 +19,9 @@ A Symbol represents a specific asset type or unit of value that can be held and 
  This allows the system to remain flexible and supports diverse applications beyond standard financial currency tracking.
 </Callout>
 
-### Use cases
+  ### Use cases
+  The distinction between "Symbol" and "Currency" allows the Minka Ledger to support diverse applications beyond traditional finance:
 
-The distinction between "Symbol" and "Currency" allows the Minka Ledger to support diverse applications beyond traditional finance:
+  - Monetary Examples: A Symbol can be a traditional fiat currency (like USD or Euros) or a virtual currency (like USDT).
 
-- Monetary Examples: A Symbol can be a traditional fiat currency (like USD or Euros) or a virtual currency (like USDT).
-
-- Non-Monetary Examples: The concept of Symbol is used when building systems such as loyalty programs, where the tracked unit might be a loyalty point count, gift card value, or credit score rather than an official currency.
-
-## Related Concepts
-
-[Wallets](): ...
-
-[Intent](): ...
+  - Non-Monetary Examples: The concept of Symbol is used when building systems such as loyalty programs, where the tracked unit might be a loyalty point count, gift card value, or credit score rather than an official currency.

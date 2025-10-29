@@ -5,98 +5,104 @@ title: Retrieve Alias Information
 import { Callout } from 'fumadocs-ui/components/callout';
 import { Step, Steps } from 'fumadocs-ui/components/steps';
 
-This tutorial teaches you how to look up an existing Alias to retrieve its details, this process can be done via API or trough the Minka Ledger Studio.
+This how-to guide teaches you how to look up an existing alias to retrieve its associated anchor record and financial details. This Alias Lookup is a foundational step for routing payments or verifying alias ownership. You can retrieve a single alias by its unique handle (e.g., a phone number or email) using the SDK, API or CLI.
 
-## Retrieve an Alias via API
 
-You can get the details of a specific alias using the `GET /v2/anchors/{handle}` endpoint.
+<Callout title="Federated Lookup">
+The lookup operation can be performed on your local federated directory. Depending on your system's configuration, if an alias is not found locally, the system may be set up to query an external or centralized directory
+</Callout>
 
-### Pre-requisites
-
+## Pre-requisites
 Before you start, ensure you have the following:
 
      - **API Access:** You have the base URL for the Ledger's API `/v2`
      - **Signer Setup:** You have an authenticated Signer identity with the required permissions to perform `GET` operations on Anchor records.
      - **Alias Key:** You know the specific Alias Key `{handle}` you wish to look up (e.g., a phone number or email address).
 
-### Perform the Request
+## Resolve Alias via SDK
 
-Follow these steps to successfully resolve an alias and retrieve the associated financial information:
+This is the most straightforward method, as the SDK handles request construction and authentication. Follow the steps below:
 
-1. To look up a specific alias, append the unique Alias Key to the endpoint path  `GET /v2/anchors/` using `GET /v2/anchors/{handle}`. If the alias key is user@example.com, the full URL would look like this:
+1. First, initialize the ``LedgerSdk`` with your server configuration and secure signer credentials.
 
+        ```typescript
+        async function createAnchor() {
+        const sdk = new LedgerSdk({
+            ledger: '<ledger-handle>',
+            server: '<server-url>',
+            timeout: 15000,
+            verifyResponseProofs: true,
+            signer: {
+            format: 'ed25519-raw',
+            public: '<signer-public-key>',
+            },
+            secure: {
+            iss: '<signer-handle>',
+            sub: 'signer:<signer-handle>',
+            aud: '<ledger-handle>',
+            exp: 60,
+            keyPair: {
+                format: 'ed25519-raw',
+                public: '<signer-public-key>',
+                secret: '<signer-private-key>',
+            },
+            },
+        });
+
+        const keyPair = {
+            format: 'ed25519-raw',
+            public: '<signer-public-key>',
+            secret: '<signer-private-key>',
+        };
         ```
-        GET /v2/anchors/user@example.com
-        ```
 
-2. Send a `GET` request to the constructed URL. This request requires a signed payload in the body, but it does require authentication (e.g., a Bearer token) to ensure the request comes from an authorized party.
+2. Use the ``anchor.read()`` method, passing the ``alias`` handle as the only parameter.
 
-        ```json
-        GET /api/v2/anchors/<alias-value> HTTP/1.1\r\n' +
-            'Accept: application/json, text/plain, */*\r\n' +
-            'X-Received: 2025-04-14T14:23:45.123Z\r\n' +
-            'X-Dispatched: 2025-04-14T14:23:45.123Z\r\n' +
-            'Authorization: Bearer <token>\r\n' +
-            'X-Ledger: <ledger-handle>\r\n' +
-            'User-Agent: LedgerSDK/2.21.0\r\n' +
-            'Accept-Encoding: gzip, compress, deflate, br\r\n' +
-            'Host: <ledger-host-url>\r\n' +
-            'Connection: keep-alive\r\n' +
-            '\r\n'
-        ```
+    ```typescript
+    async function getAnchor() {
+      const  anchor  = await sdk.anchor.read('<alias-value>').response.data;
 
-If the request is successful and an Active Anchor record matches the handle, the Ledger returns a `200 OK` status with the full Anchor details. See the example below:
+      console.log(
+        "Retrieved anchor details:",
+        JSON.stringify(anchor, null, 4)
+      );
+    }
+    ```
+3. If successful, the method returns the full anchor object and the API returns a ``200 OK`` status.
 
-```json
-{
-  hash: '6f3faa8fbc703c89c2366c577ea8244a0809711bce0ba5ffa738ade0b9888820',
-  data: {
-    parent: 'bade03e6dae89d6152defe4be80ad1777d599c7598c3cb40e8758c2d31bffd22',
-    handle: 'carlos5@minka.io',
-    wallet: 'DICE',
-    target: 'svgs:123457@lulobank.com',
-    symbol: 'cop',
-    schema: 'person',
-    custom: {
-      type: 'individual',
-      consent: 'Y',
-      lastName: 'Andino',
-      aliasType: 'tel',
-      firstName: 'Carlos',
-      aliasValue: '50494502868',
-      secondName: 'Jose',
-      accountType: 'svgs',
-      consentDate: '2025-04-14T14:23:45.123Z',
-      documentType: 'nidn',
-      receivedDate: '2025-04-14T14:23:45.123Z',
-      accountNumber: '123457',
-      dispatchedDate: '2025-04-14T14:23:45.123Z',
-      documentNumber: '0801198607268',
-      secondLastName: 'Nunez',
-      targetSpbviCode: 'SRV'
-    },
-    access: [ [Object] ]
-  },
-  luid: '$anc.-0C9sXIPUG1b6LHQz',
-  meta: {
-    proofs: [ [Object], [Object] ],
-    status: 'INACTIVE',
-    moment: '2025-04-14T17:23:55.779Z',
-    owners: [ 'ak40/ebXaPHdSwypXWHDlFaZZx0zdajPBz/dijLvdaE=' ],
-    labels: [ 'ndin:0801198607268' ]
-  }
-}
-```
+## Resolve Alias via API
 
-The response body contains the resolved alias details, which include the payment credentials necessary to execute a transaction. The key parameters in the response include:
-            - `handle`: The requested Alias Key.
-            - `alias_type`: The type of identifier used (e.g., email, phone_number).
-            - `account_data`: The detailed, private financial information (Payment Credentials).
-            - `status`: The current state of the alias (must be `active` for use in new payments).
+You can directly query the Ledger using the `GET /v2/anchors/{handle}` endpoint.
+    
+1. Construct the request replacing `{handle}` in the endpoint URL with the actual Alias you want to resolve.
 
+            ```
+            GET /v2/anchors/{handle}
+            # Example: GET /v2/anchors/user@example.com
+            ```
 
- ## Third-Party Integration
+2. Send a `GET` request to the constructed URL. Although this is a GET request, it requires authentication (e.g., a Bearer token) to ensure the request originates from an authorized party. See the example below:
 
- In environments integrated with a Centralized Directory (like DICE), the Ledger performs a local-first check. If the alias is not found in your local federated directory, the Ledger may forward the resolution request to the third-party system.
+      ```json
+      GET /api/v2/anchors/user@example.com HTTP/1.1
+      Accept: application/json
+      Authorization: Bearer <token>
+      X-Ledger: <ledger-handle>
+      Host: <ledger-host-url>
+      ```
 
-If the alias is not found or is in the Suspended or Cancelled state, the Ledger returns an error status (e.g., `404 Not Found` or a specific error code indicating the alias is inactive).
+3. If the request is successful and an Active Anchor record matches the handle, the Ledger returns a `200 OK` status with the full Anchor details.
+ 
+ <Callout type='warning'> 
+If the alias is not found or is in the `SUSPENDED` or `CANCELLED` state, the Ledger returns an error status (e.g., `404 Not Found` or a specific error code indicating the alias is inactive).
+ </Callout> 
+
+## Resolve Alias via Minka CLI
+
+Use the Minka CLI's `anchor show` command to quickly resolve the alias. The CLI constructs the request and uses your configured Signer credentials for authentication.
+
+            ```bash
+            minka anchor show <alias-handle>
+            # Example: minka anchor show carlos6@minka.io
+            ```
+
