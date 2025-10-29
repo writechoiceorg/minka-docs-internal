@@ -7,6 +7,10 @@ import { Step, Steps } from 'fumadocs-ui/components/steps';
 
 This guide teaches you how to permanently deactivate an existing Anchor record (alias linkage) using either the Minka CLI or the API. This process transitions the record to a `Cancelled` state, making it unusable for future transactions.
 
+    <Callout title="Permanent Cancellation" type="warn">
+    A Cancelled alias cannot be reactivated. This action is irreversible. If the user wishes to use the same Alias Key later, they must create an entirely new Anchor record using the `POST /v2/anchors` endpoint.
+    </Callout>
+
 ## Pre-requisites
 Before you begin this tutorial, ensure you have the following in place:
 
@@ -19,14 +23,8 @@ Before you begin this tutorial, ensure you have the following in place:
     For information on setting up your Signer and the security protocols, see Authentication and Security Basics.
     </Callout>
 
-## Cancel an Alias Record
-     Use the `DEL /v2/anchor/{handle}` endpoint to permanently remove the alias linkage from the directory. This transitions the record to the Cancelled state.
+## Cancel using the Minka CLI
 
-    <Callout title="Permanent Cancellation" type="warn">
-    A Cancelled alias cannot be reactivated. This action is irreversible. If the user wishes to use the same Alias Key later, they must create an entirely new Anchor record using the `POST /v2/anchors` endpoint.
-    </Callout>
-
-### Cancel using the Minka CLI
 The Minka CLI simplifies this process by handling the request construction and signing automatically.
 
     1. Execute the minka anchor drop command, specifying the Alias Key you wish to cancel.
