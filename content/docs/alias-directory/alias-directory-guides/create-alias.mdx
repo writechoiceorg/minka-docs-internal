@@ -2,7 +2,13 @@
 title: Create a New Alias
 ---
 
-This guide teaches you step-by-step how to create a new Alias by submitting an Anchor record to the Ledger. Creating an Anchor establishes the critical linkage between a user's wallet and a simple external identifier, enabling payment resolution.
+In Minka, creating an alias means registering a special type of anchor on the ledger. This anchor acts as the foundational record that connects a human-readable alias (like a phone number or email) to a specific target financial account. This operation is the first step in enabling an alias to be used for secure, real-time payments.
+
+This guide provides three methods for creating an alias:
+
+- Via SDK (Recommended): The simplest method, which handles complex tasks like hashing and signing.
+- Via API: For direct integration with the REST endpoint.
+- Via CLI: (Information not available in source materials).
 
 ## Pre-requisites
 
@@ -12,94 +18,122 @@ Before you start, ensure you have the following resources:
 - **Signer Setup:** You have an authenticated Signer identity and the required private key with permissions to perform creation (`POST`) operations on Anchor records.
 - **Required Data:** You have the specific Alias Key, the Wallet ID, and the Payment Credential details you intend to link.
 
-## Creating and Registering a new Alias
-
-Follow these steps to successfully create and register a new Alias in the Directory:
-
-1. **Define the Anchor Payload**
-     Construct the JSON payload for the Anchor record. The payload must include the unique identifier, the target financial account, and the associated payment credentials.
-
-    <Callout title="Anchor Creation Payload">
-            ```json
-            {
-            "handle": "carlos6@minka.io",
-            "wallet": "DICE",
-            "target": "svgs:123458@lulobank.com",
-            "symbol": "cop",
-            "schema": "person",
-            "custom": {
-                "aliasType": "tel",
-                "documentType": "nidn",
-                "documentNumber": "0801198607268",
-                "accountType": "svgs",
-                "accountNumber": "123457",
-                "firstName": "Carlos",
-                "lastName": "Andino"
-            }
-            }
-
-            ```
+    <Callout>
+    In regulated environments (e.g., Centralized Directory like DICE), the Ledger performs additional steps, including third-party validation and adding compliance-required Timestamps to the record before completion.
     </Callout>
 
-    You must define the following required fields in the request body:
+## Create an Alias via SDK
 
-        - `handle`: The unique, user-friendly Alias Key (e.g., carlos6@minka.io).
-        - `target`: The full Payment Credential string (e.g., svgs:123458@lulobank.com).
-        - `symbol`: The currency or asset this alias is tied to (e.g., cop).
-        - `schema`: The data schema this Anchor adheres to (e.g., person).
-        - `custom`: An object containing all other required metadata, such as aliasType, accountNumber, and documentNumber.
+This is the recommended method as the Minka SDK simplifies the process by handling object creation, hashing, and cryptographic signing. To do so follow steps below:
 
-2. **Sign and Submit the Anchor to the Ledger**
-    The Ledger requires that every operation be cryptographically signed by an authorized Signer to prove both identity and data integrity.
+1. First, initialize the ``LedgerSdk`` with your server configuration and secure signer credentials.
 
-    ### Submit using the Minka CLI
-    The Minka CLI automatically handles signing the request with your configured Signer private key before transmission.
-    
-        1. Save the payload from Step 1 to a local file (e.g., anchor.json).
-        2. Execute the minka anchor create command, referencing the payload file:
+        ```typescript
+        async function createAnchor() {
+        const sdk = new LedgerSdk({
+            ledger: '<ledger-handle>',
+            server: '<server-url>',
+            timeout: 15000,
+            verifyResponseProofs: true,
+            signer: {
+            format: 'ed25519-raw',
+            public: '<signer-public-key>',
+            },
+            secure: {
+            iss: '<signer-handle>',
+            sub: 'signer:<signer-handle>',
+            aud: '<ledger-handle>',
+            exp: 60,
+            keyPair: {
+                format: 'ed25519-raw',
+                public: '<signer-public-key>',
+                secret: '<signer-private-key>',
+            },
+            },
+        });
 
-            ```bash
-            # Assuming 'anchor.json' contains the payload from Step 1
-            minka anchor create --payload-file ./anchor.json
-            ```
-    ### Submit using the API
-    If you are not using the Minka CLI, you must manually sign the request payload from Step 1. Use your private key to generate a digital signature, and then send the signed payload to the Ledger using the endpoint `POST /v2/anchors`.
-    
-    <Callout type="warn">
-    The Ledger will reject any request that is not signed by an authorized Signer or if the payload has been altered after signing.
-    </Callout>
+        const keyPair = {
+            format: 'ed25519-raw',
+            public: '<signer-public-key>',
+            secret: '<signer-private-key>',
+        };
+        ```
 
-3. **Review the Successful Response**
-    If the request is successful, the Ledger returns a `201 Created` status, and the new Anchor record is immediately available in the Active state for resolution by other participants.
+2. Construct the ``anchorData`` object using the required attributes.
 
-        <Callout title="Example Response">
+        ```typescript
+        const anchorData = {
+            handle: "<alias-value>", // e.g., "tel:5551234567"
+            target: "<target-account>", // e.g., "svgs:12345@mybank.io"
+            custom: {
+            aliasType: "<alias-type-standard-value>",
+            documentType: "<document-type-standard-value>",
+            documentNumber: "<document-number>",
+            accountType: "<account-type-standard-value>",
+            accountNumber: "<account-number>",
+            firstName: "<firstname>",
+            lastName: "<lastname>",
+            entityType: "individual", // Or "business"
+            },
+            access: [
+            { action: "any", signer: { $record: "owner" } }
+            ],
+            schema: "person" // Or "business"
+        };
+        ```
+
+3. Sign and Send the Request using the SDK's builder methods to ``init()``, ``data()``, ``meta()``, ``hash()``, ``sign()``, and ``send()`` the request. The SDK handles the cryptographic operations.
+
+
+        ```typescript
+        await sdk.anchor
+            .init()
+            .data(anchorData)
+            .meta({
+            labels: ["nidn:<document-number>"], // e.g., "nidn:0801198607268"
+            proofs: []
+            })
+            .hash()
+            .sign([{
+            keyPair,
+            custom: {
+                status:"ACTIVE"
+            }
+            }])
+            .send();
+        }
+        ```
+3. A successful request will return the newly created anchor object. The API returns a ``201 Created`` status code.
+
+## Create an Alias via API
+
+This method requires you to manually construct the entire JSON payload, including cryptographic proofs, and submit it to the ``POST /v2/anchors`` endpoint.
+
+1. Create a JSON object containing the ``hash``, ``data``, and ``meta`` fields. The data ``object`` contains the core alias information , and the ``meta`` object contains the proofs and labels.
+
         ```json
         {
-        "hash":"9084396379b9c1d48cb2a66847edef1c4f5441460d4f7e0e09c59abb5b98d7cb",
+        "hash":"5d40248a0f9e9f6be3e6d43dd3062ddf98e9187ea1c8eeedb151f4ba208c96e1",
         "data":{
-            "handle":"carlos6@minka.io",
-            "wallet":"DICE",
-            "target":"svgs:123458@lulobank.com",
-            "symbol":"cop",
+            "handle":"<alias-value>",
+            "wallet":"<standard bridge wallet>",
+            "target":"<target-account>",
+            "symbol":"<symbol>",
             "custom":{
-                "aliasType":"tel",
-                "documentType":"nidn",
-                "documentNumber":"0801198607268",
-                "accountType":"svgs",
-                "accountNumber":"123457",
-                "firstName":"Carlos",
-                "secondName":"Jose",
-                "lastName":"Andino",
-                "secondLastName":"Nunez",
-                "entityType":"individual",
-                "targetSpbviCode":"SRV",
-                "participantCode":"123123"
+                "aliasType":"<alias-type-standard-value>",
+                "documentType":"<document-type-standard-value>",
+                "documentNumber":"<document-number>",
+                "accountType":"<account-type-standard-value>",
+                "accountNumber":"<account-number>",
+                "firstName":"<firstname>",
+                "lastName":"<lastname>",
+                "entityType":"<entity-type-standard-value>"
             },
             "access":[
                 {
-                    "action":"any",
+                    "action":"<action>",
                     "signer":{
-                    "$record":"owner"
+                    "$record":"<circle>"
                     }
                 }
             ],
@@ -109,27 +143,24 @@ Follow these steps to successfully create and register a new Alias in the Direct
             "proofs":[
                 {
                     "method":"ed25519-v2",
-                    "public":"ak40/ebXaPHdSwypXWHDlFaZZx0zdajPBz/dijLvdaE=",
-                    "digest":"2f34a270823568486be5fd4cf02d387821f5183b5b386ed7f6dcea94ffb45f7d",
-                    "result":"Swk6tcVgBB4XrywOAWyzKhMLuegGsF6iEoJLXEnVcTM5XuWerzHOl2OrQB4Cq3gjRNwncPpxAEjrn5Noj89jBQ==",
+                    "public":"<public-key>",
+                    "digest":"<digest-value>",
+                    "result":"<result-value>",
                     "custom":{
-                    "moment":"2025-04-14T18:16:51.994Z",
-                    "domain":null,
-                    "consentDate":"2025-04-14T14:23:45.123Z",
-                    "received":"2025-04-14T14:23:45.123Z",
-                    "dispatched":"2025-04-14T14:23:45.123Z",
-                    "status":"created"
-                    }
+                    "moment":"<request-sent-date>",
+                    "status":"CREATED"
+                }
                 }
             ],
             "labels":[
-                "ndin:0801198607268"
+                "<documentType + ":" + documentNumber>"
             ]
         }
         }
         ```
-        </Callout>
 
-    <Callout>
-    In regulated environments (e.g., Centralized Directory like DICE), the Ledger performs additional steps, including third-party validation and adding compliance-required Timestamps to the record before completion.
-    </Callout>
+2. Send the complete JSON payload in a POST request to the ``/v2/anchors`` endpoint, including your authorization token in the headers.
+
+3. A successful request will return a 201 Created status code and the full anchor object that was created.
+
+## Create an Alias via CLI
