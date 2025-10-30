@@ -2,6 +2,7 @@
   "title": "Alias Directory Guides",
   "pages": [
     "create-alias",
+    "authenticate",
     "retrieve-alias",
     "update-alias",
     "cancel-alias",

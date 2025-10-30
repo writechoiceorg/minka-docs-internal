@@ -1,0 +1,116 @@
+---
+title: Authentication & Signing
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+
+Minka Ledger secures every operation using asymmetric cryptography. Each request that modifies or creates data (a "mutation" like `POST` or `PUT`) must be cryptographically signed to verify its integrity and authenticity.
+
+The Ledger supports two primary methods for authenticating requests:
+
+1.  **Signed Request Body (Mutations):** For requests that create or modify data, you must include a `meta.proofs` object in the request body. This proof contains a signature of the request's `data` payload, proving the sender's identity and ensuring the data has not been tampered with.
+2.  **JWT Bearer Token (Reads):** For requests that only read data (`GET`), you can authenticate using a JSON Web Token (JWT) sent in the `Authorization` header. This token is also signed by your private key.
+
+This guide explains the cryptographic process for the first method: hashing and signing the request body for mutations.
+
+<Callout type="warn" title="Tamper Detection">
+The Ledger rejects any request whose body hash or signature does not match. You must hash the exact bytes you intend to sign and include the signature in the `meta.proofs` array.
+</Callout>
+
+## How Hashing and Signing Work
+
+Creating a valid proof of a request is a deterministic, three-step process.
+
+<Callout title="For Manual Integrations">
+The following sections explain the manual cryptography process. If you use the Node.js SDK, Minka CLI, or the CLI Proxy server, these steps are handled for you automatically. 
+
+This guide is for developers building a custom integration directly against the REST API. If you are using the Minka SDK, CLI, or CLI Proxy server, you can skip this section.
+</Callout>
+
+### Step 1: Create the Data Hash
+
+First, you must create a unique, verifiable hash of the `data` object you intend to send. To ensure this hash is reproducible, you must serialize the JSON `data` object into a deterministic string.
+
+1.  **Serialize the `data` Object:** The JSON serialization must follow the [RFC 8785](https://www.rfc-editor.org/rfc/rfc8785) standard. The most critical rule is that all object properties must be sorted alphabetically by key.
+2.  **Hash the Serialized Data:** Use the **SHA-256** algorithm on the serialized string. The resulting hash should be a `hex` encoded string.
+
+This first hash represents the integrity of your request's main payload.
+
+```javascript
+// Example in Node.js
+import crypto from 'crypto';
+import stringify from 'safe-stable-stringify'; // RFC 8785 compliant
+
+const HASHING_ALGORITHM = 'sha256';
+
+// 1. Your request data
+const dataToHash = {
+  handle: "wallet-handle",
+  // ... other properties
+};
+
+// 2. Serialize the data deterministically
+const serializedData = stringify(dataToHash);
+
+// 3. Create the SHA-256 hash
+const dataHash = crypto
+  .createHash(HASHING_ALGORITHM)
+  .update(serializedData)
+  .digest('hex');
+```
+This dataHash is the value you will see in the top-level hash field of the request body.
+
+### Step 2: Create the Signature Digest
+You don't sign the `dataHash` directly. Instead, you create a second hash, called a "digest," which includes any custom data you want to add to the proof itself (like a timestamp).
+
+This process, known as double hashing, prevents attacks and ensures the integrity of the proof's custom data.
+
+1. Get the `dataHash` from Step 1.
+2. Get the `signatureCustom` data. This is the custom object inside the meta.proofs array. If you have no custom proof data, use an empty string.
+3. Serialize the `signatureCustom` data using the same RFC 8785-compliant serializer..
+4. Concatenate the `dataHash` and the `serializedCustomData` and hash the result using SHA-256.
+
+```javascript // The custom data for this specific proof
+const signatureCustom = {
+  "moment": "2023-02-20T21:42:10.279Z",
+  "status": "created"
+};
+
+// 1. Serialize the custom data
+const serializedCustomData = signatureCustom ? stringify(signatureCustom) : '';
+
+// 2. Concatenate and hash to create the final digest
+const signatureDigest = crypto
+  .createHash(HASHING_ALGORITHM)
+  .update(dataHash + serializedCustomData) // dataHash from Step 1
+  .digest('hex');
+  ```
+This signatureDigest is the value that you will actually sign.
+
+### Sign the Digest
+Finally, you sign the signatureDigest (as a hex buffer) using your private key (e.g., ed25519). The final signature must be base64 encoded.
+
+```javascript
+// signatureDigest is from Step 2
+const digestBuffer = Buffer.from(signatureDigest, 'hex');
+
+// keyObject should be an Ed25519 private key object
+// (e.g., loaded using crypto.createPrivateKey)
+const signature = crypto.sign(undefined, digestBuffer, keyObject);
+
+// The final result to put in the "result" field
+const signatureResult = signature.toString('base64');
+```
+
+## Signed Request Structure
+
+A fully formed request body sent to a mutation endpoint (like `POST /v2/wallets`) includes the `data` payload, its `hash` (from Step 1), and the `meta.proofs` object you just generated. Each proof object includes the following fields, which together hash, sign, and verify the request data (Steps 1–3). 
+
+  - `hash`: The `dataHash` of the main `data` object (from Step 1).
+  - `data`: The JSON payload for the new record.
+  - `meta.proofs`: An array of proof objects. Each object in the array represents one signature and contains the following fields:
+  - `method`: The signature method used (e.g., "ed25519-v2").
+    - `public`: The public key used for verification.
+    - `digest`: The double-hashed digest (from Step 2), which includes the dataHash and the custom proof data.
+    - `result`: The final base64-encoded signature of the digest (from Step 3).
+    - `custom`: The JSON object of data included in the digest. This data is signed to prove its integrity.
