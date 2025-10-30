@@ -4,6 +4,7 @@ title: Update an Alias Status
 
 import { Callout } from 'fumadocs-ui/components/callout';
 import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
 
 In the Minka Ledger, an anchor's status determines its availability and operational validity. This allows you to manage an alias's lifecycle, such as temporarily disabling it for security reasons or reactivating it.
 
@@ -28,6 +29,83 @@ Before you begin, ensure you have the following in place:
     - **Authorization:** Your Signer must have the necessary permissions (defined by Policies and Circles) to execute `PUT` and `DEL` operations on Anchor records.
 
 ## Update Alias Status via SDK
+
+You can update an alias's status using the SDK, API, or CLI.
+
+<Tabs items={['SDK', 'API', 'CLI']}> 
+  <Tab value="SDK"> 
+  This method uses the SDK to read the existing record, modify it in memory, and send the update.
+
+      <Steps> 
+        <Step>
+        1. First, initialize the LedgerSdk with your server configuration and secure signer credentials.
+        </Step> 
+        
+        <Step>
+        2. Before you can update an anchor, you must first retrieve its current record.
+        </Step> 
+        
+        <Step>
+       3. Set the New Status and Send
+        Use the `.from()` method to start with the existing record. You must preserve all existing data using `.data(record.data)` and set the new status in both the `.meta()` object and the `.sign()` method's custom.status field.
+        
+        <Callout>
+        When updating the status, you must preserve 100% of the existing data within the anchor. The SDK's `.data(record.data)` method handles this for you.
+        </Callout>
+        </Step> 
+        <Step>
+        4. Handle the Response
+        A successful request returns an HTTP 200 OK status and the newly updated anchor object. The "API" tab shows a diff example of this response. 
+        </Step> 
+      </Steps> 
+  </Tab> 
+  
+  <Tab value="API"> 
+  You can update the data by sending a `PUT` request to the `/v2/anchors/{handle}` endpoint.
+  
+    <Steps> 
+      <Step>
+      1. **Construct the Request Body:** The request body must contain the full anchor object, including all existing data (which must be preserved).
+
+        You must update the `meta.status` field to the new status. The signature in `meta.proofs` must also include a `custom.status` field set to the new status, a `custom.moment` field, and a `custom.reason` code. 
+      </Step>
+
+      <Step>
+      2. Send your signed request to `PUT /v2/anchors/{handle}`, replacing `{handle}` with the alias you are updating. 
+      </Step>
+
+      <Step>
+      3. If successful, the server returns a `200 OK` status and the updated anchor object. The response body will reflect your changes.
+      </Step>
+    </Steps>
+  <Callout>
+  The PUT operation handles both data changes and status changes. You can use a single request to update non-critical custom data (like an owner's name) and the operational status simultaneously.
+  </Callout>
+  </Tab>
+
+<Tab value="CLI"> 
+The Minka CLI provides an interactive prompt to help you build the update payload. It automatically handles fetching the latest record, signing the new payload, and submitting the request.
+
+  <Steps> 
+    <Step>
+      1. Run the `minka anchor update` command, specifying the alias you want to change:
+        
+      ```bash
+        minka anchor update <alias-handle>
+        # Example: minka anchor update example@email.com
+      ```
+    </Step>
+    <Step>
+      2. The CLI will prompt you to select which fields you want to update (e.g., `custom_data`, `status`).
+    </Step>
+    <Step>
+      3. Confirm the changes and provide your Signer credentials when prompted.
+    </Step>
+  </Steps>
+</Tab>
+</Tabs>
+
+--- 
 
 This method uses the SDK to read the existing record, modify it in memory, and send the update. Follow the steps below to do so:
 
