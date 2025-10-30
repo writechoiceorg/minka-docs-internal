@@ -2,6 +2,11 @@
 title: Create a New Alias
 ---
 
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+
+
 In Minka, creating an alias means registering a special type of anchor on the ledger. This anchor acts as the foundational record that connects a human-readable alias (like a phone number or email) to a specific target financial account. This operation is the first step in enabling an alias to be used for secure, real-time payments.
 
 This guide provides three methods for creating an alias:
@@ -14,7 +19,7 @@ This guide provides three methods for creating an alias:
 
 Before you start, ensure you have the following resources:
 
-- **API Access:** You have the base URL for the Ledger's API (`/v2`).
+- **API Access:** You have the base URL for the Anchors API (`/v2`).
 - **Signer Setup:** You have an authenticated Signer identity and the required private key with permissions to perform creation (`POST`) operations on Anchor records.
 - **Required Data:** You have the specific Alias Key, the Wallet ID, and the Payment Credential details you intend to link.
 
@@ -22,9 +27,11 @@ Before you start, ensure you have the following resources:
     In regulated environments (e.g., Centralized Directory like DICE), the Ledger performs additional steps, including third-party validation and adding compliance-required Timestamps to the record before completion.
     </Callout>
 
-## Create an Alias via SDK
+## Create an Alias via SDK, API, and CLI
 
-This is the recommended method as the Minka SDK simplifies the process by handling object creation, hashing, and cryptographic signing. To do so follow steps below:
+<Tabs items={["SDK", "API", "CLI"]}>
+  <Tab value="SDK">
+    This is the recommended method as the Minka SDK simplifies the process by handling object creation, hashing, and cryptographic signing. To do so follow steps below:
 
 1. First, initialize the ``LedgerSdk`` with your server configuration and secure signer credentials.
 
@@ -103,11 +110,11 @@ This is the recommended method as the Minka SDK simplifies the process by handli
             .send();
         }
         ```
-3. A successful request will return the newly created anchor object. The API returns a ``201 Created`` status code.
-
-## Create an Alias via API
-
-This method requires you to manually construct the entire JSON payload, including cryptographic proofs, and submit it to the ``POST /v2/anchors`` endpoint.
+3. On success, you receive the newly created anchor object and a ``201 Created`` status.
+  </Tab>
+  
+  <Tab value="API">
+    Construct the entire JSON payload, including cryptographic proofs, and submit it to the ``POST /v2/anchors`` endpoint.
 
 1. Create a JSON object containing the ``hash``, ``data``, and ``meta`` fields. The data ``object`` contains the core alias information , and the ``meta`` object contains the proofs and labels.
 
@@ -159,12 +166,13 @@ This method requires you to manually construct the entire JSON payload, includin
         }
         ```
 
-2. Send the complete JSON payload in a POST request to the ``/v2/anchors`` endpoint, including your authorization token in the headers.
+2. Send the complete JSON payload in a `POST` request to the ``/v2/anchors`` endpoint, including your authorization token in the headers.
 
-3. A successful request will return a 201 Created status code and the full anchor object that was created.
-
-## Create an Alias via CLI
-    You can use the Minka CLI to create new Anchor records directly from your terminal. This method is useful for scripting and automation. It typically involves preparing a JSON file with the Anchor data and then passing that file to the CLI `create` command.
+3. On success, you receive `201 Created` and the full anchor object.
+  </Tab>
+  
+  <Tab value="CLI">
+    Use the Minka CLI to create Anchor records from your terminal. This method is useful for scripting and automation. Prepare a JSON file with the Anchor data and pass it to the CLI `create` command.
 
         1. Create a JSON file (e.g., `new-alias.json`) that contains the data for the new Anchor. The structure is similar to the `data` object used in the API method.
            
@@ -199,5 +207,14 @@ This method requires you to manually construct the entire JSON payload, includin
         --status "ACTIVE"
         ```
 
-        3. If successful, the CLI returns the newly created Anchor object in JSON format, confirming that it was registered on the Ledger.
+        3. If successful, you see the newly created Anchor object in JSON, confirming registration on the Ledger.
+  </Tab>
+</Tabs>
+
+## See also
+
+- [Retrieve Alias Information](/docs/alias-directory/alias-directory-guides/retrieve-alias)
+- [Update an Alias Status](/docs/alias-directory/alias-directory-guides/update-alias)
+- [Cancel an Alias](/docs/alias-directory/alias-directory-guides/cancel-alias)
+- [Integrate with a Centralized Directory](/docs/alias-directory/alias-directory-guides/integr-alias)
 

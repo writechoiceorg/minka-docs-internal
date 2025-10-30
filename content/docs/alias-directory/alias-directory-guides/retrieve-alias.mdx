@@ -4,6 +4,7 @@ title: Retrieve Alias Information
 
 import { Callout } from 'fumadocs-ui/components/callout';
 import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
 
 This how-to guide teaches you how to look up an existing alias to retrieve its associated anchor record and financial details. This Alias Lookup is a foundational step for routing payments or verifying alias ownership. You can retrieve a single alias by its unique handle (e.g., a phone number or email) using the SDK, API or CLI.
 
@@ -15,13 +16,15 @@ The lookup operation can be performed on your local federated directory. Dependi
 ## Pre-requisites
 Before you start, ensure you have the following:
 
-     - **API Access:** You have the base URL for the Ledger's API `/v2`
+     - **API Access:** You have the base URL for the Anchors API `/v2`
      - **Signer Setup:** You have an authenticated Signer identity with the required permissions to perform `GET` operations on Anchor records.
      - **Alias Key:** You know the specific Alias Key `{handle}` you wish to look up (e.g., a phone number or email address).
 
-## Resolve Alias via SDK
+## Resolve Alias via SDK, API, and CLI
 
-This is the most straightforward method, as the SDK handles request construction and authentication. Follow the steps below:
+<Tabs items={["SDK", "API", "CLI"]}>
+  <Tab value="SDK">
+    Use the SDK to construct requests and handle authentication. Follow these steps:
 
 1. First, initialize the ``LedgerSdk`` with your server configuration and secure signer credentials.
 
@@ -69,10 +72,9 @@ This is the most straightforward method, as the SDK handles request construction
     }
     ```
 3. If successful, the method returns the full anchor object and the API returns a ``200 OK`` status.
-
-## Resolve Alias via API
-
-You can directly query the Ledger using the `GET /v2/anchors/{handle}` endpoint.
+  </Tab>
+  <Tab value="API">
+    Query the Ledger using the `GET /v2/anchors/{handle}` endpoint.
     
 1. Construct the request replacing `{handle}` in the endpoint URL with the actual Alias you want to resolve.
 
@@ -91,18 +93,26 @@ You can directly query the Ledger using the `GET /v2/anchors/{handle}` endpoint.
       Host: <ledger-host-url>
       ```
 
-3. If the request is successful and an Active Anchor record matches the handle, the Ledger returns a `200 OK` status with the full Anchor details.
+3. If successful and an ACTIVE Anchor record matches the handle, you receive `200 OK` with the full Anchor details.
  
  <Callout type='warning'> 
 If the alias is not found or is in the `SUSPENDED` or `CANCELLED` state, the Ledger returns an error status (e.g., `404 Not Found` or a specific error code indicating the alias is inactive).
  </Callout> 
-
-## Resolve Alias via Minka CLI
-
-Use the Minka CLI's `anchor show` command to quickly resolve the alias. The CLI constructs the request and uses your configured Signer credentials for authentication.
+  </Tab>
+  <Tab value="CLI">
+    Use the Minka CLI `anchor show` command to resolve the alias. The CLI constructs the request and uses your configured Signer credentials for authentication.
 
             ```bash
             minka anchor show <alias-handle>
             # Example: minka anchor show carlos6@minka.io
             ```
+  </Tab>
+</Tabs>
+
+## See also
+
+- [Create a New Alias](/docs/alias-directory/alias-directory-guides/create-alias)
+- [Update an Alias Status](/docs/alias-directory/alias-directory-guides/update-alias)
+- [Cancel an Alias](/docs/alias-directory/alias-directory-guides/cancel-alias)
+- [Integrate with a Centralized Directory](/docs/alias-directory/alias-directory-guides/integr-alias)
 
