@@ -2,22 +2,50 @@
 title: Domains
 ---
 
-A Domain functions as a container designed to segment and constrain data and operations into designated areas within the Minka Ledger. By enforcing boundaries, Domains are used to manage complexity and significantly lower the risk associated with granting permissions in large systems. 
+import { Callout } from 'fumadocs-ui/components/callout';
 
-> For a high-level summary, see the [Security Overview](./security-overview.mdx).
+    <Callout>
+    For a high-level summary, see the [Security Overview](./security-overview.mdx).
+    </Callout>
 
-<Callout>
-    If Domains are not used, all operations and data are considered global and flat, meaning any rule or participant could potentially access or affect the entire system.
+A Domain is a container that segments data and operations into designated areas within the Minka Ledger.
+
+Think of a Domain as a secure, virtual workspace. It builds boundaries that let you safely manage permissions, isolate data, and reduce risk in a large system.
+
+<Callout type="warn">
+If Domains are not used, all operations and data are considered global and flat. This means any participant or permission rule could potentially access or affect the entire system.
 </Callout>
 
 ## Key Benefits
 
-Domains provide structural benefits across data management and access control:
+Domains provide two primary benefits:
 
-- **Segmentation and Constraint (Technical Function):** Domains ensure that data is cleanly separated and that rules are targeted.
-    - **Data Isolation:** Domains segment different parts of a complex system, ensuring that participants (users or organizations) cannot access data or operate outside their specific Domain.
-    - **Targeted Enforcement:** Domains allow you to apply different Policies, rules, and routes to distinct subsets of data, customizing behavior without affecting the global system.
+### Data Isolation
 
-- **Organizational Management and Risk Mitigation (Business Benefit):** Domains allow for safe, scalable management of multiple parties and limited permissions.
-    - **Organizational Management:** You can use Domains to manage different organizations within a system, limiting each organization to its own set of data and operations.
-    - **Risk Containment:** If you grant a user permissions (even unlimited permissions) within a Domain, the risk is contained. The system guarantees the user cannot view, modify, or perform actions outside that specific Domain.
+Domains cleanly separate different parts of your system. This allows you to:
+
+- Isolate data by organization, region, or function.
+- Enforce targeted rules by applying different Policies and routes to distinct data subsets without affecting the global system.
+- Prevent crossover, ensuring participants in one Domain cannot access data or operate in another.
+
+### Risk Containment and Management
+
+Domains are a powerful tool for managing security and permissions at scale.
+
+    - **Manage Multi-Tenancy:** You can use Domains to manage different organizations (tenants) within the same ledger, limiting each to its own "workspace."
+     - **Contain Permissions:** Risk is contained within the Domain. Even if you grant a user unlimited permissions, the system guarantees that user cannot view, modify, or perform actions outside that specific Domain.
+
+## How Domains Work with Permissions
+
+Domains are the top-level container for your authorization model. The system for granting permissions works like this:
+
+1.  A Domain is created to define the secure boundary (e.g., "Organization-A").
+2.  Policies, which are sets of rules (e.g., "can create wallets"), are attached to that Domain.
+3.  Circles, which are groups of users (Signers), are also attached to the Domain and linked to those Policies.
+
+This model ensures that a Signer in "Organization-A" can only perform actions defined by "Organization-A's" policies, and only on data within that same Domain.
+
+## See also
+
+- [Security Overview](./security-overview.mdx) (how domains fit)
+- [Config & Data Integrity](./security-guides/config-dataintegrity.mdx) (platform guarantees)

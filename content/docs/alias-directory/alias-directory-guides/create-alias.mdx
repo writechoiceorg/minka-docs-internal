@@ -31,7 +31,7 @@ Before you start, ensure you have the following resources:
 
 <Tabs items={["SDK", "API", "CLI"]}>
   <Tab value="SDK">
-    This is the recommended method as the Minka SDK simplifies the process by handling object creation, hashing, and cryptographic signing. To do so follow steps below:
+This is the recommended method as the Minka SDK simplifies the process by handling object creation, hashing, and cryptographic signing. To do so follow steps below:
 
 1. First, initialize the ``LedgerSdk`` with your server configuration and secure signer credentials.
 
@@ -112,7 +112,7 @@ Before you start, ensure you have the following resources:
         ```
 3. On success, you receive the newly created anchor object and a ``201 Created`` status.
   </Tab>
-  
+
   <Tab value="API">
     Construct the entire JSON payload, including cryptographic proofs, and submit it to the ``POST /v2/anchors`` endpoint.
 
@@ -170,7 +170,7 @@ Before you start, ensure you have the following resources:
 
 3. On success, you receive `201 Created` and the full anchor object.
   </Tab>
-  
+
   <Tab value="CLI">
     Use the Minka CLI to create Anchor records from your terminal. This method is useful for scripting and automation. Prepare a JSON file with the Anchor data and pass it to the CLI `create` command.
 

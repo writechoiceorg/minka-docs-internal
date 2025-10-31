@@ -27,41 +27,41 @@ Before you begin this tutorial, ensure you have the following in place:
 <Tabs items={["SDK", "API", "CLI"]}>
   <Tab value="SDK">
   Use the SDK `drop()` method to construct and sign the required DELETE request.
-     1. First, get the handle of the alias you intend to cancel. It's also best practice to define a reasonCode for the operation, which is stored in the ledger's history.
-          
-      ```typescript
-      const handleToCancel = 'tel:+15551234567';
-      const reasonCode = '01';
-      ```
+   1. First, get the handle of the alias you intend to cancel. It's also best practice to define a reasonCode for the operation, which is stored in the ledger's history.
+        
+    ```typescript
+    const handleToCancel = 'tel:+15551234567';
+    const reasonCode = '01';
+    ```
      2. Use the `sdk.anchor.drop()` method to cancel the alias, passing in the `handleToCancel`. In the `.sign()` method, you must set the `custom.status` to `CANCELLED`. You must also include the `reason` and a `moment` (an ISO 8601 timestamp) for the signature.
-          
-      ```typescript
-      try {
-          const dropResponse = await sdk.anchor
-              .drop(handleToCancel)
-              .sign([
-              {
-                  keyPair,
+        
+    ```typescript
+    try {
+        const dropResponse = await sdk.anchor
+            .drop(handleToCancel)
+            .sign([
+            {
+                keyPair,
                   custom:
                   {
-                  status: 'CANCELLED',
-                  reason: reasonCode,
-                  moment: new Date().toISOString(),
-                  },
-              },
-              ])
-              .send();
-          
-          // A successful drop returns an HTTP 204 status
-          console.log('Successfully cancelled alias:', handleToCancel);
-          console.log('Status Code:', dropResponse.status); // Expected: 204
+                status: 'CANCELLED',
+                reason: reasonCode,
+                moment: new Date().toISOString(),
+                },
+            },
+            ])
+            .send();
+        
+        // A successful drop returns an HTTP 204 status
+        console.log('Successfully cancelled alias:', handleToCancel);
+        console.log('Status Code:', dropResponse.status); // Expected: 204
 
-          } catch (error) {
-          console.error('Error cancelling alias:', error.message);
-          // Handle errors, such as 404 Not Found if the alias doesn't exist
-          }
-      ```
-      
+        } catch (error) {
+        console.error('Error cancelling alias:', error.message);
+        // Handle errors, such as 404 Not Found if the alias doesn't exist
+        }
+    ```
+    
      3. On success, you receive `204 No Content`.
   </Tab>
 
@@ -69,7 +69,7 @@ Before you begin this tutorial, ensure you have the following in place:
   Use the `DELETE /v2/anchors/{handle}` endpoint to permanently cancel the alias.
      1. Send a `DELETE` request to the `/v2/anchors/{handle}` endpoint, replacing `{handle}` with the alias you want to cancel.
      2. Include required attributes in your signed request. You must set `sign.custom.status` to `CANCELLED`. You should also include `sign.custom.moment` and a `sign.custom.reason` code (e.g., "01" for normal cancellation).
-     3. A successful cancellation returns a `204 No Content` HTTP response.
+   3. A successful cancellation returns a `204 No Content` HTTP response.
   </Tab>
 
   <Tab value="CLI">
