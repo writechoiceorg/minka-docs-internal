@@ -3,7 +3,8 @@
   "pages": [
     "what-is",
     "alias-lifecycle",
-    "fed-cen-dir"
+    "fed-cen-dir",
+    "security-and-authentication"
     ],
   "defaultOpen": false
 }

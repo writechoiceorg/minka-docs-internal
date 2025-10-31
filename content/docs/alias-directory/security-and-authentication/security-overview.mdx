@@ -1,0 +1,49 @@
+---
+title: Basic Security Overview
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+
+Minka Ledger is built on a "security-by-default" model. Every operation is protected by a framework that verifies identity, checks permissions, and guarantees data integrity.
+
+This model stands on three pillars:
+
+    - **Authentication:** Proving who you are
+    - **Authorization:** Defining what you can do
+    - **Data Integrity:** Ensuring data is verifiable and un-tampered
+
+This page provides a high-level overview of these three concepts.
+
+## 1. Authentication (Who you are)
+
+Before any action is taken, the Ledger must verify that a request is from a legitimate source. This is done using a Signer, which is a cryptographic key pair that proves your identity.
+
+- **For Mutations (Writing Data):** To create or change data, you must use your Signer to digitally sign the entire request. This is the highest level of security, proving you are who you say you are.
+- **For Reads (Querying Data):** For simpler read-only operations, you can use a short-lived JWT (JSON Web Token). This is a secure, temporary pass that is faster and more efficient for frequent read requests.
+
+See the guides: [Authentication & Signing](./guides/auth-sign.mdx) and the [Signers concept](./signers-concept.mdx).
+
+## 2. Authorization (What you can do)
+
+After authentication confirms who you are, the Ledger checks what you are allowed to do. Minka Ledger uses a "least-privilege" model to control access:
+
+    - **Policies:** These are the specific rules, like "can create a transaction" or "can only read balances."
+    - **Circles:** Users and Signers are grouped into Circles (like roles or teams), and Policies are applied to the entire Circle.
+    - **Domains:** For maximum security, you can segment your ledger into isolated Domains (e.g., "Production" vs. "Staging," or "US Operations" vs. "EU Operations"). This ensures that users and rules in one domain have no access to another.
+
+Learn how to set up permissions in the [Domains Concept](./domains-concept.mdx).
+
+## 3. Data Integrity (Tamper‑proofing)
+
+This pillar ensures that the data you send is exactly what the Ledger receives and that a verifiable audit trail exists for every change.
+
+When you send a mutation, you must include two things:
+
+- **A Data Hash:** A unique cryptographic fingerprint of the data payload.
+- **A Signature:** Your Signer's signature, which validates both the request and the data hash.
+
+The Ledger then re-computes the hash and validates the signature. Learn more in [Configuration and Data Integrity](./guides/config-dataintegrity.mdx).
+
+    <Callout type="warn" title="Tamper Detection">
+    If the signature is valid but the hashes do not match, the Ledger rejects the request. This prevents any possibility of "man-in-the-middle" attacks and ensures a verifiable, immutable audit trail.
+    </Callout>
