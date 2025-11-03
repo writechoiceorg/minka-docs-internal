@@ -2,6 +2,7 @@
   "title": "Security & Authentication",
   "pages": [
     "security-overview",
+    "authentication",
     "domains-concept",
     "signers-concept",
     "config-dataintegrity"

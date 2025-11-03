@@ -1,12 +1,13 @@
 {
   "title": "Alias Directory Guides",
   "pages": [
+    "sign-requests",
     "create-alias",
     "retrieve-alias",
     "update-alias",
     "cancel-alias",
     "integr-alias",
-    "sign-requests"
+    "manual-api-signing"
   ],
   "defaultOpen": false
 }
