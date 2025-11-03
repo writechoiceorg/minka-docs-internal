@@ -16,6 +16,7 @@ The lookup operation can be performed on your local federated directory. Dependi
 ## Pre-requisites
 Before you start, ensure you have the following:
 
+     - **SDK Initialization:** The Minka SDK must be initialized and configured. See [SDK, CLI, and API Initialization](/docs/Quickstart/sdk-cli-api-initialization) for setup instructions.
      - **API Access:** You have the base URL for the Anchors API `/v2`
      - **Signer Setup:** You have an authenticated Signer identity with the required permissions to perform `GET` operations on Anchor records.
      - **Alias Key:** You know the specific Alias Key `{handle}` you wish to look up (e.g., a phone number or email address).
@@ -26,44 +27,13 @@ Before you start, ensure you have the following:
   <Tab value="SDK">
     Use the SDK to construct requests and handle authentication. Follow these steps:
 
-1. First, initialize the ``LedgerSdk`` with your server configuration and secure signer credentials.
-
-        ```typescript
-        async function createAnchor() {
-        const sdk = new LedgerSdk({
-            ledger: '<ledger-handle>',
-            server: '<server-url>',
-            timeout: 15000,
-            verifyResponseProofs: true,
-            signer: {
-            format: 'ed25519-raw',
-            public: '<signer-public-key>',
-            },
-            secure: {
-            iss: '<signer-handle>',
-            sub: 'signer:<signer-handle>',
-            aud: '<ledger-handle>',
-            exp: 60,
-            keyPair: {
-                format: 'ed25519-raw',
-                public: '<signer-public-key>',
-                secret: '<signer-private-key>',
-            },
-            },
-        });
-
-        const keyPair = {
-            format: 'ed25519-raw',
-            public: '<signer-public-key>',
-            secret: '<signer-private-key>',
-        };
-        ```
-
-2. Use the ``anchor.read()`` method, passing the ``alias`` handle as the only parameter.
+1. Use the ``anchor.read()`` method, passing the ``alias`` handle as the only parameter.
 
     ```typescript
+    import sdk from './ledgerClient'; // Your initialized SDK instance
+
     async function getAnchor() {
-      const  anchor  = await sdk.anchor.read('<alias-value>').response.data;
+      const anchor = await sdk.anchor.read('<alias-value>').response.data;
 
       console.log(
         "Retrieved anchor details:",
@@ -71,7 +41,8 @@ Before you start, ensure you have the following:
       );
     }
     ```
-3. If successful, the method returns the full anchor object and the API returns a ``200 OK`` status.
+
+2. If successful, the method returns the full anchor object and the API returns a ``200 OK`` status.
   </Tab>
   <Tab value="API">
     Query the Ledger using the `GET /v2/anchors/{handle}` endpoint.

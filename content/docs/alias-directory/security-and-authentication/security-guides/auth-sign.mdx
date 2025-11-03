@@ -20,6 +20,7 @@ The Ledger rejects any request whose body hash or signature does not match. You 
 
 ## Pre-requisites
 
+- **SDK Initialization:** If using the Node.js SDK, it must be initialized and configured. See [SDK, CLI, and API Initialization](/docs/Quickstart/sdk-cli-api-initialization) for setup instructions.
 - A Signer key pair (e.g., Ed25519) permitted to perform the target action
 - Ledger handle and API server URL
 - SDK/CLI/Proxy installed and configured (if using those tools)
@@ -32,11 +33,8 @@ Select your preferred method.
 <Tabs items={["Node.js SDK", "API (curl)", "CLI", "CLI Proxy"]}>
   <Tab value="Node.js SDK">
         ```javascript
-        import { LedgerSdk } from '@minka/ledger-sdk';
-
-        const sdk = new LedgerSdk({ server: '<url>', ledger: '<handle>' });
-
-        const keyPair = { format: 'ed25519-raw', public: '<pub>', secret: '<sec>' };
+        import sdk from './ledgerClient'; // Your initialized SDK instance
+        import { keyPair } from './config'; // Your key pair from SDK configuration
 
         const { response } = await sdk.wallet
           .init()

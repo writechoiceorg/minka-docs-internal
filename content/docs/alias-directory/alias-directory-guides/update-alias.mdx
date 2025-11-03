@@ -23,6 +23,7 @@ In regulated environments that require Third-Party Integration, the Ledger perfo
 
 Before you begin, ensure you have the following in place:
 
+    - **SDK Initialization:** The Minka SDK must be initialized and configured. See [SDK, CLI, and API Initialization](/docs/Quickstart/sdk-cli-api-initialization) for setup instructions.
     - **API Access:** You have the base URL for the Anchors API `/v2`
     - **Signer Setup:** You have an authenticated Signer identity and the necessary private key for signing requests.
     - **Existing Alias Handle:** You must know the Alias Key of the Anchor record you intend to modify or delete.
@@ -38,50 +39,17 @@ You can update an alias's status using the SDK, API, or CLI.
 
       <Steps> 
         <Step>
-        1. First, initialize the LedgerSdk with your server configuration and secure signer credentials.
-
-        ```typescript
-        async function createAnchor() {
-        const sdk = new LedgerSdk({
-            ledger: '<ledger-handle>',
-            server: '<server-url>',
-            timeout: 15000,
-            verifyResponseProofs: true,
-            signer: {
-            format: 'ed25519-raw',
-            public: '<signer-public-key>',
-            },
-            secure: {
-            iss: '<signer-handle>',
-            sub: 'signer:<signer-handle>',
-            aud: '<ledger-handle>',
-            exp: 60,
-            keyPair: {
-                format: 'ed25519-raw',
-                public: '<signer-public-key>',
-                secret: '<signer-private-key>',
-            },
-            },
-        });
-
-        const keyPair = {
-            format: 'ed25519-raw',
-            public: '<signer-public-key>',
-            secret: '<signer-private-key>',
-        };
-        ```
-        
-        </Step> 
-        
-<Step>
-2. Before you can update an anchor, you must first retrieve its current record.
+        1. Before you can update an anchor, you must first retrieve its current record.
     ```typescript
-    const record = (await sdk.anchor.read('<alias-value>')).response.data;
+    import sdk from './ledgerClient'; // Your initialized SDK instance
+
+    async function updateAnchor() {
+      const record = (await sdk.anchor.read('<alias-value>')).response.data;
     ```
 </Step> 
         
         <Step>
-       3. Use the `.from()` method to start with the existing record. You must preserve all existing data using `.data(record.data)` and set the new status in both the `.meta()` object and the `.sign()` method's `custom.status` field.
+       2. Use the `.from()` method to start with the existing record. You must preserve all existing data using `.data(record.data)` and set the new status in both the `.meta()` object and the `.sign()` method's `custom.status` field.
 
     <Callout>
         When updating the status, you must preserve 100% of the existing data within the anchor. The SDK's `.data(record.data)` method handles this for you.
@@ -102,7 +70,7 @@ You can update an alias's status using the SDK, API, or CLI.
         )
         .hash()
         .sign([{ // Sign with the new status
-            keyPair,
+            keyPair, // From your SDK configuration
             custom:{
                 status: "<status-value>", // e.g., "SUSPENDED"
                 moment:"2025-04-14T14:23:45.123Z" // ISO 8601 datetime
@@ -114,7 +82,7 @@ You can update an alias's status using the SDK, API, or CLI.
         </Step> 
         
         <Step>
-        4. Handle the response
+        3. Handle the response
         You receive `200 OK` and the updated anchor object. The "API" tab shows a diff example of this response. 
         </Step> 
       </Steps> 

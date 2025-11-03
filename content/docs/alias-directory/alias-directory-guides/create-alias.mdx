@@ -19,6 +19,7 @@ This guide provides three methods for creating an alias:
 
 Before you start, ensure you have the following resources:
 
+- **SDK Initialization:** The Minka SDK must be initialized and configured. See [SDK, CLI, and API Initialization](/docs/Quickstart/sdk-cli-api-initialization) for setup instructions.
 - **API Access:** You have the base URL for the Anchors API (`/v2`).
 - **Signer Setup:** You have an authenticated Signer identity and the required private key with permissions to perform creation (`POST`) operations on Anchor records.
 - **Required Data:** You have the specific Alias Key, the Wallet ID, and the Payment Credential details you intend to link.
@@ -33,40 +34,7 @@ Before you start, ensure you have the following resources:
   <Tab value="SDK">
 This is the recommended method as the Minka SDK simplifies the process by handling object creation, hashing, and cryptographic signing. To do so follow steps below:
 
-1. First, initialize the ``LedgerSdk`` with your server configuration and secure signer credentials.
-
-        ```typescript
-        async function createAnchor() {
-        const sdk = new LedgerSdk({
-            ledger: '<ledger-handle>',
-            server: '<server-url>',
-            timeout: 15000,
-            verifyResponseProofs: true,
-            signer: {
-            format: 'ed25519-raw',
-            public: '<signer-public-key>',
-            },
-            secure: {
-            iss: '<signer-handle>',
-            sub: 'signer:<signer-handle>',
-            aud: '<ledger-handle>',
-            exp: 60,
-            keyPair: {
-                format: 'ed25519-raw',
-                public: '<signer-public-key>',
-                secret: '<signer-private-key>',
-            },
-            },
-        });
-
-        const keyPair = {
-            format: 'ed25519-raw',
-            public: '<signer-public-key>',
-            secret: '<signer-private-key>',
-        };
-        ```
-
-2. Construct the ``anchorData`` object using the required attributes.
+1. Construct the ``anchorData`` object using the required attributes.
 
         ```typescript
         const anchorData = {
@@ -89,27 +57,29 @@ This is the recommended method as the Minka SDK simplifies the process by handli
         };
         ```
 
-3. Sign and Send the Request using the SDK's builder methods to ``init()``, ``data()``, ``meta()``, ``hash()``, ``sign()``, and ``send()`` the request. The SDK handles the cryptographic operations.
+2. Sign and Send the Request using the SDK's builder methods to ``init()``, ``data()``, ``meta()``, ``hash()``, ``sign()``, and ``send()`` the request. The SDK handles the cryptographic operations.
 
+    ```typescript
+    import sdk from './ledgerClient'; // Your initialized SDK instance
 
-        ```typescript
-        await sdk.anchor
-            .init()
-            .data(anchorData)
-            .meta({
-            labels: ["nidn:<document-number>"], // e.g., "nidn:0801198607268"
-            proofs: []
-            })
-            .hash()
-            .sign([{
-            keyPair,
-            custom: {
-                status:"ACTIVE"
-            }
-            }])
-            .send();
+    async function createAnchor() {
+    await sdk.anchor
+        .init()
+        .data(anchorData)
+        .meta({
+        labels: ["nidn:<document-number>"], // e.g., "nidn:0801198607268"
+        proofs: []
+        })
+        .hash()
+        .sign([{
+        keyPair, // From your SDK configuration
+        custom: {
+            status: "ACTIVE"
         }
-        ```
+        }])
+        .send();
+    }
+    ```
 3. On success, you receive the newly created anchor object and a ``201 Created`` status.
   </Tab>
 
