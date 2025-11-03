@@ -73,12 +73,12 @@ You can update an alias's status using the SDK, API, or CLI.
         
         </Step> 
         
-        <Step>
+<Step>
 2. Before you can update an anchor, you must first retrieve its current record.
     ```typescript
     const record = (await sdk.anchor.read('<alias-value>')).response.data;
     ```
-        </Step> 
+</Step> 
         
         <Step>
        3. Use the `.from()` method to start with the existing record. You must preserve all existing data using `.data(record.data)` and set the new status in both the `.meta()` object and the `.sign()` method's `custom.status` field.

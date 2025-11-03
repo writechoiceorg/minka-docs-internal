@@ -1,0 +1,188 @@
+---
+title: SDK, CLI, and API Initialization
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+
+This guide provides the central initialization steps for connecting to the Minka Ledger. Following these steps is a prerequisite for running most examples, commands, and tutorials.
+
+Choose the tab below based on your integration method:
+- **Node.js SDK:** For integrating the ledger into your backend services.
+- **Minka CLI:** For command-line administration, testing, and management.
+- **Direct API (Proxy):** For testing the raw API with tools like Postman or curl.
+
+## Initialize the Minka Ledger via SDK, API, and CLI
+
+<Tabs items={["Node.js SDK", "Minka CLI", "Direct API (Proxy)"]}>
+  <Tab value="Node.js SDK">
+    Use the `@minka/ledger-sdk` for Node.js environments to integrate the ledger into your services.
+ 
+ ### Pre-requisites
+ 
+    - Install [Node.js v20](https://nodejs.org/en/download/) or newer installed on your machine.
+ 
+ ### Initialize the Minka Ledger via SDK
+
+    1. Install the SDK into your project using npm.
+    ```bash
+    npm install @minka/ledger-sdk
+    ```
+
+    2. **Create a Signer (Key Pair):** You need an Ed25519 key pair to sign requests or generate the JWTs that the SDK uses. You can generate a key pair locally using the SDK itself.
+ 
+    ```javascript
+    import { LedgerSdk } from '@minka/ledger-sdk';
+
+    // This is a local-only operation; it does not make an API call.
+    const sdk = new LedgerSdk();
+    const signer = sdk.signer
+    .init()
+    .data({ handle: 'local-key' })
+    .keys({ format: 'ed25519-raw' });
+
+    const { data }_ = await signer.read();
+
+    // Store this keyPair securely (e.g., in environment variables or a secret manager)
+    const keyPair = {
+    format: data.format,
+    public: data.public,
+    secret: data.secret,
+    };
+
+    console.log(keyPair);
+    ```
+ 
+ 3. **Initialize the Minka Ledger via SDK:** In a central configuration file (e.g., ledgerClient.js), create and export a single instance of the SDK. This instance will be pre-configured to handle authentication for all requests.
+ 
+    ```javascript
+    import { LedgerSdk } from '@minka/ledger-sdk';
+
+    // This keyPair is from Step 2. Load it from your secret store.
+    const myKeyPair = {
+      format: 'ed25519-raw',
+      public: '<your-public-key>',
+      secret: '<your-secret-key>',
+    };
+
+    // This is the ledger's public key, used to verify responses.
+    const ledgerPublicKey = '<ledger-public-key>';
+
+    const sdk = new LedgerSdk({
+      // The handle of the ledger you are connecting to
+      ledger: 'my-ledger',
+      
+      // The root URL of the ledger server
+      server: 'https://ldg-stg.one/api/v2',
+      
+      // The ledger's public key for verifying server responses
+      signer: {
+        format: 'ed25519-raw',
+        public: ledgerPublicKey,
+      },
+      
+      // Automatically create and attach JWTs for all requests
+      secure: {
+        iss: '<your-issuer-id>',         // Your signer handle or public key
+        sub: '<your-subject-id>',       // e.g., 'signer:my-app'
+        aud: '<your-audience-id>',     // The ledger handle or public key
+        exp: 3600,                     // Token expiration in seconds (e.g., 1 hour)
+        keyPair: myKeyPair             // The key pair from Step 2
+      },
+    });
+
+    export default sdk;
+    ```
+
+You can now import this pre-configured sdk instance anywhere in your application. All requests made using this instance will be automatically authenticated. See [Authentication & Signing](/docs/alias-directory/security-and-authentication/security-guides/auth-sign) for more details.
+  </Tab>
+  <Tab value="Minka CLI">
+    The Minka CLI is the fastest way to manage your ledger, test operations, and perform administrative tasks.
+
+ ### Pre-requisites
+ 
+    - Install [Node.js v20](https://nodejs.org/en/download/) or newer installed on your machine.
+
+ ### Initialize the Minka Ledger via CLI  
+
+    1. Install the Minka CLI globally using npm.
+    ```bash
+    npm install -g @minka/cli
+    ```
+
+    2. Connect the CLI to your target ledger environment. You only need to do this once.
+    ```bash
+    minka server connect https://ldg-stg.one/api/v2
+    ```
+
+    3. Create a local, password-protected signer identity. This command generates a new key pair and saves it securely on your local machine.
+
+    ```bash
+    minka signer create
+    ```
+
+   You will be prompted to set a handle (e.g., my-admin-signer) and a password.
+
+    4. Select Your Active Ledger. If your server hosts multiple ledgers, select the one you want to interact with.
+
+    ```bash
+    minka ledger select
+    ```
+
+    You will be prompted to choose from a list of available ledgers.
+
+    5. Authenticate your CLI session. This command uses your local signer (from Step 3) to create a short-lived JWT that is automatically attached to all subsequent commands. You will be prompted to select your signer and enter the password you created.
+    
+    ```bash
+    minka ledger login
+    ```
+You are now authenticated. You can run any command, such as `minka wallet list` to see the list of available wallets or `minka intent create` to create a new intent.
+
+  </Tab>
+
+  <Tab value="Direct API (Proxy)">
+    The Direct API (Proxy) is a simple way to test the raw API with tools like Postman or curl. It intercepts your requests and automatically handles the complex hashing and signing process.
+  
+ ### Pre-requisites
+ 
+    - A fully configured and logged-in Minka CLI (see the "Minka CLI" tab).
+
+ ### Initialize the Minka Ledger via Direct API (Proxy)
+ 
+    1. Run the Proxy
+    ```bash
+    minka ledger login
+    ```
+    
+  2. Start the Proxy. It will run in your terminal and show the local URL it is listening on (e.g., http://localhost:4042/v2).
+    ```bash
+    minka server proxy
+    ```
+  
+  3. You can now send plain JSON requests to the local proxy URL. The proxy will sign them with your logged-in signer and forward them to the actual ledger server.
+
+    ```bash
+    # Example: Creating a new wallet using curl
+    # Note: We are sending the request to localhost:4042
+
+    curl -X POST http://localhost:4042/v2/wallets \
+        -H "Content-Type: application/json" \
+        -d '{
+              "data": {
+                "handle": "my-proxy-wallet"
+              }
+            }'
+    ```
+  
+    You should see the response from the actual ledger server, confirming that the proxy is working.
+  
+<Callout title="Manual Signing">
+For production API integrations without the Node.js SDK, you must implement manual request signing. This involves:
+1. Canonicalizing your JSON payload according to RFC 8785.
+2. Hashing the serialized string with SHA-256.
+3. Creating a signature digest (a hash of the data hash and any custom signature data).
+4. Signing the digest with your Ed25519 private key.
+
+See the [Authentication & Signing](/docs/alias-directory/security-and-authentication/security-guides/auth-sign) guide for more details.
+</Callout>
+  </Tab>
+</Tabs>
