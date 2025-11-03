@@ -1,5 +1,5 @@
 ---
-title: Basic Security Overview
+title: Security Overview
 ---
 
 import { Callout } from 'fumadocs-ui/components/callout';
@@ -21,7 +21,7 @@ Before any action is taken, the Ledger must verify that a request is from a legi
 - **For Mutations (Writing Data):** To create or change data, you must use your Signer to digitally sign the entire request. This is the highest level of security, proving you are who you say you are.
 - **For Reads (Querying Data):** For simpler read-only operations, you can use a short-lived JWT (JSON Web Token). This is a secure, temporary pass that is faster and more efficient for frequent read requests.
 
-See the guides: [Authentication & Signing](./guides/auth-sign.mdx) and the [Signers concept](./signers-concept.mdx).
+See the guides: [Authentication & Signing](/docs/alias-directory-guides/auth-sign) and the [Signers concept](./signers-concept.mdx).
 
 ## 2. Authorization (What you can do)
 

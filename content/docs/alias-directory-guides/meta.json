@@ -2,11 +2,11 @@
   "title": "Alias Directory Guides",
   "pages": [
     "create-alias",
-    "authenticate",
     "retrieve-alias",
     "update-alias",
     "cancel-alias",
-    "integr-alias"
-    ],
+    "integr-alias",
+    "sign-requests"
+  ],
   "defaultOpen": false
 }

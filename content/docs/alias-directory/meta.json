@@ -1,10 +1,10 @@
 {
   "title": "Alias Directory",
   "pages": [
-    "what-is",
+    "alias-directory-overview",
     "alias-lifecycle",
-    "fed-cen-dir",
+    "directory-models",
     "security-and-authentication"
-    ],
+  ],
   "defaultOpen": false
 }

@@ -1,0 +1,11 @@
+{
+  "title": "Security & Authentication",
+  "pages": [
+    "security-overview",
+    "domains-concept",
+    "signers-concept",
+    "config-dataintegrity"
+  ],
+  "defaultOpen": false
+}
+

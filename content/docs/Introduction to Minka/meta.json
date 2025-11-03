@@ -1,0 +1,11 @@
+{
+  "title": "Introduction to Minka",
+  "pages": [
+    "what-is-minka",
+    "our-solutions",
+    "transaction-flow",
+    "Minka's Core Concepts"
+  ],
+  "defaultOpen": false
+}
+

@@ -1,0 +1,34 @@
+---
+title: Authentication
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+
+Minka Ledger secures every operation using asymmetric cryptography. Each request that modifies or creates data (a "mutation" like POST or PUT) must be cryptographically signed. This process verifies the sender's identity and guarantees that the request data has not been tampered with.
+
+The Ledger uses two primary methods for authenticating requests, depending on the type of operation you are performing.
+
+<Callout type="warn" title="Tamper Detection">
+The Ledger rejects any request whose body hash or signature does not match the payload. You must always hash the exact bytes you intend to sign and include the valid signature with your request.
+</Callout>
+
+## Authentication Methods
+
+1. **Signed Request Body (Mutations):** For any request that creates or modifies data (such as `POST`, `PUT`, or `DELETE`), you must provide a cryptographic proof directly within the request body.
+
+This proof is included in a meta.proofs object. It contains a signature of the request's data payload, proving who you are and that the data is exactly as you sent it. This is the primary method for securing write operations on the ledger.
+
+2. **JWT Bearer Token (Reads):** For requests that only read data (GET operations), you can authenticate using a JSON Web Token (JWT).
+
+This JWT, which is also signed by your private key, is sent in the Authorization header of your request. It's a simpler, more conventional way to authenticate read-only requests, such as fetching a list of wallets or checking a transaction status.
+
+## See also
+
+Now that you understand the authentication methods, you can read the following guides to learn more:
+
+- **[Sign Requests with the SDK & CLI](/docs/alias-directory-guides/sign-requests)** - Step-by-step guide for implementing request signing
+- **[Create a New Alias](/docs/alias-directory-guides/create-alias)** - Create aliases with proper authentication
+- **[Retrieve Alias Information](/docs/alias-directory-guides/retrieve-alias)** - Authenticated read operations
+- **[Update an Alias Status](/docs/alias-directory-guides/update-alias)** - Update operations with cryptographic signing
+- **[Signers Concept](/docs/alias-directory/security-and-authentication/signers-concept)** - Learn about Signer key pairs and identity management

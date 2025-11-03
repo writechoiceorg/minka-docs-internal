@@ -1,0 +1,147 @@
+---
+title: How to sign requests with the SDK & CLI
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+
+This guide provides the fastest path to signing a request using Minka's official tools. These tools automatically handle all complex cryptographic operations, such as hashing and signing, so you don't need to implement them manually. This guide is for you if you use the Node.js SDK, the Minka CLI, or test the API with tools like Postman.
+
+## Prerequisites
+
+Before you begin, ensure you have:
+
+- **Initialized SDK, CLI, or Proxy**: Complete the setup steps in [SDK, CLI, and API Initialization](/docs/Quickstart/sdk-cli-api-initialization).
+- **A Signer key pair**: An Ed25519 key pair with permissions to perform the target action. You create this during SDK initialization.
+- **Ledger information**: Your ledger handle and API server URL.
+
+## Choose your method
+
+Select the method that matches your workflow:
+
+<Tabs items={["Node.js SDK", "Minka CLI", "CLI Proxy"]}>
+  <Tab value="Node.js SDK">
+    Use the Node.js SDK when building backend services or integrating the ledger into your application.
+
+    ### Step 1: Import your initialized SDK
+
+    Import the SDK instance you configured during initialization:
+
+    ```javascript
+    import sdk from './ledgerClient'; // Your initialized SDK instance
+    import { keyPair } from './config'; // Your key pair from SDK configuration
+    ```
+
+    ### Step 2: Create and sign a request
+
+    Use the SDK's builder methods to create, hash, sign, and send your request. The SDK handles all cryptographic operations automatically:
+
+    ```javascript
+    const { response } = await sdk.wallet
+      .init()
+      .data({ handle: 'my-wallet' })
+      .hash()
+      .sign([{ keyPair, custom: { moment: new Date().toISOString() } }])
+      .send();
+
+    console.log(response.status, response.data);
+    ```
+
+    The SDK automatically:
+    - Creates a deterministic hash of your data
+    - Generates the signature digest
+    - Signs the request with your key pair
+    - Includes the proof in `meta.proofs`
+
+    ### Step 3: Verify the response
+
+    If successful, you receive a `201 Created` status and the created record in the response:
+
+    ```json
+    {
+      "data": {
+        "record": "wallet",
+        "handle": "my-wallet",
+        "status": "created"
+      }
+    }
+    ```
+
+  </Tab>
+  <Tab value="Minka CLI">
+    Use the Minka CLI for command-line administration, testing, and automation.
+
+    ### Step 1: Ensure you're authenticated
+
+    Log in to your CLI session:
+
+    ```bash
+    minka ledger login
+    ```
+
+    You'll be prompted to select your signer and enter your password.
+
+    ### Step 2: Run a signed command
+
+    The CLI automatically handles hashing and signing for all commands. For example, create a wallet:
+
+    ```bash
+    minka wallet create --handle my-wallet --signer <signer-handle>
+    ```
+
+    The CLI automatically:
+    - Hashes your request data
+    - Signs the request with your configured signer
+    - Sends the request to the ledger
+
+    ### Step 3: Verify the output
+
+    If successful, the CLI displays the created record in JSON format, confirming your request was signed and processed correctly.
+
+  </Tab>
+  <Tab value="CLI Proxy">
+    Use the CLI Proxy when testing the API with tools like Postman or curl. The proxy intercepts your requests and automatically signs them.
+
+    ### Step 1: Start the proxy
+
+    Start the local proxy server:
+
+    ```bash
+    minka server proxy
+    ```
+
+    The proxy displays the local URL it's listening on (for example, `http://localhost:4042/v2`).
+
+    ### Step 2: Send a plain JSON request
+
+    Send your request to the local proxy URL. The proxy handles all signing automatically:
+
+    ```bash
+    curl -X POST http://localhost:4042/v2/wallets \
+        -H "Content-Type: application/json" \
+        -d '{
+              "data": {
+                "handle": "my-proxy-wallet"
+              }
+            }'
+    ```
+
+    The proxy automatically:
+    - Intercepts your request
+    - Signs it with your logged-in signer
+    - Forwards the signed request to the actual ledger server
+
+    ### Step 3: Verify the response
+
+    You receive the response from the ledger server, confirming that the proxy signed and forwarded your request successfully.
+
+  </Tab>
+</Tabs>
+
+## Next steps
+
+You've successfully signed your first request. Now you can:
+
+- **[Create a New Alias](/docs/alias-directory-guides/create-alias)**: Register aliases with signed requests
+- **[Retrieve Alias Information](/docs/alias-directory-guides/retrieve-alias)**: Perform authenticated read operations
+- **[Update an Alias Status](/docs/alias-directory-guides/update-alias)**: Modify records with cryptographic signing

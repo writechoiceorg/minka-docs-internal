@@ -39,23 +39,24 @@ You can update an alias's status using the SDK, API, or CLI.
 
       <Steps> 
         <Step>
-        1. Before you can update an anchor, you must first retrieve its current record.
-    ```typescript
-    import sdk from './ledgerClient'; // Your initialized SDK instance
-
-    async function updateAnchor() {
-      const record = (await sdk.anchor.read('<alias-value>')).response.data;
-    ```
-</Step> 
+        1. Before you can update an anchor, you must first retrieve its current record using `sdk.anchor.read()`.
+        </Step> 
         
         <Step>
-       2. Use the `.from()` method to start with the existing record. You must preserve all existing data using `.data(record.data)` and set the new status in both the `.meta()` object and the `.sign()` method's `custom.status` field.
+        2. Use the `.from()` method to start with the existing record. You must preserve all existing data using `.data(record.data)` and set the new status in both the `.meta()` object and the `.sign()` method's `custom.status` field.
 
     <Callout>
         When updating the status, you must preserve 100% of the existing data within the anchor. The SDK's `.data(record.data)` method handles this for you.
     </Callout>
 
     ```typescript
+    import sdk from './ledgerClient'; // Your initialized SDK instance
+
+    async function updateAnchor() {
+      // Step 1: Retrieve the current record
+      const record = (await sdk.anchor.read('<alias-value>')).response.data;
+
+      // Step 2: Update the status while preserving all existing data
       await sdk.anchor
         .from(record)
         .data( // Preserve all existing data
@@ -140,7 +141,8 @@ You can update an alias's status using the SDK, API, or CLI.
         "result": "HSx4A9sj1DwwiX71pjEI5eyJGvBpV8ViBF9dCLM4nmLfK8exRB4AA47lQe1w4QrdronMUBRq+rMSYx+yzTqrCw==",
         "custom": {
           "moment": "2025-04-14T14:23:45.123Z", // ISO 8601 datetime
-          "status": "SUSPENDED" // Signature must also reflect the new status
+          "status": "SUSPENDED", // Signature must also reflect the new status
+          "reason": "SECURITY_AUDIT" // Reason code for the status change
         }
       }
     ]
@@ -162,7 +164,8 @@ You can update an alias's status using the SDK, API, or CLI.
             {
               "custom": {
                 "status": "SUSPENDED",
-                "moment": "2025-04-14T14:23:45.123Z"
+                "moment": "2025-04-14T14:23:45.123Z",
+                "reason": "SECURITY_AUDIT"
               }
             }
           ]
@@ -207,8 +210,7 @@ The Minka CLI provides an interactive prompt to help you build the update payloa
 </Tabs>
 
 ## See also
-
-- [Create a New Alias](/docs/alias-directory/alias-directory-guides/create-alias)
-- [Retrieve Alias Information](/docs/alias-directory/alias-directory-guides/retrieve-alias)
-- [Cancel an Alias](/docs/alias-directory/alias-directory-guides/cancel-alias)
-- [Integrate with a Centralized Directory](/docs/alias-directory/alias-directory-guides/integr-alias)
+- [Create a New Alias](/docs/alias-directory-guides/create-alias)
+- [Retrieve Alias Information](/docs/alias-directory-guides/retrieve-alias)
+- [Cancel an Alias](/docs/alias-directory-guides/cancel-alias)
+- [Integrate with a Centralized Directory](/docs/alias-directory-guides/integr-alias)
