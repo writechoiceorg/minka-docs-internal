@@ -5,7 +5,13 @@ title: Authentication
 import { Callout } from 'fumadocs-ui/components/callout';
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
 
-Minka Ledger secures every operation using asymmetric cryptography. Each request that modifies or creates data (a "mutation" like POST or PUT) must be cryptographically signed. This process verifies the sender's identity and guarantees that the request data has not been tampered with.
+Minka Ledger secures every operation using asymmetric cryptography. The Ledger categorizes operations into two types:
+
+- **Mutations (Write Operations):** Requests that create, modify, or delete data (such as `POST`, `PUT`, or `DELETE`). These operations change the ledger's state and must be cryptographically signed.
+
+- **Reads (Query Operations):** Requests that only retrieve data without modifying it (such as `GET`). These operations are read-only and use a simpler authentication method.
+
+Each mutation request must be cryptographically signed. This process verifies the sender's identity and guarantees that the request data has not been tampered with.
 
 The Ledger uses two primary methods for authenticating requests, depending on the type of operation you are performing.
 
@@ -15,13 +21,15 @@ The Ledger rejects any request whose body hash or signature does not match the p
 
 ## Authentication Methods
 
-1. **Signed Request Body (Mutations):** For any request that creates or modifies data (such as `POST`, `PUT`, or `DELETE`), you must provide a cryptographic proof directly within the request body.
+1. **Signed Request Body (For Mutations):** For any request that creates, modifies, or deletes data (mutations like `POST`, `PUT`, or `DELETE`), you must provide a cryptographic proof directly within the request body.
 
-This proof is included in a meta.proofs object. It contains a signature of the request's data payload, proving who you are and that the data is exactly as you sent it. This is the primary method for securing write operations on the ledger.
+This proof is included in a `meta.proofs` object. It contains a signature of the request's data payload, proving who you are and that the data is exactly as you sent it.
 
-2. **JWT Bearer Token (Reads):** For requests that only read data (GET operations), you can authenticate using a JSON Web Token (JWT).
+This is the primary method for securing write operations on the ledger. Examples include creating an alias, updating an anchor status, or canceling a record.
 
-This JWT, which is also signed by your private key, is sent in the Authorization header of your request. It's a simpler, more conventional way to authenticate read-only requests, such as fetching a list of wallets or checking a transaction status.
+2. **JWT Bearer Token (For Reads):** For requests that only retrieve data without modifying it (read operations like `GET`), you can authenticate using a JSON Web Token (JWT).
+
+This JWT is also signed by your private key and sent in the `Authorization` header of your request. It's a simpler, more conventional way to authenticate read-only requests, such as fetching a list of wallets, checking a transaction status, or looking up an alias.
 
 ## See also
 

@@ -6,20 +6,20 @@ import { Callout } from 'fumadocs-ui/components/callout';
 import { Step, Steps } from 'fumadocs-ui/components/steps';
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
 
-This how-to guide teaches you how to look up an existing alias to retrieve its associated anchor record and financial details. This Alias Lookup is a foundational step for routing payments or verifying alias ownership. You can retrieve a single alias by its unique handle (e.g., a phone number or email) using the SDK, API or CLI.
+This how-to guide teaches you how to look up an existing alias to retrieve its associated **anchor** (a foundational ledger record that securely links an alias to a financial account) record and financial details. This Alias Lookup is a foundational step for routing payments or verifying alias ownership. You can retrieve a single alias by its unique **handle** (the alias identifier, such as a phone number or email address) using the SDK, API or CLI.
 
 
 <Callout title="Federated Lookup">
 The lookup operation can be performed on your local federated directory. Depending on your system's configuration, if an alias is not found locally, the system may be set up to query an external or centralized directory
 </Callout>
 
-## Pre-requisites
+## Prerequisites
 Before you start, ensure you have the following:
 
-     - **SDK Initialization:** The Minka SDK must be initialized and configured. See [SDK, CLI, and API Initialization](/docs/Quickstart/sdk-cli-api-initialization) for setup instructions.
+     - **SDK, CLI, or API Initialization:** Your chosen tool (SDK, CLI, or API proxy) must be initialized and configured. See [SDK, CLI, and API Initialization](/docs/Quickstart/sdk-cli-api-initialization) for setup instructions.
      - **API Access:** You have the base URL for the Anchors API `/v2`
-     - **Signer Setup:** You have an authenticated Signer identity with the required permissions to perform `GET` operations on Anchor records.
-     - **Alias Key:** You know the specific Alias Key `{handle}` you wish to look up (e.g., a phone number or email address).
+     - **Signer Setup:** You have an authenticated **Signer** (a cryptographic key pair that represents your identity and authorizes operations on the ledger) identity with the required permissions to perform `GET` operations on Anchor records.
+     - **Alias Key:** You know the specific Alias Key (the **handle**, or alias identifier, such as a phone number or email address) you wish to look up.
 
 ## Resolve Alias via SDK, API, and CLI
 
@@ -32,14 +32,26 @@ Before you start, ensure you have the following:
     ```typescript
     import sdk from './ledgerClient'; // Your initialized SDK instance
 
-    async function getAnchor() {
-      const anchor = await sdk.anchor.read('<alias-value>').response.data;
+    async function getAnchor(aliasHandle: string) {
+        try {
+            const response = await sdk.anchor.read(aliasHandle);
+            const anchor = response.response.data;
 
-      console.log(
-        "Retrieved anchor details:",
-        JSON.stringify(anchor, null, 4)
-      );
+            console.log('Retrieved anchor details:', JSON.stringify(anchor, null, 2));
+            console.log('Status:', response.response.status); // Expected: 200
+            
+            return anchor;
+        } catch (error) {
+            console.error('Error retrieving alias:', error.message);
+            // Handle specific error cases:
+            // - 404: Alias not found
+            // - 401: Authentication failed
+            throw error;
+        }
     }
+
+    // Execute the function with an alias handle
+    getAnchor('<alias-value>'); // e.g., "tel:+15551234567"
     ```
 
 2. If successful, the method returns the full anchor object and the API returns a ``200 OK`` status.
@@ -51,13 +63,13 @@ Before you start, ensure you have the following:
 
             ```
             GET /v2/anchors/{handle}
-            # Example: GET /v2/anchors/user@example.com
+            # Example: GET /v2/anchors/<alias-value>
             ```
 
 2. Send a `GET` request to the constructed URL. Although this is a GET request, it requires authentication (e.g., a Bearer token) to ensure the request originates from an authorized party. See the example below:
 
       ```json
-      GET /api/v2/anchors/user@example.com HTTP/1.1
+      GET /api/v2/anchors/<alias-value> HTTP/1.1
       Accept: application/json
       Authorization: Bearer <token>
       X-Ledger: <ledger-handle>
@@ -73,10 +85,16 @@ If the alias is not found or is in the `SUSPENDED` or `CANCELLED` state, the Led
   <Tab value="CLI">
     Use the Minka CLI `anchor show` command to resolve the alias. The CLI constructs the request and uses your configured Signer credentials for authentication.
 
-            ```bash
-            minka anchor show <alias-handle>
-            # Example: minka anchor show carlos6@minka.io
-            ```
+    1. Run the `minka anchor show` command with the alias handle you want to look up:
+
+        ```bash
+        minka anchor show <alias-handle>
+        # Example: minka anchor show <alias-value>
+        ```
+
+    2. The CLI automatically handles authentication using your configured Signer credentials and sends the request to the ledger.
+
+    3. If successful, you receive the full anchor object in JSON format, including the alias handle, target account, custom data, and all associated metadata.
   </Tab>
 </Tabs>
 

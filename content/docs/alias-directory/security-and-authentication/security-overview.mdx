@@ -18,8 +18,9 @@ This page provides a high-level overview of these three concepts.
 
 Before any action is taken, the Ledger must verify that a request is from a legitimate source. This is done using a Signer, which is a cryptographic key pair that proves your identity.
 
-- **For Mutations (Writing Data):** To create or change data, you must use your Signer to digitally sign the entire request. This is the highest level of security, proving you are who you say you are.
-- **For Reads (Querying Data):** For simpler read-only operations, you can use a short-lived JWT (JSON Web Token). This is a secure, temporary pass that is faster and more efficient for frequent read requests.
+- **For Mutations (Write Operations):** Mutations are operations that create, modify, or delete data (such as `POST`, `PUT`, or `DELETE`). To perform a mutation, you must use your Signer to digitally sign the entire request. Digital signatures provide strong authentication and prove you are who you say you are. Examples include creating an alias or updating an anchor status.
+
+- **For Reads (Query Operations):** Reads are operations that only retrieve data without modifying it (such as `GET`). For read-only operations, you can use a short-lived JWT (JSON Web Token). This is a secure, temporary pass that is faster and more efficient for frequent read requests. Examples include looking up an alias or fetching wallet information.
 
 See the guides: [Authentication & Signing](/docs/using-the-alias-directory/auth-sign) and the [Signers concept](./signers-concept.mdx).
 
@@ -37,7 +38,7 @@ Learn how to set up permissions in the [Domains Concept](./domains-concept.mdx).
 
 This pillar ensures that the data you send is exactly what the Ledger receives and that a verifiable audit trail exists for every change.
 
-When you send a mutation, you must include two things:
+When you send a mutation (a write operation that creates, modifies, or deletes data), you must include two things:
 
 - **A Data Hash:** A unique cryptographic fingerprint of the data payload.
 - **A Signature:** Your Signer's signature, which validates both the request and the data hash.

@@ -1,20 +1,20 @@
 ---
-title: Our Solutions
+title: Minka Solutions
 ---
 
 import { Callout } from 'fumadocs-ui/components/callout';
 import { Step, Steps } from 'fumadocs-ui/components/steps';
 
-The Minka platform provides you with a suite of solutions for building real-time payment ecosystems. These solutions handle everything from the core system of record to payment initiation and network interoperability. This guide provides a high-level overview of each solution to help you understand which components you'll use.
+The Minka platform consists of several solutions that work together to build real-time payment ecosystems. These solutions cover the core system of record, payment initiation, and network interoperability. This guide provides a high-level overview of each solution to help you understand which components you'll use.
 
 These solutions and the platform work together to serve various use cases. The [Ledger](#ledger) serves as the foundational system of record where transactions are ultimately registered. [Rails](#rails) and [Gateway](#gateway) act as intermediary routing and network layers. [Channels](#channels) provide user-facing ways to initiate payments (like QR codes or aliases).
 
 ## Ledger
 The Minka Ledger is the core component of Minka’s payment platform. It records and manages real-time transactions between users and financial institutions, supports multiple participants, and ensures security and transparency using cryptographic methods.
 
-You can customize the ledger to comply with regional regulations and operational requirements. It is the core system of record and is exposed via a comprehensive API.
+You can customize the ledger to comply with regional regulations and operational requirements. It is the core system of record and is exposed via an API.
 
-The Ledger API documentation includes components essential for building a complete financial system, such as:
+The Ledger API documentation includes components for building financial systems, such as:
 
     - [**Anchor**](./anchors-concept.mdx) (for the Alias Directory)
     - [**Bridge**](./bridges-concept.mdx) (for connecting to external services)
@@ -27,7 +27,7 @@ The Ledger API documentation includes components essential for building a comple
     </Callout>
 
 ## Rails
-The Minka Rails is what powers Minka’s payment solutions designed for ACHs (Automated Clearing Houses) and national payment networks, designed to manage a payment network. It enables secure and efficient transactions between banks, payment processors, and users, supporting multiple payment types and networks.
+The Minka Rails powers Minka's payment solutions designed for ACHs (Automated Clearing Houses) and national payment networks. It manages payment networks and processes transactions between banks, payment processors, and users, supporting multiple payment types and networks.
 
 When using Rails, you will encounter two primary roles: 
 - A **Provider** (e.g., a central bank or ACH operator) is responsible for the core network infrastructure. This includes ensuring the network can communicate with any centralized systems, connect to local channels, and test both credits and debits.
@@ -48,12 +48,12 @@ The Minka Channels solution is focused on the origination or initiation of payme
 The Channels solution includes several key services:
 
 - **Alias Directory Services:** Allows users to link simple identifiers (like a phone number or email) to an account using an Anchor record.
-- **QR Code:** Enables payment initiation by scanning a QR code.
+- **QR Code:** Supports payment initiation by scanning a QR code.
 - **Payment Links:** Allows payments to be sent or requested via a simple URL.
 - **NFC:** Supports tap-to-pay or other near-field communication use cases.
 
 ## See also
 
 - [What is Minka?](/docs/Introduction%20to%20Minka/what-is-minka) - Learn about Minka's core principles and fundamental concepts
-- [Transaction Flow](/docs/Introduction%20to%20Minka/transaction-flow) - Understand how Minka's solutions work together in a complete payment flow
-- [Anchors Concept](/docs/Introduction%20to%20Minka/Minka's%20Core%20Concepts/anchors-concept) - Deep dive into Anchors, the foundational records for the Alias Directory
+- [Transaction Flow](/docs/Introduction%20to%20Minka/transaction-flow) - Understand how Minka's solutions work together in a payment flow
+- [Anchors Concept](/docs/Introduction%20to%20Minka/Minka's%20Core%20Concepts/anchors-concept) - Understand Anchors, the foundational records for the Alias Directory

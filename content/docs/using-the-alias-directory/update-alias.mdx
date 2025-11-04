@@ -16,17 +16,17 @@ This operation is used to set the following statuses :
 All status changes are written to the ledger, ensuring traceability.
 
 <Callout title="Third-Party Integration">
-In regulated environments that require Third-Party Integration, the Ledger performs additional steps after receiving your signed request. This may include third-party validation and adding compliance-required Timestamps to the record before the update is finalized. You only need to submit the request, the Ledger handles the compliance workflow.
+In regulated environments that require Third-Party Integration, the Ledger performs additional steps after receiving your signed request. This may include third-party validation and adding compliance-required Timestamps to the record before the Ledger finalizes the update. You only need to submit the request, the Ledger handles the compliance workflow.
 </Callout>
 
-## Pre-requisites
+## Prerequisites
 
 Before you begin, ensure you have the following in place:
 
-    - **SDK Initialization:** The Minka SDK must be initialized and configured. See [SDK, CLI, and API Initialization](/docs/Quickstart/sdk-cli-api-initialization) for setup instructions.
+    - **SDK, CLI, or API Initialization:** Your chosen tool (SDK, CLI, or API proxy) must be initialized and configured. See [SDK, CLI, and API Initialization](/docs/Quickstart/sdk-cli-api-initialization) for setup instructions.
     - **API Access:** You have the base URL for the Anchors API `/v2`
-    - **Signer Setup:** You have an authenticated Signer identity and the necessary private key for signing requests.
-    - **Existing Alias Handle:** You must know the Alias Key of the Anchor record you intend to modify or delete.
+    - **Signer Setup:** You have an authenticated **Signer** (a cryptographic key pair that represents your identity and authorizes operations on the ledger) identity and the necessary private key for signing requests.
+    - **Existing Alias Handle:** You must know the Alias Key (the **handle**, or alias identifier) of the Anchor record you intend to modify or delete.
     - **Authorization:** Your Signer must have the necessary permissions (defined by Policies and Circles) to execute `PUT` and `DEL` operations on Anchor records.
 
 ## Update Alias Status via SDK, API, and CLI
@@ -51,34 +51,52 @@ You can update an alias's status using the SDK, API, or CLI.
 
     ```typescript
     import sdk from './ledgerClient'; // Your initialized SDK instance
+    import { keyPair } from './config'; // Your key pair from SDK configuration
 
-    async function updateAnchor() {
-      // Step 1: Retrieve the current record
-      const record = (await sdk.anchor.read('<alias-value>')).response.data;
+    async function updateAnchor(aliasHandle: string, newStatus: string) {
+        try {
+            // Step 1: Retrieve the current record
+            const readResponse = await sdk.anchor.read(aliasHandle);
+            const record = readResponse.response.data;
 
-      // Step 2: Update the status while preserving all existing data
-      await sdk.anchor
-        .from(record)
-        .data( // Preserve all existing data
-            {
-                ...record.data
-            }
-        )
-        .meta( { // Set the new status in the meta object
-            status: "<status-value>", // e.g., "SUSPENDED"
-            proofs: []
+            // Step 2: Update the status while preserving all existing data
+            const response = await sdk.anchor
+                .from(record)
+                .data({
+                    // Preserve all existing data
+                    ...record.data
+                })
+                .meta({
+                    // Set the new status in the meta object
+                    status: newStatus, // e.g., "SUSPENDED"
+                    proofs: []
+                })
+                .hash()
+                .sign([{
+                    // Sign with the new status
+                    keyPair, // From your SDK configuration
+                    custom: {
+                        status: newStatus, // e.g., "SUSPENDED"
+                        moment: new Date().toISOString() // Current ISO 8601 datetime
+                    }
+                }])
+                .send();
+
+            console.log('Alias updated successfully:', response.data);
+            console.log('Status:', response.status); // Expected: 200
+            return response.data;
+        } catch (error) {
+            console.error('Error updating alias:', error.message);
+            // Handle specific error cases:
+            // - 404: Alias not found
+            // - 400: Invalid status or data format
+            // - 401: Authentication failed
+            throw error;
         }
-        )
-        .hash()
-        .sign([{ // Sign with the new status
-            keyPair, // From your SDK configuration
-            custom:{
-                status: "<status-value>", // e.g., "SUSPENDED"
-                moment:"2025-04-14T14:23:45.123Z" // ISO 8601 datetime
-            }
-        }])
-        .send();
     }
+
+    // Execute the function
+    updateAnchor('<alias-value>', '<status-value>'); // e.g., "tel:+15551234567", "SUSPENDED"
     ```
         </Step> 
         
@@ -101,14 +119,14 @@ You can update an alias's status using the SDK, API, or CLI.
   "hash": "5831f42bd15da1cafa5a4a4623a398389a734766ad169fb4f3b6bdf80418712f",
   "luid": "$anc.-0847869HxNkGI2-Z",
   "data": {
-    "handle": "svgs:-vqibKLJKikP@teslabank.io",
-    "wallet": "tel:70271566",
-    "target": "tran:254085257323@minka.io",
+    "handle": "<alias-value>",
+    "wallet": "<wallet-id>",
+    "target": "<target-account>",
     "symbol": "usd",
     "custom": {
-      "name": "Keyon",
-      "idType": "nidn",
-      "idNumber": "IJdEsSmS",
+      "name": "<name>",
+      "idType": "<id-type>",
+      "idNumber": "<id-number>",
       "entityType": "individual",
       "lastUpdated": "2025-04-02T05:10:30.822Z",
       "status": "verified"
@@ -147,8 +165,8 @@ You can update an alias's status using the SDK, API, or CLI.
       }
     ]
   }
-        }
-      ```
+}
+```
       </Step>
 
       <Step>

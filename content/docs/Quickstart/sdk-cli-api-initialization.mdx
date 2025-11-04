@@ -18,7 +18,7 @@ Choose the tab below based on your integration method:
   <Tab value="Node.js SDK">
     Use the `@minka/ledger-sdk` for Node.js environments to integrate the ledger into your services.
  
- ### Pre-requisites
+ ### Prerequisites
  
     - Install [Node.js v20](https://nodejs.org/en/download/) or newer installed on your machine.
  
@@ -29,7 +29,7 @@ Choose the tab below based on your integration method:
     npm install @minka/ledger-sdk
     ```
 
-    2. **Create a Signer (Key Pair):** You need an Ed25519 key pair to sign requests or generate the JWTs that the SDK uses. You can generate a key pair locally using the SDK itself.
+    2. **Create a Signer (Key Pair):** You need an **Ed25519** (a cryptographic signature algorithm that uses elliptic curve cryptography for fast, secure digital signatures) key pair to sign requests or generate the JWTs that the SDK uses. You can generate a key pair locally using the SDK itself.
  
     ```javascript
     import { LedgerSdk } from '@minka/ledger-sdk';
@@ -99,7 +99,7 @@ You can now import this pre-configured sdk instance anywhere in your application
   <Tab value="Minka CLI">
     The Minka CLI is the fastest way to manage your ledger, test operations, and perform administrative tasks.
 
- ### Pre-requisites
+ ### Prerequisites
  
     - Install [Node.js v20](https://nodejs.org/en/download/) or newer installed on your machine.
 
@@ -131,7 +131,7 @@ You can now import this pre-configured sdk instance anywhere in your application
 
     You will be prompted to choose from a list of available ledgers.
 
-    5. Authenticate your CLI session. This command uses your local signer (from Step 3) to create a short-lived JWT that is automatically attached to all subsequent commands. You will be prompted to select your signer and enter the password you created.
+    5. Authenticate your CLI session. This command uses your local signer (from Step 3) to create a short-lived JWT (JSON Web Token) that is automatically attached to all subsequent commands. You will be prompted to select your signer and enter the password you created.
     
     ```bash
     minka ledger login
@@ -143,7 +143,7 @@ You are now authenticated. You can run any command, such as `minka wallet list` 
   <Tab value="Direct API (Proxy)">
     The Direct API (Proxy) is a simple way to test the raw API with tools like Postman or curl. It intercepts your requests and automatically handles the complex hashing and signing process.
   
- ### Pre-requisites
+ ### Prerequisites
  
     - A fully configured and logged-in Minka CLI (see the "Minka CLI" tab).
 

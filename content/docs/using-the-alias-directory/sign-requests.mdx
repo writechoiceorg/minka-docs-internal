@@ -12,7 +12,7 @@ This guide provides the fastest path to signing a request using Minka's official
 Before you begin, ensure you have:
 
 - **Initialized SDK, CLI, or Proxy**: Complete the setup steps in [SDK, CLI, and API Initialization](/docs/Quickstart/sdk-cli-api-initialization).
-- **A Signer key pair**: An Ed25519 key pair with permissions to perform the target action. You create this during SDK initialization.
+- **A Signer key pair**: An **Ed25519** (a cryptographic signature algorithm that uses elliptic curve cryptography for fast, secure digital signatures) key pair with permissions to perform the target action. You create this **Signer** (a cryptographic key pair that represents your identity and authorizes operations on the ledger) during SDK initialization.
 - **Ledger information**: Your ledger handle and API server URL.
 
 ## Choose your method
@@ -37,14 +37,30 @@ Select the method that matches your workflow:
     Use the SDK's builder methods to create, hash, sign, and send your request. The SDK handles all cryptographic operations automatically:
 
     ```javascript
-    const { response } = await sdk.wallet
-      .init()
-      .data({ handle: 'my-wallet' })
-      .hash()
-      .sign([{ keyPair, custom: { moment: new Date().toISOString() } }])
-      .send();
+    async function createWallet(walletHandle) {
+        try {
+            const { response } = await sdk.wallet
+                .init()
+                .data({ handle: walletHandle })
+                .hash()
+                .sign([{ keyPair, custom: { moment: new Date().toISOString() } }])
+                .send();
 
-    console.log(response.status, response.data);
+            console.log('Status:', response.status); // Expected: 201
+            console.log('Created wallet:', response.data);
+            return response.data;
+        } catch (error) {
+            console.error('Error creating wallet:', error.message);
+            // Handle specific error cases:
+            // - 400: Invalid data format
+            // - 409: Wallet already exists
+            // - 401: Authentication failed
+            throw error;
+        }
+    }
+
+    // Execute the function
+    createWallet('my-wallet');
     ```
 
     The SDK automatically:

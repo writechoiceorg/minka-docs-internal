@@ -10,13 +10,13 @@ This guide provides the low-level, manual process for hashing and signing Minka 
 <Callout type="warn" title="For Advanced Integrations Only">
 This is an advanced guide. These steps are complex, and any error will result in a failed request.
 
-If you [sign requests using the SDK or CLI](/docs/using-the-alias-directory/sign-requests), all of these steps are handled for you automatically. We strongly recommend using our official tools whenever possible.
+If you [sign requests using the SDK or CLI](/docs/using-the-alias-directory/sign-requests), the SDK or CLI handles all of these steps automatically. We strongly recommend using our official tools whenever possible.
 </Callout>
 
-## Pre-requisites
+## Prerequisites
 - **Ed25519 Signing:** To create a signature from your private key.
 - **SHA-256 Hashing:** To create the data hash and signature digest.
-- **Canonical JSON (RFC 8785):** A JSON serializer that sorts all object keys alphabetically before outputting the string. This is critical for creating a reproducible, deterministic hash.
+- **Canonical JSON (RFC 8785):** A JSON serializer that follows **RFC 8785** (a standard for JSON canonicalization that ensures consistent serialization by sorting object keys alphabetically). The serializer sorts all object keys alphabetically before outputting the string. This is critical for creating a reproducible, deterministic hash.
 
 ## Manual API Signing Steps
 
@@ -53,7 +53,7 @@ Creating a valid proof for a request (like `POST /v2/wallets`) is a deterministi
 </Steps>
 
 ## Signed Request Structure
-A fully formed request body sent to a mutation endpoint (like `POST /v2/wallets`) includes the `data` payload, its hash (from Step 1), and the `meta.proofs` object you just generated.
+A fully formed request body sent to a mutation endpoint (a write operation like `POST /v2/wallets`, `PUT /v2/anchors/{handle}`, or `DELETE /v2/anchors/{handle}`) includes the `data` payload, its hash (from Step 1), and the `meta.proofs` object you just generated.
 
 ### Proof Object Fields
 - `hash`: The dataHash of the main data object (from Step 1).
@@ -63,7 +63,7 @@ A fully formed request body sent to a mutation endpoint (like `POST /v2/wallets`
   - `public`: The public key (in base64) used for verification.
   - `digest`: The double-hashed signatureDigest (from Step 2).
   - `result`: The final base64-encoded signature of the digest (from Step 3).
-  - `custom`: The JSON object of data that was included in the digest (from Step 2).
+  - `custom`: The JSON object of data that you included in the digest (from Step 2).
 
 ## Troubleshooting
 If you receive a signature or hash error (such as `crypto.hash-invalid` or `crypto.signature-invalid`), check the following:

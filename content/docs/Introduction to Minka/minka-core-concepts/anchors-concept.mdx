@@ -6,7 +6,7 @@ An Anchor is the foundational, auditable record in the Minka Ledger that securel
 
 When you create an alias (like a phone number or email), you are registering a new anchor on the ledger.  This anchor serves several critical purposes:
 
-- Links a simple, public alias to a specific target account for payment routing. 
+- Links a simple, public alias to a specific **target** (the financial account where payments to this alias will be routed) account for payment routing. 
 - Persists identity and routing data in a consistent, verifiable format. 
 - Defines the access controls and business rules for that specific alias. 
 - Provides a complete, tamper-evident audit trail for all changes to the alias. 
@@ -16,14 +16,15 @@ Anchors do not hold balances. Their sole purpose is to describe the identity, ru
 A single wallet or account can have multiple anchors associated with it (e.g., one for a phone number and one for an email, both pointing to the same account).
 </Callout> 
 
-The Anchor record is cersioned and auditable. Every change is cryptographically signed and tracked, leveraging the Ledger's Immutable History guarantee.
+The Anchor record is versioned and auditable. Every change is cryptographically signed and tracked, leveraging the Ledger's Immutable History guarantee.
 
 ## Anchor Structure and Data Fields
 
 An anchor is a JSON-based ledger record that manages the relationship between the key pieces of data required for alias resolution. See an example in the codeblock below:
 
 ```json
-"data": {
+{
+  "data": {
     "handle": "email@example.com",
     "wallet": "wallet1",
     "target": "target@example.com",
@@ -33,7 +34,18 @@ An anchor is a JSON-based ledger record that manages the relationship between th
       "idType": "nidn",
       "idNumber": "IJdEsSmS",
       "entityType": "individual"
-    }
+    },
+    "access": [
+      {
+        "action": "any",
+        "signer": {
+          "$record": "owner"
+        }
+      }
+    ],
+    "schema": "person"
+  }
+}
 ```
 The key fields are as follows:
 

@@ -12,12 +12,12 @@ This guide teaches you how to permanently deactivate an existing Anchor record (
     A CANCELLED alias cannot be reactivated. This action is irreversible. If the user wishes to use the same Alias Key later, they must create an entirely new Anchor record using the `POST /v2/anchors` endpoint.
     </Callout>
 
-## Pre-requisites
+## Prerequisites
 Before you begin this tutorial, ensure you have the following in place:
 
     - **API Access:** You have the base URL for the Anchors API `/v2`
-    - **Signer Setup:** You have an authenticated Signer identity and the necessary private key for signing requests.
-    - **Existing Alias Handle:** You must know the Alias Key of the Anchor record you intend to modify or delete.
+    - **Signer Setup:** You have an authenticated **Signer** (a cryptographic key pair that represents your identity and authorizes operations on the ledger) identity and the necessary private key for signing requests.
+    - **Existing Alias Handle:** You must know the Alias Key (the **handle**, or alias identifier) of the Anchor record you intend to modify or delete.
     - **Authorization:** Your Signer must have the necessary permissions (defined by Policies and Circles) to `DELETE` operations on Anchor records.
 
     <Callout type="info">
@@ -27,42 +27,42 @@ Before you begin this tutorial, ensure you have the following in place:
 <Tabs items={["SDK", "API", "CLI"]}>
   <Tab value="SDK">
   Use the SDK `drop()` method to construct and sign the required DELETE request.
-   1. First, get the handle of the alias you intend to cancel. It's also best practice to define a reasonCode for the operation, which is stored in the ledger's history.
+   1. First, get the handle of the alias you intend to cancel. You should also define a reasonCode for the operation, which is stored in the ledger's history.
         
     ```typescript
     import sdk from './ledgerClient'; // Your initialized SDK instance
     import { keyPair } from './config'; // Your key pair from SDK configuration
 
-    const handleToCancel = 'tel:+15551234567';
-    const reasonCode = '01';
-    ```
-     2. Use the `sdk.anchor.drop()` method to cancel the alias, passing in the `handleToCancel`. In the `.sign()` method, you must set the `custom.status` to `CANCELLED`. You must also include the `reason` and a `moment` (an ISO 8601 timestamp) for the signature.
-        
-    ```typescript
-    try {
-        const dropResponse = await sdk.anchor
-            .drop(handleToCancel)
-            .sign([
-            {
-                keyPair,
-                  custom:
-                  {
-                status: 'CANCELLED',
-                reason: reasonCode,
-                moment: new Date().toISOString(),
-                },
-            },
-            ])
-            .send();
-        
-        // A successful drop returns an HTTP 204 status
-        console.log('Successfully cancelled alias:', handleToCancel);
-        console.log('Status Code:', dropResponse.status); // Expected: 204
-
+    async function cancelAlias(aliasHandle: string, reasonCode: string = '01') {
+        try {
+            const dropResponse = await sdk.anchor
+                .drop(aliasHandle)
+                .sign([{
+                    keyPair,
+                    custom: {
+                        status: 'CANCELLED',
+                        reason: reasonCode,
+                        moment: new Date().toISOString(),
+                    },
+                }])
+                .send();
+            
+            // A successful drop returns an HTTP 204 status
+            console.log('Successfully cancelled alias:', aliasHandle);
+            console.log('Status Code:', dropResponse.status); // Expected: 204
+            return dropResponse;
         } catch (error) {
-        console.error('Error cancelling alias:', error.message);
-        // Handle errors, such as 404 Not Found if the alias doesn't exist
+            console.error('Error cancelling alias:', error.message);
+            // Handle specific error cases:
+            // - 404: Alias not found
+            // - 401: Authentication failed
+            // - 403: Insufficient permissions
+            throw error;
         }
+    }
+
+    // Execute the function
+    cancelAlias('<alias-value>', '<reason-code>'); // e.g., "tel:+15551234567", "01"
     ```
     
      3. On success, you receive `204 No Content`.
@@ -82,7 +82,7 @@ Before you begin this tutorial, ensure you have the following in place:
            
            ```bash
            minka anchor drop <alias-handle>
-           # Example: minka anchor drop user@example.com
+           # Example: minka anchor drop <alias-value>
            ``` 
 
       2. Confirm the operation when prompted (the action is irreversible).

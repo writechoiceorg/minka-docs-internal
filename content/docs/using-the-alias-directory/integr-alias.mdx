@@ -7,14 +7,14 @@ import { Step, Steps } from 'fumadocs-ui/components/steps';
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
 
 
-This tutorial guides you through the process of integrating your Alias Directory solution with a Centralized Directory with a Centralized Directory (such as a specific regional registry like DICE, or a national registry). This is required in regulated Real-Time Payment (RTP) environments to ensure third-party validation and compliance for all alias operations.
+This tutorial guides you through the process of integrating your Alias Directory solution with a Centralized Directory (such as a specific regional registry like DICE, or a national registry). Regulated Real-Time Payment (RTP) environments require this integration to ensure third-party validation and compliance for all alias operations.
 
-## Pre-requisites
+## Prerequisites
     Before implementing this integration flow, make sure you have the following in place:
 
     - **API Access:** You have the base URL for the Anchors API `/v2`
     - **Bridge Configuration:** You have a configured Bridge record that connects your Ledger to the external Centralized Directory service.
-    - **Signer Setup:** You have an authenticated Signer with permissions to perform `POST` and `GET` operations on Anchor records.
+    - **Signer Setup:** You have an authenticated **Signer** (a cryptographic key pair that represents your identity and authorizes operations on the ledger) with permissions to perform `POST` and `GET` operations on Anchor records.
     - **Regulatory Knowledge:** You understand the data requirements (e.g., owner data, account data) and timestamp requirements of the external Centralized Directory.
 
 ## Integration via API and CLI
@@ -26,13 +26,7 @@ This tutorial guides you through the process of integrating your Alias Directory
 <Steps>
     <Step>
     ### Submit the Anchor Creation Request
-        You initiate the process by submitting the new Anchor record via the standard creation endpoint `POST /v2/anchors`
-
-        You can use the Minka CLI to create the anchor and submit the request:
-
-    ```bash
-    minka anchor create
-    ```
+        You initiate the process by submitting the new Anchor record via the standard creation endpoint `POST /v2/anchors`. The request must include all required fields for the Centralized Directory, including custom data and compliance information.
     </Step>
      <Step>
      ### Third-Party Validation (Ledger Action)
@@ -53,13 +47,6 @@ This tutorial guides you through the process of integrating your Alias Directory
         <Step>
      ### Submit the Lookup Request
         You submit the resolution request using the Alias Key (`:handle`) using the endpoint `GET /v2/anchors/:handle`
-
-        You can use the Minka CLI to perform the lookup:
-
-        ```bash
-        minka anchor show <alias-handle>
-        # Example: minka anchor show tel:1234555555
-        ```
         </Step>
         <Step>
      ### Local-First Check
@@ -80,11 +67,76 @@ This tutorial guides you through the process of integrating your Alias Directory
         </Steps>
 
 ## Compliance Requirements: Third-Party Timestamps
-    In environments with a Centralized Directory, Timestamps are required as part of the integration and are essential for compliance and auditability.
+    In environments with a Centralized Directory, you require timestamps as part of the integration, and they are essential for compliance and auditability.
 
-    - **Purpose:** Timestamps (such as R101 or C110) are added to the Anchor record during the creation and update flows to provide a verifiable record of the moment regulatory checks or updates occurred.
+    - **Purpose:** The Ledger adds timestamps (such as R101 or C110) to the Anchor record during the creation and update flows to provide a verifiable record of the moment regulatory checks or updates occurred.
     - **Mechanism:** The Ledger automatically adds these timestamps upon successful third-party validation, ensuring that the final Anchor record meets the requirements of the Centralized Directory.
     - **Audit Trail:** These timestamps establish an immutable audit trail for compliance purposes.
+  </Tab>
+  
+  <Tab value="CLI">
+    Use the Minka CLI to create and look up aliases in a centralized directory environment. The CLI automatically handles the integration workflow, including third-party validation.
+
+    <Steps>
+      <Step>
+        ### Create an Alias with Centralized Directory Integration
+        
+        Create a JSON file with the anchor data including all required fields for the Centralized Directory:
+
+        ```json
+        {
+          "handle": "<alias-value>",
+          "target": "<target-account>",
+          "custom": {
+            "aliasType": "PHONE",
+            "documentType": "NIDN",
+            "documentNumber": "<document-number>",
+            "accountType": "<account-type-standard-value>",
+            "accountNumber": "<account-number>",
+            "firstName": "<firstname>",
+            "lastName": "<lastname>",
+            "entityType": "individual"
+          },
+          "access": [
+            { "action": "any", "signer": { "$record": "owner" } }
+          ],
+          "schema": "person"
+        }
+        ```
+
+        Use the `minka anchor create` command to submit the alias:
+
+        ```bash
+        minka anchor create \
+        --file new-alias.json \
+        --signer <your-signer-handle> \
+        --label "nidn:<document-number>" \
+        --status "ACTIVE"
+        ```
+
+        The Ledger automatically handles third-party validation through the configured Bridge and adds compliance-required timestamps.
+      </Step>
+      
+      <Step>
+        ### Look Up an Alias (Local-First Resolution)
+        
+        Use the `minka anchor show` command to look up an alias. The CLI automatically performs local-first resolution and falls back to the Centralized Directory if needed:
+
+        ```bash
+        minka anchor show <alias-handle>
+        # Example: minka anchor show <alias-value>
+        ```
+
+        The CLI constructs the request and uses your configured Signer credentials for authentication. The Ledger automatically:
+        1. Checks the local federated directory first
+        2. Falls back to the Centralized Directory via the Bridge if not found locally
+        3. Returns the complete anchor record with all metadata and timestamps
+      </Step>
+    </Steps>
+    
+    <Callout>
+      The CLI automatically handles the integration workflow with the Centralized Directory. You don't need to manually manage Bridge connections or timestamp requirements—the Ledger handles these automatically.
+    </Callout>
   </Tab>
 </Tabs>
 

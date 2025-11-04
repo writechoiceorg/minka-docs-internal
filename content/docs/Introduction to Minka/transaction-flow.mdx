@@ -11,10 +11,10 @@ The flow generally follows four stages:
 - **Origination (Minka Channels):** A user initiates the payment (e.g., via QR code or alias) using Minka Channels.
 - **Network Processing (Minka Rails):** The transaction is sent to a network operator (like an ACH or Central Bank) that uses Minka Rails to manage the core network.
 - **Intermediary Routing (Minka Gateway):** A participant bank or institution uses Minka Gateway to receive the transaction from the network and route it to the correct destination.
-- **Final Settlement (Minka Ledger):** The transaction is recorded in the destination's Minka Ledger, which acts as the ultimate system of record.
+- **Final Settlement (Minka Ledger):** The destination's Minka Ledger records the transaction, acting as the ultimate system of record.
 
-## Pre-requisites
-This conceptual guide assumes you are familiar with Minka's core solutions. For a detailed breakdown of each component, please read the [Our Solutions](./our-solutions.mdx) page first.
+## Prerequisites
+This conceptual guide assumes you are familiar with Minka's core solutions. For a detailed breakdown of each component, please read the [Minka Solutions](./minka-solutions.mdx) page first.
 
 ## Understanding the Transaction Flow
 The following diagram illustrates the path of a typical transaction, originating from a Participant and moving through various institutional layers to its final destination.
@@ -57,10 +57,16 @@ sequenceDiagram
 
 The flow is divided into two main phases:
 ### Phase 1: Alias Look-up
-The first phase is the Alias Look-up. Before a payment is sent, the user's application (Minka Channels) must confirm the recipient. This request travels from Channels to the Minka Rails network, which routes the query to the correct participant bank's Minka Gateway. The Gateway then checks its internal Minka Ledger to validate the recipient. Once confirmed, the 'Recipient Info' is passed all the way back up this chain to the user's application.
+The first phase is the Alias Look-up. Before a payment is sent, the user's application (Minka Channels) must confirm the recipient. This request travels from Channels to the Minka Rails network, which routes the query to the correct participant bank's Minka Gateway.
+
+The Gateway then checks its internal Minka Ledger to validate the recipient. Once confirmed, the system passes the 'Recipient Info' all the way back up this chain to the user's application.
 
 ### Phase 2: Payment
-Once the recipient is confirmed, the user initiates Phase 2, the Payment, by creating a transaction Intent. This action triggers a two-phase commit orchestrated by Minka Rails to ensure the transaction is atomic (meaning it either fully succeeds or fully fails). Rails first instructs all parties to enter a Prepare phase, where funds are held and accounts are validated. After all parties report back that they are ready, Rails issues the Commit command. The Gateway forwards this to the Minka Ledger for final settlement. A confirmation is then sent back up the chain to notify the user that the transaction is complete.
+Once the recipient is confirmed, the user initiates Phase 2, the Payment, by creating a transaction Intent. This action triggers a two-phase commit orchestrated by Minka Rails to ensure the transaction is atomic (meaning it either fully succeeds or fully fails).
+
+Rails first instructs all parties to enter a Prepare phase, where the system holds funds and validates accounts. After all parties report back that they are ready, Rails issues the Commit command.
+
+The Gateway forwards this to the Minka Ledger for final settlement. The system then sends a confirmation back up the chain to notify the user that the transaction is complete.
 
 ## Roles 
 The product flow highlights two distinct roles for institutions within the ecosystem: 
@@ -79,11 +85,11 @@ A Participant is a member of the network, such as a bank, that connects to the p
 ## Tools and Components
 While the diagram shows the high-level flow between packaged products, several underlying tools are required to make this flow functional. These include:
     - **Bridges:** Most Minka Ledgers are not standalone. They use Bridges to connect to other services, such as legacy bank cores or external centralized directories.
-    - **Security:** A universal transaction flow requires security protocols to be in place. This is handled by Ledger components like Circles and Policies, which define permissions and access rules.
+    - **Security:** A universal transaction flow requires security protocols to be in place. Ledger components like Circles and Policies handle this by defining permissions and access rules.
     - **CLI/SDK:** You use tools like the Minka CLI or SDKs to build, test, and integrate with this transaction flow.
 
 ## See also
 
-- [Our Solutions](/docs/Introduction%20to%20Minka/our-solutions) - Detailed breakdown of each Minka solution component (Ledger, Rails, Gateway, Channels)
+- [Minka Solutions](/docs/Introduction%20to%20Minka/minka-solutions) - Detailed breakdown of each Minka solution component (Ledger, Rails, Gateway, Channels)
 - [What is Minka?](/docs/Introduction%20to%20Minka/what-is-minka) - Understand Minka's fundamental principles and core concepts
 - [Retrieve Alias Information](/docs/using-the-alias-directory/retrieve-alias) - Learn how alias lookup works in Phase 1 of the transaction flow

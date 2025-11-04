@@ -7,21 +7,23 @@ import { Step, Steps } from 'fumadocs-ui/components/steps';
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
 
 
-In Minka, creating an alias means registering a special type of anchor on the ledger. This anchor acts as the foundational record that connects a human-readable alias (like a phone number or email) to a specific target financial account. This operation is the first step in enabling an alias to be used for secure, real-time payments.
+In Minka, creating an alias means registering a special type of **anchor** (a foundational ledger record that securely links an alias to a financial account) on the ledger. This anchor acts as the foundational record that connects a human-readable alias (like a phone number or email) to a specific **target** (the financial account where payments to this alias will be routed) account.
+
+This operation is the first step in enabling an alias to be used for secure, real-time payments.
 
 This guide provides three methods for creating an alias:
 
 - Via SDK (Recommended): The simplest method, which handles complex tasks like hashing and signing.
 - Via API: For direct integration with the REST endpoint.
-- Via CLI: (Information not available in source materials).
+- Via CLI: For command-line operations, scripting, and automation.
 
-## Pre-requisites
+## Prerequisites
 
 Before you start, ensure you have the following resources:
 
-- **SDK Initialization:** The Minka SDK must be initialized and configured. See [SDK, CLI, and API Initialization](/docs/Quickstart/sdk-cli-api-initialization) for setup instructions.
+- **SDK, CLI, or API Initialization:** Your chosen tool (SDK, CLI, or API proxy) must be initialized and configured. See [SDK, CLI, and API Initialization](/docs/Quickstart/sdk-cli-api-initialization) for setup instructions.
 - **API Access:** You have the base URL for the Anchors API (`/v2`).
-- **Signer Setup:** You have an authenticated Signer identity and the required private key with permissions to perform creation (`POST`) operations on Anchor records.
+- **Signer Setup:** You have an authenticated **Signer** (a cryptographic key pair that represents your identity and authorizes operations on the ledger) identity and the required private key with permissions to perform creation (`POST`) operations on Anchor records.
 - **Required Data:** You have the specific Alias Key, the Wallet ID, and the Payment Credential details you intend to link.
 
     <Callout>
@@ -38,47 +40,64 @@ This is the recommended method as the Minka SDK simplifies the process by handli
 
         ```typescript
         const anchorData = {
-            handle: "<alias-value>", // e.g., "tel:5551234567"
+            handle: "<alias-value>", // e.g., "tel:+15551234567"
             target: "<target-account>", // e.g., "svgs:12345@mybank.io"
             custom: {
-            aliasType: "<alias-type-standard-value>",
-            documentType: "<document-type-standard-value>",
-            documentNumber: "<document-number>",
-            accountType: "<account-type-standard-value>",
-            accountNumber: "<account-number>",
-            firstName: "<firstname>",
-            lastName: "<lastname>",
-            entityType: "individual", // Or "business"
+                aliasType: "<alias-type-standard-value>",
+                documentType: "<document-type-standard-value>",
+                documentNumber: "<document-number>",
+                accountType: "<account-type-standard-value>",
+                accountNumber: "<account-number>",
+                firstName: "<firstname>",
+                lastName: "<lastname>",
+                entityType: "individual", // Or "business"
             },
             access: [
-            { action: "any", signer: { $record: "owner" } }
+                { action: "any", signer: { $record: "owner" } }
             ],
             schema: "person" // Or "business"
         };
         ```
 
-2. Sign and Send the Request using the SDK's builder methods to ``init()``, ``data()``, ``meta()``, ``hash()``, ``sign()``, and ``send()`` the request. The SDK handles the cryptographic operations.
+2. Sign and Send the Request using the SDK's builder methods. The SDK handles the cryptographic operations.
 
     ```typescript
     import sdk from './ledgerClient'; // Your initialized SDK instance
+    import { keyPair } from './config'; // Your key pair from SDK configuration
 
     async function createAnchor() {
-    await sdk.anchor
-        .init()
-        .data(anchorData)
-        .meta({
-        labels: ["nidn:<document-number>"], // e.g., "nidn:0801198607268"
-        proofs: []
-        })
-        .hash()
-        .sign([{
-        keyPair, // From your SDK configuration
-        custom: {
-            status: "ACTIVE"
+        try {
+            const response = await sdk.anchor
+                .init()
+                .data(anchorData)
+                .meta({
+                    labels: ["nidn:<document-number>"], // e.g., "nidn:0801198607268"
+                    proofs: []
+                })
+                .hash()
+                .sign([{
+                    keyPair, // From your SDK configuration
+                    custom: {
+                        status: "ACTIVE"
+                    }
+                }])
+                .send();
+
+            console.log('Alias created successfully:', response.data);
+            console.log('Status:', response.status); // Expected: 201
+            return response.data;
+        } catch (error) {
+            console.error('Error creating alias:', error.message);
+            // Handle specific error cases:
+            // - 400: Invalid data format
+            // - 409: Alias already exists
+            // - 401: Authentication failed
+            throw error;
         }
-        }])
-        .send();
     }
+
+    // Execute the function
+    createAnchor();
     ```
 3. On success, you receive the newly created anchor object and a ``201 Created`` status.
   </Tab>
@@ -148,16 +167,16 @@ This is the recommended method as the Minka SDK simplifies the process by handli
            
     ```json
         {
-        "handle": "tel:5551234567",
-        "target": "svgs:12345@mybank.io",
+        "handle": "<alias-value>",
+        "target": "<target-account>",
         "custom": {
             "aliasType": "PHONE",
             "documentType": "NIDN",
-            "documentNumber": "0801198607268",
-            "accountType": "SAVINGS",
-            "accountNumber": "123456789",
-            "firstName": "Carlos",
-            "lastName": "Andino",
+            "documentNumber": "<document-number>",
+            "accountType": "<account-type-standard-value>",
+            "accountNumber": "<account-number>",
+            "firstName": "<firstname>",
+            "lastName": "<lastname>",
             "entityType": "individual"
         },
         "access": [
@@ -167,13 +186,13 @@ This is the recommended method as the Minka SDK simplifies the process by handli
         }
         ```
 
-        2. Use the Minka CLI `anchors create` command to submit the new record. The CLI handles the hashing and signing using your configured Signer credentials.
+        2. Use the Minka CLI `anchor create` command to submit the new record. The CLI handles the hashing and signing using your configured Signer credentials.
         
         ```bash
-        minka anchors create \
+        minka anchor create \
         --file new-alias.json \
         --signer <your-signer-handle> \
-        --label "nidn:0801198607268" \
+        --label "nidn:<document-number>" \
         --status "ACTIVE"
         ```
 
