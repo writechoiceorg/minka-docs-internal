@@ -1,0 +1,11 @@
+  {
+    "title": "Minka Core Concepts",
+    "pages": [
+      "aliases-concept",
+      "anchors-concept",
+      "bridges-concept",
+      "intent-concept",
+      "wallet-symbol-concept"
+    ],
+    "defaultOpen": false
+  }
