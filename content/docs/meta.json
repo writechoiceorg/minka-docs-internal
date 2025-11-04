@@ -3,11 +3,11 @@
   "pages": [
     "---Introduction to Minka---",
     "...Introduction to Minka",
-    "---Quickstart---",
-    "...Quickstart",
     "---Alias Directory---",
     "...alias-directory",
-    "---Alias Directory Guides---",
-    "...alias-directory-guides"],
+    "---Quickstart---",
+    "...Quickstart",
+    "---Using the Alias Directory---",
+    "...using-the-alias-directory"],
   "root": true
 }

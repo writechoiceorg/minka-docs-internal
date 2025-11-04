@@ -30,6 +30,9 @@ Before you begin this tutorial, ensure you have the following in place:
    1. First, get the handle of the alias you intend to cancel. It's also best practice to define a reasonCode for the operation, which is stored in the ledger's history.
         
     ```typescript
+    import sdk from './ledgerClient'; // Your initialized SDK instance
+    import { keyPair } from './config'; // Your key pair from SDK configuration
+
     const handleToCancel = 'tel:+15551234567';
     const reasonCode = '01';
     ```
@@ -86,3 +89,9 @@ Before you begin this tutorial, ensure you have the following in place:
       3. Upon success, you receive confirmation of permanent deactivation.
   </Tab>
 </Tabs>
+
+## See also
+
+- [Create a New Alias](/docs/using-the-alias-directory/create-alias) - Register a new alias by creating an anchor record on the ledger
+- [Retrieve Alias Information](/docs/using-the-alias-directory/retrieve-alias) - Learn how to look up existing aliases to retrieve anchor records and financial details
+- [Update an Alias Status](/docs/using-the-alias-directory/update-alias) - Modify alias status and manage the alias lifecycle (ACTIVE, SUSPENDED)

@@ -1,3 +1,288 @@
 @import 'tailwindcss';
 @import 'fumadocs-ui/css/neutral.css';
 @import 'fumadocs-ui/css/preset.css';
+
+/* Minka Brand Styling for Mermaid Diagrams */
+.mermaid-container {
+  /* Container styling with light background for better text readability */
+  padding: 1.5rem;
+  background: #FFFFFF;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="dark"] .mermaid-container {
+  background: #1E293B;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Mermaid diagram custom styling */
+.mermaid-container svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Participant/actor styling */
+.mermaid-container .actor {
+  fill: #1E40AF !important;
+  stroke: #3B82F6 !important;
+}
+
+[data-theme="dark"] .mermaid-container .actor {
+  fill: #3B82F6 !important;
+  stroke: #60A5FA !important;
+}
+
+/* Sequence diagram messages */
+.mermaid-container .messageLine0,
+.mermaid-container .messageLine1 {
+  stroke: #10B981 !important;
+  stroke-width: 2px;
+}
+
+[data-theme="dark"] .mermaid-container .messageLine0,
+[data-theme="dark"] .mermaid-container .messageLine1 {
+  stroke: #34D399 !important;
+  stroke-width: 2.5px;
+}
+
+/* Message text styling */
+.mermaid-container .messageText {
+  fill: #1E293B !important;
+  font-weight: 500;
+}
+
+[data-theme="dark"] .mermaid-container .messageText {
+  fill: #FFFFFF !important;
+  font-weight: 500;
+}
+
+/* Message labels - ensure they're readable in dark mode */
+.mermaid-container .messageText tspan {
+  fill: inherit;
+}
+
+[data-theme="dark"] .mermaid-container .messageText tspan {
+  fill: #FFFFFF !important;
+}
+
+/* Alternative selector for message text */
+.mermaid-container text[class*="message"],
+.mermaid-container .messageText,
+.mermaid-container text {
+  fill: #1E293B !important;
+}
+
+[data-theme="dark"] .mermaid-container text[class*="message"],
+[data-theme="dark"] .mermaid-container .messageText,
+[data-theme="dark"] .mermaid-container text {
+  fill: #FFFFFF !important;
+}
+
+/* Note boxes */
+.mermaid-container .note {
+  fill: #FEF3C7 !important;
+  stroke: #FCD34D !important;
+}
+
+[data-theme="dark"] .mermaid-container .note {
+  fill: #78350F !important;
+  stroke: #F59E0B !important;
+}
+
+.mermaid-container .noteText {
+  fill: #78350F !important;
+}
+
+[data-theme="dark"] .mermaid-container .noteText {
+  fill: #FBBF24 !important;
+  font-weight: 600;
+}
+
+/* Actor labels */
+.mermaid-container .actor-text {
+  fill: #1E293B !important;
+  font-weight: 600;
+}
+
+[data-theme="dark"] .mermaid-container .actor-text {
+  fill: #FFFFFF !important;
+  font-weight: 600;
+}
+
+/* Actor title text */
+.mermaid-container .actor-title {
+  fill: #1E293B !important;
+}
+
+[data-theme="dark"] .mermaid-container .actor-title {
+  fill: #FFFFFF !important;
+}
+
+/* All text elements in sequence diagrams */
+.mermaid-container .sequence-diagram text {
+  fill: #1E293B !important;
+}
+
+[data-theme="dark"] .mermaid-container .sequence-diagram text {
+  fill: #FFFFFF !important;
+}
+
+/* Arrow heads */
+.mermaid-container .arrowhead {
+  fill: #10B981 !important;
+}
+
+[data-theme="dark"] .mermaid-container .arrowhead {
+  fill: #34D399 !important;
+}
+
+
+/* Arrow markers and arrowheads - ensure visibility */
+.mermaid-container marker path,
+.mermaid-container .arrowhead path {
+  fill: #10B981 !important;
+  stroke: #10B981 !important;
+}
+
+[data-theme="dark"] .mermaid-container marker path,
+[data-theme="dark"] .mermaid-container .arrowhead path {
+  fill: #34D399 !important;
+  stroke: #34D399 !important;
+}
+
+/* All arrow markers - critical for arrow visibility */
+.mermaid-container marker {
+  fill: #10B981 !important;
+}
+
+[data-theme="dark"] .mermaid-container marker {
+  fill: #34D399 !important;
+}
+
+/* SVG path elements used for arrows */
+.mermaid-container svg path[marker-end],
+.mermaid-container svg path[marker-start] {
+  stroke: #10B981 !important;
+}
+
+[data-theme="dark"] .mermaid-container svg path[marker-end],
+[data-theme="dark"] .mermaid-container svg path[marker-start] {
+  stroke: #34D399 !important;
+}
+
+/* Message/arrow paths in sequence diagrams - ensure arrows are visible */
+.mermaid-container svg .messageLine0 path,
+.mermaid-container svg .messageLine1 path,
+.mermaid-container svg path[class*="messageLine"] {
+  stroke: #10B981 !important;
+  fill: none !important;
+}
+
+[data-theme="dark"] .mermaid-container svg .messageLine0 path,
+[data-theme="dark"] .mermaid-container svg .messageLine1 path,
+[data-theme="dark"] .mermaid-container svg path[class*="messageLine"] {
+  stroke: #34D399 !important;
+  fill: none !important;
+}
+
+/* Arrow lines - ensure they're visible */
+.mermaid-container .arrowLine {
+  stroke: #10B981 !important;
+  stroke-width: 2px;
+}
+
+[data-theme="dark"] .mermaid-container .arrowLine {
+  stroke: #34D399 !important;
+  stroke-width: 2.5px;
+}
+
+/* Loop/activation boxes */
+.mermaid-container .activation0,
+.mermaid-container .activation1 {
+  fill: #6366F1 !important;
+  opacity: 0.3;
+}
+
+[data-theme="dark"] .mermaid-container .activation0,
+[data-theme="dark"] .mermaid-container .activation1 {
+  fill: #818CF8 !important;
+  opacity: 0.4;
+}
+
+/* Additional styling for flowchart elements (if used) */
+.mermaid-container .node rect,
+.mermaid-container .node circle,
+.mermaid-container .node ellipse,
+.mermaid-container .node polygon {
+  fill: #1E40AF !important;
+  stroke: #3B82F6 !important;
+}
+
+[data-theme="dark"] .mermaid-container .node rect,
+[data-theme="dark"] .mermaid-container .node circle,
+[data-theme="dark"] .mermaid-container .node ellipse,
+[data-theme="dark"] .mermaid-container .node polygon {
+  fill: #3B82F6 !important;
+  stroke: #60A5FA !important;
+}
+
+.mermaid-container .nodeLabel {
+  color: #FFFFFF !important;
+  font-weight: 500;
+}
+
+[data-theme="dark"] .mermaid-container .nodeLabel {
+  color: #F1F5F9 !important;
+}
+
+/* Edge/connector styling */
+.mermaid-container .edgePath .path {
+  stroke: #10B981 !important;
+  stroke-width: 2px;
+}
+
+[data-theme="dark"] .mermaid-container .edgePath .path {
+  stroke: #34D399 !important;
+}
+
+.mermaid-container .edgeLabel {
+  background-color: #FFFFFF !important;
+  color: #1E293B !important;
+}
+
+[data-theme="dark"] .mermaid-container .edgeLabel {
+  background-color: transparent !important;
+  color: #FFFFFF !important;
+}
+
+/* Additional text selectors for better coverage */
+.mermaid-container svg text {
+  fill: #1E293B !important;
+}
+
+[data-theme="dark"] .mermaid-container svg text {
+  fill: #FFFFFF !important;
+}
+
+/* Exception for note text which should be darker in light mode */
+.mermaid-container .noteText {
+  fill: #78350F !important;
+}
+
+[data-theme="dark"] .mermaid-container .noteText {
+  fill: #FBBF24 !important;
+  font-weight: 600;
+}
+
+/* Note text elements - ensure all note text is dark */
+.mermaid-container .note text,
+.mermaid-container .noteText tspan {
+  fill: inherit !important;
+}
+
+[data-theme="dark"] .mermaid-container .note text,
+[data-theme="dark"] .mermaid-container .noteText tspan {
+  fill: #FBBF24 !important;
+  font-weight: 600;
+}

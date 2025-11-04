@@ -10,7 +10,7 @@ This guide provides the low-level, manual process for hashing and signing Minka 
 <Callout type="warn" title="For Advanced Integrations Only">
 This is an advanced guide. These steps are complex, and any error will result in a failed request.
 
-If you [sign requests using the SDK or CLI](/docs/alias-directory-guides/sign-requests), all of these steps are handled for you automatically. We strongly recommend using our official tools whenever possible.
+If you [sign requests using the SDK or CLI](/docs/using-the-alias-directory/sign-requests), all of these steps are handled for you automatically. We strongly recommend using our official tools whenever possible.
 </Callout>
 
 ## Pre-requisites
@@ -73,3 +73,9 @@ If you receive a signature or hash error (such as `crypto.hash-invalid` or `cryp
 - **Digest Content:** Confirm your `signatureDigest` (Step 2) is a hash of the `dataHash` (Step 1) concatenated with the serialized `signatureCustom` data.
 
 - **Signed Target:** Ensure your `result` (Step 3) is a signature of the `signatureDigest`, not a signature of the raw `dataHash`.
+
+## See also
+
+- [Sign Requests with the SDK & CLI](/docs/using-the-alias-directory/sign-requests) - Use Minka's official tools to automatically handle request signing (recommended)
+- [Authentication](/docs/alias-directory/security-and-authentication/authentication) - Understand the authentication methods and when to use signed request bodies
+- [Config & Data Integrity](/docs/alias-directory/security-and-authentication/config-dataintegrity) - Learn about the cryptographic guarantees and data integrity mechanisms

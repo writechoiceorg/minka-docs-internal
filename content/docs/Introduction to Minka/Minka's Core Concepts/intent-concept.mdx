@@ -28,4 +28,10 @@ Claims are essential in scenarios where multiple actions must be finalized toget
 
 - **Taxes & Fees:** If a payment requires collecting a tax or fee, multiple Claims are used. The system ensures that if the primary payment is successfully recorded, the tax debit must also be recorded. This prevents the primary payment from occurring without the fee being collected.
 
-- **Currency Exchanges:** For currency exchange (e.g., giving $100 and receiving €80), placing both parts into two claims ensures that the exchange is atomic, meaning the user is guaranteed to receive the euros if they provide the dollars.  
+- **Currency Exchanges:** For currency exchange (e.g., giving $100 and receiving €80), placing both parts into two claims ensures that the exchange is atomic, meaning the user is guaranteed to receive the euros if they provide the dollars.
+
+## See also
+
+- [Transaction Flow](/docs/Introduction%20to%20Minka/transaction-flow) - Understand how Intents are used in the two-phase commit process during payment transactions
+- [What is Minka?](/docs/Introduction%20to%20Minka/what-is-minka) - Learn about transactional atomicity, one of Minka's fundamental principles
+- [Config & Data Integrity](/docs/alias-directory/security-and-authentication/config-dataintegrity) - Understand how Intents guarantee atomicity and data integrity

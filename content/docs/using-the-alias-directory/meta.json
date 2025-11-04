@@ -1,0 +1,13 @@
+{
+  "title": "Using the Alias Directory",
+  "pages": [
+      "create-alias",
+      "update-alias",
+      "cancel-alias",
+      "retrieve-alias",
+      "integr-alias",
+      "sign-requests",
+      "manual-api-signing"
+  ],
+  "defaultOpen": false
+}
