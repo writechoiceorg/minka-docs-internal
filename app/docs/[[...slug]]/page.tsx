@@ -12,8 +12,13 @@ import { createRelativeLink } from 'fumadocs-ui/mdx';
 
 export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
   const params = await props.params;
-  const page = source.getPage(params.slug);
-  if (!page) notFound();
+  const slug = params.slug ?? [];
+  const page = source.getPage(slug);
+  
+  if (!page) {
+    console.error('Page not found for slug:', slug);
+    notFound();
+  }
 
   const MDX = page.data.body;
 
@@ -41,7 +46,7 @@ export async function generateMetadata(
   props: PageProps<'/docs/[[...slug]]'>,
 ): Promise<Metadata> {
   const params = await props.params;
-  const page = source.getPage(params.slug);
+  const page = source.getPage(params.slug ?? []);
   if (!page) notFound();
 
   return {

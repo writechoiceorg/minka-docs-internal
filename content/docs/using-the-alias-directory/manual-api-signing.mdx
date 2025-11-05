@@ -64,18 +64,9 @@ A fully formed request body sent to a mutation endpoint (a write operation like 
   - `digest`: The double-hashed signatureDigest (from Step 2).
   - `result`: The final base64-encoded signature of the digest (from Step 3).
   - `custom`: The JSON object of data that you included in the digest (from Step 2).
-
-## Troubleshooting
-If you receive a signature or hash error (such as `crypto.hash-invalid` or `crypto.signature-invalid`), check the following:
-
-- **Canonical JSON:** Ensure your `data` object (for Step 1) and your `signatureCustom` object (for Step 2) are both serialized using RFC 8785 (alphabetical keys) before hashing.
-
-- **Digest Content:** Confirm your `signatureDigest` (Step 2) is a hash of the `dataHash` (Step 1) concatenated with the serialized `signatureCustom` data.
-
-- **Signed Target:** Ensure your `result` (Step 3) is a signature of the `signatureDigest`, not a signature of the raw `dataHash`.
-
+  
 ## See also
 
-- [Sign Requests with the SDK & CLI](/docs/using-the-alias-directory/sign-requests) - Use Minka's official tools to automatically handle request signing (recommended)
-- [Authentication](/docs/alias-directory/security-and-authentication/authentication) - Understand the authentication methods and when to use signed request bodies
-- [Config & Data Integrity](/docs/alias-directory/security-and-authentication/config-dataintegrity) - Learn about the cryptographic guarantees and data integrity mechanisms
+- [Sign Requests with the SDK & CLI](/docs/using-the-alias-directory/sign-requests): Use Minka's official tools to automatically handle request signing (recommended)
+- [Authentication](/docs/alias-directory/security-and-authentication/authentication): Understand the authentication methods and when to use signed request bodies
+- [Config & Data Integrity](/docs/alias-directory/security-and-authentication/config-dataintegrity): Learn about the cryptographic guarantees and data integrity mechanisms

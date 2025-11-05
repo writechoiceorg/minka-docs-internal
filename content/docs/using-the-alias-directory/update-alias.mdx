@@ -3,15 +3,14 @@ title: Update an Alias Status
 ---
 
 import { Callout } from 'fumadocs-ui/components/callout';
-import { Step, Steps } from 'fumadocs-ui/components/steps';
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
 
 In the Minka Ledger, an anchor's status determines its availability and operational validity. This allows you to manage an alias's lifecycle, such as temporarily disabling it for security reasons or reactivating it.
 
-This operation is used to set the following statuses :
+This operation is used to set the following statuses:
 
-- ``ACTIVE``: The anchor is valid and available for use.
-- ``SUSPENDED``: The anchor is temporarily disabled and cannot be used in new transactions.
+- `ACTIVE`: The anchor is valid and available for use.
+- `SUSPENDED`: The anchor is temporarily disabled and cannot be used in new transactions.
 
 All status changes are written to the ledger, ensuring traceability.
 
@@ -23,30 +22,26 @@ In regulated environments that require Third-Party Integration, the Ledger perfo
 
 Before you begin, ensure you have the following in place:
 
-    - **SDK, CLI, or API Initialization:** Your chosen tool (SDK, CLI, or API proxy) must be initialized and configured. See [SDK, CLI, and API Initialization](/docs/Quickstart/sdk-cli-api-initialization) for setup instructions.
-    - **API Access:** You have the base URL for the Anchors API `/v2`
-    - **Signer Setup:** You have an authenticated **Signer** (a cryptographic key pair that represents your identity and authorizes operations on the ledger) identity and the necessary private key for signing requests.
-    - **Existing Alias Handle:** You must know the Alias Key (the **handle**, or alias identifier) of the Anchor record you intend to modify or delete.
-    - **Authorization:** Your Signer must have the necessary permissions (defined by Policies and Circles) to execute `PUT` and `DEL` operations on Anchor records.
+- **[SDK Initialization](/docs/Quickstart/sdk-initialization):** The Minka SDK must be initialized and configured. See the Quickstart section for setup instructions.
+- **API Access:** You have the base URL for the Anchors API `/v2`
+- **Signer Setup:** You have an authenticated Signer (a cryptographic key pair that represents your identity and authorizes operations on the ledger) identity and the necessary private key for signing requests.
+- **Existing Alias Handle:** You must know the Alias Key (the handle, or alias identifier) of the Anchor record you intend to modify.
+- **Authorization:** Your Signer must have the necessary permissions (defined by Policies and Circles) to execute `PUT` operations on Anchor records.
 
 ## Update Alias Status via SDK, API, and CLI
 
 You can update an alias's status using the SDK, API, or CLI.
 
-<Tabs items={['SDK', 'API', 'CLI']}> 
-  <Tab value="SDK"> 
-  Use the SDK to read the existing record, modify it in memory, and send the update.
+<Tabs items={["SDK", "API", "CLI"]}>
+  <Tab value="SDK">
+    Use the SDK to update alias status from your backend services. The SDK handles authentication, request construction, and response parsing.
 
-      <Steps> 
-        <Step>
-        1. Before you can update an anchor, you must first retrieve its current record using `sdk.anchor.read()`.
-        </Step> 
-        
-        <Step>
-        2. Use the `.from()` method to start with the existing record. You must preserve all existing data using `.data(record.data)` and set the new status in both the `.meta()` object and the `.sign()` method's `custom.status` field.
+    1. Before you can update an anchor, you must first retrieve its current record using `sdk.anchor.read()`.
+
+    2. Use the `.from()` method to start with the existing record and set the new status in both the `.meta()` object and the `.sign()` method's `custom.status` field.
 
     <Callout>
-        When updating the status, you must preserve 100% of the existing data within the anchor. The SDK's `.data(record.data)` method handles this for you.
+    When updating the status, you must preserve 100% of the existing data within the anchor. The SDK's `.data(record.data)` method handles this automatically.
     </Callout>
 
     ```typescript
@@ -57,27 +52,24 @@ You can update an alias's status using the SDK, API, or CLI.
         try {
             // Step 1: Retrieve the current record
             const readResponse = await sdk.anchor.read(aliasHandle);
-            const record = readResponse.response.data;
+            const record = readResponse.data;
 
-            // Step 2: Update the status while preserving all existing data
+            // Step 2: Update the status
             const response = await sdk.anchor
                 .from(record)
                 .data({
-                    // Preserve all existing data
                     ...record.data
                 })
                 .meta({
-                    // Set the new status in the meta object
                     status: newStatus, // e.g., "SUSPENDED"
                     proofs: []
                 })
                 .hash()
                 .sign([{
-                    // Sign with the new status
-                    keyPair, // From your SDK configuration
+                    keyPair,
                     custom: {
-                        status: newStatus, // e.g., "SUSPENDED"
-                        moment: new Date().toISOString() // Current ISO 8601 datetime
+                        status: newStatus,
+                        moment: new Date().toISOString()
                     }
                 }])
                 .send();
@@ -96,139 +88,121 @@ You can update an alias's status using the SDK, API, or CLI.
     }
 
     // Execute the function
-    updateAnchor('<alias-value>', '<status-value>'); // e.g., "tel:+15551234567", "SUSPENDED"
+    updateAnchor('tel:+15551234567', 'SUSPENDED');
     ```
-        </Step> 
-        
-        <Step>
-        3. Handle the response
-        You receive `200 OK` and the updated anchor object. The "API" tab shows a diff example of this response. 
-        </Step> 
-      </Steps> 
-  </Tab> 
-  
-  <Tab value="API"> 
-  Send a `PUT` request to the `/v2/anchors/{handle}` endpoint to update the data.
-  
-    <Steps> 
-      <Step>
-      1. The request body must contain the full anchor object, including all existing data (which must be preserved). You must update the `meta.status` field to the new status. The signature in `meta.proofs` must also include a `custom.status` field set to the new status, a `custom.moment` field, and a `custom.reason` code. 
 
-```json
-{
-  "hash": "5831f42bd15da1cafa5a4a4623a398389a734766ad169fb4f3b6bdf80418712f",
-  "luid": "$anc.-0847869HxNkGI2-Z",
-  "data": {
-    "handle": "<alias-value>",
-    "wallet": "<wallet-id>",
-    "target": "<target-account>",
-    "symbol": "usd",
-    "custom": {
-      "name": "<name>",
-      "idType": "<id-type>",
-      "idNumber": "<id-number>",
-      "entityType": "individual",
-      "lastUpdated": "2025-04-02T05:10:30.822Z",
-      "status": "verified"
-    },
-    "access": [
-      {
-        "action": "any",
-        "signer": {
-          "public": "gef6OID0o7ZFGTXutV62mh+zv5kgkFP3QLiR+N7syck="
-        }
-      },
-      {
-        "action": "read",
-        "bearer": {
-          "$signer": {
-            "$record": "owner"
-          }
-        }
-      }
-    ],
-    "parent": "6fbba0181fc0177365b62541ed7e94d8532ca6dd40651f23387d4c17d00967ec"
-  },
-  "meta": {
-    "status": "SUSPENDED", // Example: Setting the new status
-    "proofs": [
-      {
-        "method": "ed25519-v2",
-        "public": "gef6OID0o7ZFGTXutV62mh+zv5kgkFP3QLiR+N7syck=",
-        "digest": "482d687c0719d02eff65be40cafb9fbfb35a850fdc95e82c90765791ea6c52b8",
-        "result": "HSx4A9sj1DwwiX71pjEI5eyJGvBpV8ViBF9dCLM4nmLfK8exRB4AA47lQe1w4QrdronMUBRq+rMSYx+yzTqrCw==",
-        "custom": {
-          "moment": "2025-04-14T14:23:45.123Z", // ISO 8601 datetime
-          "status": "SUSPENDED", // Signature must also reflect the new status
-          "reason": "SECURITY_AUDIT" // Reason code for the status change
-        }
-      }
-    ]
-  }
-}
-```
-      </Step>
-
-      <Step>
-      1a. Visual diff of changed fields
-
-      The following diff highlights only the changed field in the request body:
-
-      ```diff
-      {
-        "meta": {
-          "status": "SUSPENDED",
-          "proofs": [
-            {
-              "custom": {
-                "status": "SUSPENDED",
-                "moment": "2025-04-14T14:23:45.123Z",
-                "reason": "SECURITY_AUDIT"
-              }
-            }
-          ]
-        }
-      }
-      ```
-      </Step>
-
-      <Step>
-      2. Send your signed request to `PUT /v2/anchors/{handle}`, replacing `{handle}` with the alias you are updating. 
-      </Step>
-
-      <Step>
-      3. If successful, you receive `200 OK` and the updated anchor object. The response body reflects your changes.
-      </Step>
-    </Steps>
-  <Callout>
-  The PUT operation handles both data changes and status changes. You can use a single request to update non-critical custom data (like an owner's name) and the operational status simultaneously.
-  </Callout>
+    3. On success, you receive `200 OK` and the updated anchor object.
   </Tab>
 
-<Tab value="CLI"> 
-The Minka CLI provides an interactive prompt to help you build the update payload. It automatically handles fetching the latest record, signing the new payload, and submitting the request.
+  <Tab value="API">
+    Send a `PUT` request to `/v2/anchors/{handle}` to update the anchor status.
 
-  <Steps> 
-    <Step>
+    1. Construct the request body with the full anchor object, preserving all existing data. Update `meta.status` to the new status. The signature in `meta.proofs` must include `custom.status` (set to the new status), `custom.moment`, and optionally `custom.reason`.
+
+    <Callout>
+    The `luid` (Ledger Unique Identifier) and `parent` fields are returned by the ledger when you retrieve the record. Include them in your update request to maintain record integrity.
+    </Callout>
+
+    ```json
+    {
+      "hash": "5831f42bd15da1cafa5a4a4623a398389a734766ad169fb4f3b6bdf80418712f",
+      "luid": "$anc.-0847869HxNkGI2-Z",
+      "data": {
+        "handle": "<alias-value>",
+        "wallet": "<wallet-id>",
+        "target": "<target-account>",
+        "symbol": "usd",
+        "custom": {
+          "name": "<name>",
+          "idType": "<id-type>",
+          "idNumber": "<id-number>",
+          "entityType": "individual",
+          "lastUpdated": "2025-04-02T05:10:30.822Z",
+          "status": "verified"
+        },
+        "access": [
+          {
+            "action": "any",
+            "signer": {
+              "public": "gef6OID0o7ZFGTXutV62mh+zv5kgkFP3QLiR+N7syck="
+            }
+          },
+          {
+            "action": "read",
+            "bearer": {
+              "$signer": {
+                "$record": "owner"
+              }
+            }
+          }
+        ],
+        "parent": "6fbba0181fc0177365b62541ed7e94d8532ca6dd40651f23387d4c17d00967ec"
+      },
+      "meta": {
+        "status": "SUSPENDED",
+        "proofs": [
+          {
+            "method": "ed25519-v2",
+            "public": "gef6OID0o7ZFGTXutV62mh+zv5kgkFP3QLiR+N7syck=",
+            "digest": "482d687c0719d02eff65be40cafb9fbfb35a850fdc95e82c90765791ea6c52b8",
+            "result": "HSx4A9sj1DwwiX71pjEI5eyJGvBpV8ViBF9dCLM4nmLfK8exRB4AA47lQe1w4QrdronMUBRq+rMSYx+yzTqrCw==",
+            "custom": {
+              "moment": "2025-04-14T14:23:45.123Z",
+              "status": "SUSPENDED",
+              "reason": "SECURITY_AUDIT"
+            }
+          }
+        ]
+      }
+    }
+    ```
+
+    2. Review the visual diff. The following example highlights only the changed fields:
+
+    ```diff
+    {
+      "meta": {
+        "status": "SUSPENDED",
+        "proofs": [
+          {
+            "custom": {
+              "status": "SUSPENDED",
+              "moment": "2025-04-14T14:23:45.123Z",
+              "reason": "SECURITY_AUDIT"
+            }
+          }
+        ]
+      }
+    }
+    ```
+
+    3. Send your signed request to `PUT /v2/anchors/{handle}`, replacing `{handle}` with the alias you are updating.
+
+    4. On success, you receive `200 OK` and the updated anchor object.
+
+    <Callout>
+    The PUT operation handles both data changes and status changes. You can use a single request to update non-critical custom data (like an owner's name) and the operational status simultaneously.
+    </Callout>
+  </Tab>
+
+  <Tab value="CLI">
+    Use the Minka CLI to update alias status. The CLI handles request construction and signing.
+
     1. Run the `minka anchor update` command, specifying the alias you want to change:
-        
-        ```bash
-        minka anchor update <alias-handle>
-        # Example: minka anchor update example@email.com
-        ```
-    </Step>
-    <Step>
-      2. The CLI will prompt you to select which fields you want to update (e.g., `custom_data`, `status`).
-    </Step>
-    <Step>
+
+    ```bash
+    minka anchor update <alias-handle>
+    # Example: minka anchor update example@email.com
+    ```
+
+    2. The CLI prompts you to select which fields you want to update (e.g., `custom_data`, `status`).
+
     3. Confirm the changes and provide your Signer credentials when prompted.
-    </Step>
-  </Steps>
-</Tab>
+  </Tab>
 </Tabs>
 
 ## See also
 
-- [Create a New Alias](/docs/using-the-alias-directory/create-alias) - Register a new alias by creating an anchor record on the ledger
-- [Retrieve Alias Information](/docs/using-the-alias-directory/retrieve-alias) - Learn how to look up existing aliases to retrieve anchor records and financial details
-- [Cancel an Alias](/docs/using-the-alias-directory/cancel-alias) - Permanently deactivate an alias by transitioning it to CANCELLED state
+- [Create a New Alias](/docs/using-the-alias-directory/create-alias): Register a new alias by creating an anchor record on the ledger
+- [Retrieve Alias Information](/docs/using-the-alias-directory/retrieve-alias): Learn how to look up existing aliases to retrieve anchor records and financial details
+- [Cancel an Alias](/docs/using-the-alias-directory/cancel-alias): Permanently deactivate an alias by transitioning it to CANCELLED state
