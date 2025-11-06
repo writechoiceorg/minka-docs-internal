@@ -28,3 +28,6 @@ yarn-error.log*
 next-env.d.ts
 DOCUMENTATION_IMPROVEMENT_CHECKLIST.md
 DOCUMENTATION_ANALYSIS.md
+
+# reference repo (client source - local only, not for GitHub)
+/reference-repo
