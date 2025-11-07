@@ -31,3 +31,7 @@ DOCUMENTATION_ANALYSIS.md
 
 # reference repo (client source - local only, not for GitHub)
 /reference-repo
+
+# code validation tests and generated test files
+/sdk-examples-test/
+sdk-examples-test/
