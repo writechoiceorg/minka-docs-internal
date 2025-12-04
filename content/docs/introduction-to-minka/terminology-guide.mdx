@@ -1,0 +1,756 @@
+---
+title: Minka Documentation Terminology Guide
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+# Minka Documentation Terminology Guide
+
+This guide establishes consistent terminology and capitalization rules for all Minka documentation. Use this guide when writing, reviewing, or translating documentation to ensure consistency across all materials and languages.
+
+## Purpose
+
+This guide serves as:
+
+- **Internal reference** for documentation contributors
+- **Translation guideline** for maintaining consistency across languages
+- **Style standard** for automated checks and linting
+- **Foundation** for a future public glossary
+
+## How to Use This Guide
+
+1. **Before writing**: Check this guide for the correct term and capitalization
+2. **During review**: Verify terminology matches this guide
+3. **When translating**: Follow the translation guidance for each term
+4. **For new terms**: Add new entries following the same format
+
+---
+
+## Core Ledger Concepts
+
+### Anchor
+
+**Definition**: A core Ledger record that securely links a public alias (such as a phone number or email) to a specific payment credential (such as a bank account). Anchors are the foundational records that enable the Alias Directory.
+
+**Capitalization**:
+
+- **Capitalize** when referring to the Ledger record type: "An Anchor record", "create an Anchor", "the Anchor's target field"
+- **Lowercase** only in code examples, field names, or technical references: `anchor.read()`, `data.anchor`, `POST /v2/anchors`
+
+**Contexts**:
+
+- Use "Anchor" when explaining the concept or record type
+- Use "anchor record" when emphasizing it's a record in the Ledger
+- Use "anchor" (lowercase) in code, API endpoints, and field names
+
+**Translation**:
+
+- **Keep in English** for technical accuracy
+- If translation is required, use the local equivalent of "anchor" (e.g., "ancla" in Spanish) but maintain capitalization rules
+
+**Examples**:
+
+- ✅ "An Anchor is a core Ledger record..."
+- ✅ "Each alias is stored as an Anchor record in the Ledger"
+- ✅ "Use `sdk.anchor.read()` to retrieve the Anchor"
+- ❌ "an anchor is a core ledger record" (incorrect capitalization)
+- ❌ "create an anchor" (should be "create an Anchor")
+
+---
+
+### Alias
+
+**Definition**: A human-readable identifier (such as a phone number, email address, or ID number) that maps to a financial account. An alias is stored in the `source` field of an Anchor record.
+
+**Capitalization**:
+
+- **Capitalize** when part of a product or feature name: "Alias Directory", "Alias Handle", "Alias Directory Overview"
+- **Lowercase** when referring to the general concept: "an alias", "the alias", "create aliases", "alias resolution"
+- **Lowercase** in code examples and field names: `alias-handle`, `POST /v2/advices/alias-resolve`
+
+**Contexts**:
+
+- Use lowercase "alias" when describing what it is conceptually
+- Use capitalized "Alias" only in specific product names or titles
+- Use "alias handle" (lowercase) when referring to the identifier itself
+- Use "Alias Handle" (capitalized) when it's a formal term in a title or heading
+
+**Translation**:
+
+- **Translate** the general concept: "alias" → "alias" (Spanish), "pseudonyme" (French)
+- **Keep in English** for product names: "Alias Directory" remains "Alias Directory"
+- **Keep in English** for technical terms: "alias handle" → "alias handle" (not translated)
+
+**Examples**:
+
+- ✅ "An alias is a human-readable identifier"
+- ✅ "The Alias Directory is a key component"
+- ✅ "Use the alias handle to look up the alias"
+- ✅ "Alias Handle: `tel:+15551234567`"
+- ❌ "An Alias is a human-readable identifier" (incorrect - not a product name here)
+- ❌ "the alias directory" (incorrect - product name should be capitalized)
+
+---
+
+### Handle
+
+**Definition**: A unique identifier for a Ledger record. Handles are globally unique across all Domains and record types. Examples include `wallet:user-123`, `tel:+15551234567`, or `anchor-for-melissa-ruiz`.
+
+**Capitalization**:
+
+- **Lowercase** in all contexts: "the handle", "a unique handle", "handle uniqueness"
+- **Capitalize** only when part of a compound term that is itself capitalized: "Alias Handle" (when used as a formal term in titles)
+
+**Contexts**:
+
+- Use lowercase "handle" when referring to the identifier concept
+- Use "handle" when describing uniqueness: "handles are globally unique"
+- Use "handle" in code examples: `<alias-handle>`, `handle: "wallet:user-123"`
+- Use "Alias Handle" or "Wallet Handle" when these are formal terms in headings or titles
+
+**Translation**:
+
+- **Translate** the general concept: "handle" → "identificador" (Spanish), "identifiant" (French)
+- **Keep in English** for technical compound terms: "alias handle" → "alias handle"
+- **Keep in English** in code examples and placeholders
+
+**Examples**:
+
+- ✅ "The handle uniquely identifies the record"
+- ✅ "Handles are globally unique across all Domains"
+- ✅ "Use `<alias-handle>` as a placeholder"
+- ✅ "Alias Handle: The unique identifier for the alias"
+- ❌ "The Handle uniquely identifies the record" (incorrect - not a proper noun)
+
+---
+
+### Record
+
+**Definition**: A data structure stored in the Ledger. All core concepts (Anchors, Wallets, Intents, etc.) are stored as records.
+
+**Capitalization**:
+
+- **Lowercase** when used generically: "a record", "the record", "Ledger records"
+- **Capitalize** only when part of a compound term that is itself a proper noun: "Ledger record" (when "Ledger" is capitalized)
+
+**Contexts**:
+
+- Use lowercase "record" when referring to the general concept
+- Use "Ledger record" (capitalize Ledger, lowercase record) when emphasizing it's a record in the Ledger
+- Use "record" in code examples and technical references
+
+**Translation**:
+
+- **Translate** the general concept: "record" → "registro" (Spanish), "enregistrement" (French)
+- **Keep compound terms**: "Ledger record" → "registro del Ledger" (translate record, keep Ledger)
+
+**Examples**:
+
+- ✅ "An Anchor is a Ledger record"
+- ✅ "Each record has a unique handle"
+- ✅ "The record's hash field"
+- ❌ "An Anchor is a Ledger Record" (incorrect - record is not a proper noun)
+
+---
+
+### Wallet
+
+**Definition**: A Ledger record that represents a participant (such as a bank, enterprise, or person) in the financial ecosystem. Wallets hold balances of one or more Symbols.
+
+**Capitalization**:
+
+- **Capitalize** when referring to the Ledger concept: "a Wallet", "create a Wallet", "Wallet balances"
+- **Lowercase** in code examples, field names, and API references: `wallet:user-123`, `wallet.create()`
+
+**Contexts**:
+
+- Use "Wallet" (capitalized) when explaining the concept
+- Use "wallet" (lowercase) in code, API endpoints, and handle examples
+- Use "Wallets" (capitalized) for plural when referring to the concept
+
+**Translation**:
+
+- **Keep in English** for technical accuracy
+- If translation is required, use the local equivalent but maintain capitalization rules
+
+**Examples**:
+
+- ✅ "A Wallet represents a participant in your financial ecosystem"
+- ✅ "Create a Wallet by sending a request to the Ledger API"
+- ✅ "Use `wallet:user-123` as the handle"
+- ❌ "a wallet represents a participant" (incorrect capitalization)
+
+---
+
+### Symbol
+
+**Definition**: A Ledger record that defines a unit of value (such as a currency, asset, or loyalty point). Symbols define what units of value can be held in Wallets.
+
+**Capitalization**:
+
+- **Capitalize** when referring to the Ledger concept: "a Symbol", "create a Symbol", "Symbol scale"
+- **Lowercase** in code examples and field names: `symbol: "USD"`, `data.symbol`
+
+**Contexts**:
+
+- Use "Symbol" (capitalized) when explaining the concept
+- Use "symbol" (lowercase) in code examples and technical references
+- Use "Symbols" (capitalized) for plural when referring to the concept
+
+**Translation**:
+
+- **Keep in English** for technical accuracy
+- If translation is required, use the local equivalent but maintain capitalization rules
+
+**Examples**:
+
+- ✅ "A Symbol defines the unit of value"
+- ✅ "Create a Symbol with handle `USD`"
+- ✅ "The `symbol` field in the data object"
+- ❌ "a symbol defines the unit of value" (incorrect capitalization)
+
+---
+
+### Domain
+
+**Definition**: A namespace within the Ledger that organizes and contains other Ledger records. Domains provide data separation and security boundaries.
+
+**Capitalization**:
+
+- **Capitalize** when referring to the Ledger concept: "a Domain", "create a Domain", "Domain namespace"
+- **Lowercase** in code examples and field names: `domain: "org-a"`, `data.domain`
+
+**Contexts**:
+
+- Use "Domain" (capitalized) when explaining the concept
+- Use "domain" (lowercase) in code examples and technical references
+- Use "Domains" (capitalized) for plural when referring to the concept
+- Use "root Domain" (capitalize Domain) when referring to the default namespace
+
+**Translation**:
+
+- **Keep in English** for technical accuracy
+- If translation is required, use the local equivalent but maintain capitalization rules
+
+**Examples**:
+
+- ✅ "A Domain is a namespace within the Ledger"
+- ✅ "Create records within a Domain"
+- ✅ "The root Domain is the default namespace"
+- ❌ "a domain is a namespace" (incorrect capitalization)
+
+---
+
+### Intent
+
+**Definition**: A core Ledger record that represents a formal, auditable request to perform a financial action. Intents track the state of operations as they move through the system using the Two-Phase Commit protocol.
+
+**Capitalization**:
+
+- **Capitalize** when referring to the Ledger concept: "an Intent", "create an Intent", "Intent status"
+- **Lowercase** in code examples and field names: `intent.create()`, `POST /v2/intents`
+
+**Contexts**:
+
+- Use "Intent" (capitalized) when explaining the concept
+- Use "intent" (lowercase) in code examples and technical references
+- Use "Intents" (capitalized) for plural when referring to the concept
+
+**Translation**:
+
+- **Keep in English** for technical accuracy
+- If translation is required, use the local equivalent but maintain capitalization rules
+
+**Examples**:
+
+- ✅ "An Intent represents a formal request to perform a financial action"
+- ✅ "Create an Intent to transfer funds"
+- ✅ "The Intent status transitions from `pending` to `accepted`"
+- ❌ "an intent represents a formal request" (incorrect capitalization)
+
+---
+
+### Claim
+
+**Definition**: A specific, verifiable action within an Intent. A Claim specifies a balance movement (debit or credit) for a specific Wallet and Symbol. An Intent contains one or more Claims.
+
+**Capitalization**:
+
+- **Capitalize** when referring to the Ledger concept: "a Claim", "Claims within an Intent", "Claim direction"
+- **Lowercase** in code examples and field names: `claims: [...]`, `data.claims`
+
+**Contexts**:
+
+- Use "Claim" (capitalized) when explaining the concept
+- Use "claim" (lowercase) in code examples and technical references
+- Use "Claims" (capitalized) for plural when referring to the concept
+
+**Translation**:
+
+- **Keep in English** for technical accuracy
+- If translation is required, use the local equivalent but maintain capitalization rules
+
+**Examples**:
+
+- ✅ "A Claim specifies a balance movement"
+- ✅ "An Intent contains an array of Claims"
+- ✅ "The `claims` field in the Intent data"
+- ❌ "a claim specifies a balance movement" (incorrect capitalization)
+
+---
+
+### Bridge
+
+**Definition**: A configuration record in the Ledger that connects internal systems to external services (such as bank cores or payment networks). Bridges participate in the Two-Phase Commit protocol to coordinate transactions.
+
+**Capitalization**:
+
+- **Capitalize** when referring to the Ledger concept: "a Bridge", "create a Bridge", "Bridge configuration"
+- **Lowercase** in code examples and field names: `bridge.create()`, `POST /v2/bridges`
+
+**Contexts**:
+
+- Use "Bridge" (capitalized) when explaining the concept
+- Use "bridge" (lowercase) in code examples and technical references
+- Use "Bridges" (capitalized) for plural when referring to the concept
+- Use "bridge service" (lowercase) when referring to the external service implementation
+
+**Translation**:
+
+- **Keep in English** for technical accuracy
+- If translation is required, use the local equivalent but maintain capitalization rules
+
+**Examples**:
+
+- ✅ "A Bridge connects the Ledger to external systems"
+- ✅ "Configure a Bridge to coordinate transactions"
+- ✅ "Your bridge service must implement the 2PC protocol"
+- ❌ "a bridge connects the ledger" (incorrect capitalization)
+
+---
+
+### Signer
+
+**Definition**: A cryptographic identity that represents an authorized actor in the Ledger. Each Signer is defined by a unique cryptographic key pair (private key and public key).
+
+**Capitalization**:
+
+- **Capitalize** when referring to the Ledger concept: "a Signer", "create a Signer", "Signer permissions"
+- **Lowercase** in code examples and field names: `signer.create()`, `signer.public`
+
+**Contexts**:
+
+- Use "Signer" (capitalized) when explaining the concept
+- Use "signer" (lowercase) in code examples and technical references
+- Use "Signers" (capitalized) for plural when referring to the concept
+
+**Translation**:
+
+- **Keep in English** for technical accuracy
+- If translation is required, use the local equivalent but maintain capitalization rules
+
+**Examples**:
+
+- ✅ "A Signer is a cryptographic identity"
+- ✅ "Create a Signer with a key pair"
+- ✅ "Signers must have appropriate permissions"
+- ❌ "a signer is a cryptographic identity" (incorrect capitalization)
+
+---
+
+### Circle
+
+**Definition**: A group of Signers that is linked to specific Policies. Circles simplify authorization management by allowing you to assign permissions to groups rather than individual Signers.
+
+**Capitalization**:
+
+- **Capitalize** when referring to the Ledger concept: "a Circle", "create a Circle", "Circle membership"
+- **Lowercase** in code examples and field names: `circle: "admin"`, `data.circle`
+
+**Contexts**:
+
+- Use "Circle" (capitalized) when explaining the concept
+- Use "circle" (lowercase) in code examples and technical references
+- Use "Circles" (capitalized) for plural when referring to the concept
+
+**Translation**:
+
+- **Keep in English** for technical accuracy
+- If translation is required, use the local equivalent but maintain capitalization rules
+
+**Examples**:
+
+- ✅ "A Circle is a group of Signers"
+- ✅ "Link a Circle to a Policy to grant permissions"
+- ✅ "The `anchor-reader` circle has read permissions"
+- ❌ "a circle is a group of signers" (incorrect capitalization)
+
+---
+
+### Policy
+
+**Definition**: A reusable set of access rules that defines what actions are allowed (such as "can create Wallets" or "can transfer funds"). Policies are attached to Domains and linked to Circles.
+
+**Capitalization**:
+
+- **Capitalize** when referring to the Ledger concept: "a Policy", "create a Policy", "Policy rules"
+- **Lowercase** in code examples and field names: `policy.create()`, `data.policy`
+
+**Contexts**:
+
+- Use "Policy" (capitalized) when explaining the concept
+- Use "policy" (lowercase) in code examples and technical references
+- Use "Policies" (capitalized) for plural when referring to the concept
+
+**Translation**:
+
+- **Keep in English** for technical accuracy
+- If translation is required, use the local equivalent but maintain capitalization rules
+
+**Examples**:
+
+- ✅ "A Policy defines access rules"
+- ✅ "Attach a Policy to a Domain"
+- ✅ "Policies control what actions Signers can perform"
+- ❌ "a policy defines access rules" (incorrect capitalization)
+
+---
+
+## Platform and Product Terms
+
+### Ledger
+
+**Definition**: The core Minka platform that stores and processes financial records. Also referred to as "Minka Ledger".
+
+**Capitalization**:
+
+- **Capitalize** when referring to the platform: "the Ledger", "Minka Ledger", "Ledger API", "Ledger record"
+- **Lowercase** only in compound terms where it's not the primary noun: "ledger infrastructure" (when used as an adjective)
+
+**Contexts**:
+
+- Use "Ledger" (capitalized) when referring to the Minka Ledger platform
+- Use "the Ledger" when referring to the system in general
+- Use "Minka Ledger" when using the full product name
+- Use "ledger" (lowercase) only when it's clearly a generic term (rare in Minka documentation)
+
+**Translation**:
+
+- **Keep in English**: "Ledger" → "Ledger" (do not translate)
+- **Keep compound terms**: "Minka Ledger" → "Minka Ledger"
+
+**Examples**:
+
+- ✅ "The Ledger stores all records"
+- ✅ "Minka Ledger provides atomic transactions"
+- ✅ "Send a request to the Ledger API"
+- ✅ "Ledger records are immutable"
+- ❌ "the ledger stores all records" (incorrect - this is the product name)
+
+---
+
+### Alias Directory
+
+**Definition**: A registry system that maps human-readable identifiers (aliases) to financial account information. This is a product/feature name.
+
+**Capitalization**:
+
+- **Always capitalize**: "Alias Directory", "the Alias Directory", "Alias Directory Overview"
+
+**Contexts**:
+
+- Always use "Alias Directory" (both words capitalized) as it's a product/feature name
+- Use "alias directory" (lowercase) only when referring to the general concept in a non-Minka context (rare)
+
+**Translation**:
+
+- **Keep in English**: "Alias Directory" → "Alias Directory" (do not translate product names)
+
+**Examples**:
+
+- ✅ "The Alias Directory is a key component"
+- ✅ "Alias Directory Overview"
+- ❌ "the alias directory" (incorrect - product name)
+- ❌ "Alias directory" (incorrect - both words should be capitalized)
+
+---
+
+## Technical Terms
+
+### Hash
+
+**Definition**: A cryptographic fingerprint of a record. The hash is generated from the record's data and is used to verify integrity and create digital signatures.
+
+**Capitalization**:
+
+- **Lowercase** in all contexts: "the hash", "hash value", "hash field"
+- **Lowercase** in code examples: `hash: "abc123"`, `data.hash`
+
+**Contexts**:
+
+- Use lowercase "hash" in all contexts
+- Use "hash" when referring to the cryptographic concept
+- Use "hash" in code examples and field names
+
+**Translation**:
+
+- **Keep in English** for technical accuracy: "hash" → "hash"
+- If translation is required, use the local equivalent but keep it lowercase
+
+**Examples**:
+
+- ✅ "The hash verifies the record's integrity"
+- ✅ "The `hash` field contains the cryptographic fingerprint"
+- ❌ "The Hash verifies the record's integrity" (incorrect capitalization)
+
+---
+
+### LUID (Ledger Unique Identifier)
+
+**Definition**: A unique identifier assigned by the Ledger to each record. Format: `$anc.123...` for Anchors, `$wlt.123...` for Wallets, etc.
+
+**Capitalization**:
+
+- **Uppercase** when using the acronym: "LUID", "the LUID"
+- **Lowercase** in code examples and field names: `luid: "$anc.123"`, `data.luid`
+- **Capitalize** when spelling out: "Ledger Unique Identifier"
+
+**Contexts**:
+
+- Use "LUID" (uppercase) when using the acronym
+- Use "luid" (lowercase) in code examples and field names
+- Use "Ledger Unique Identifier" when spelling out the full term
+
+**Translation**:
+
+- **Keep in English**: "LUID" → "LUID", "Ledger Unique Identifier" → "Ledger Unique Identifier"
+
+**Examples**:
+
+- ✅ "The LUID uniquely identifies the record"
+- ✅ "The `luid` field contains the Ledger Unique Identifier"
+- ✅ "Use the LUID to retrieve the record"
+- ❌ "the luid uniquely identifies" (incorrect - acronym should be uppercase)
+
+---
+
+### Schema
+
+**Definition**: The type or structure definition for a Ledger record. Examples include `person`, `business`, or `account`.
+
+**Capitalization**:
+
+- **Lowercase** when referring to the general concept: "the schema", "schema type"
+- **Lowercase** in code examples and field names: `schema: "person"`, `data.schema`
+- **Capitalize** only when part of a proper noun: "Anchor Schema" (if it's a formal name)
+
+**Contexts**:
+
+- Use lowercase "schema" in most contexts
+- Use "schema" when referring to the type field
+- Use "Schema" (capitalized) only in formal titles or when it's part of a proper noun
+
+**Translation**:
+
+- **Keep in English** for technical accuracy: "schema" → "schema"
+- If translation is required, use the local equivalent but keep it lowercase
+
+**Examples**:
+
+- ✅ "The schema field defines the record type"
+- ✅ "Set `schema: 'person'` for individual records"
+- ✅ "Schema types include `person` and `business`"
+- ❌ "The Schema field" (incorrect - not a proper noun)
+
+---
+
+## Status and State Terms
+
+### Status Values
+
+**Definition**: Values that indicate the current state of a record (e.g., `active`, `suspended`, `cancelled` for Anchors; `pending`, `accepted`, `prepared`, `committed`, `completed`, `aborted`, `rejected` for Intents).
+
+**Capitalization**:
+
+- **Lowercase** in all contexts: "status is `active`", "the `suspended` status", "status: `pending`"
+- **Lowercase** in code examples: `status: "active"`, `meta.status`
+
+**Contexts**:
+
+- Always use lowercase for status values
+- Use backticks when referring to specific status values: `active`, `suspended`
+- Use "status" (lowercase) when referring to the concept
+
+**Translation**:
+
+- **Translate** status values: "active" → "activo" (Spanish), "actif" (French)
+- **Keep in English** in code examples and API responses
+
+**Examples**:
+
+- ✅ "The Anchor status is `active`"
+- ✅ "Set the status to `suspended`"
+- ✅ "Status values include `pending`, `accepted`, and `prepared`"
+- ❌ "The Anchor status is `Active`" (incorrect - status values are lowercase)
+
+---
+
+## Field Names and API Terms
+
+### Field Names
+
+**Capitalization**:
+
+- **Lowercase** for all field names: `handle`, `target`, `source`, `custom`, `hash`, `luid`, `meta`
+- **Use backticks** when referring to field names in documentation: "the `handle` field", "set `target` to the account"
+
+**Contexts**:
+
+- Always use lowercase for field names
+- Use backticks to distinguish field names from regular text
+- Use "field" (lowercase) when referring to the concept
+
+**Translation**:
+
+- **Keep in English** for field names: `handle` → `handle`, `target` → `target`
+- Field names are not translated in code or API documentation
+
+**Examples**:
+
+- ✅ "The `handle` field contains the unique identifier"
+- ✅ "Set the `target` field to the destination account"
+- ❌ "The `Handle` field" (incorrect - field names are lowercase)
+
+---
+
+### API Endpoints
+
+**Capitalization**:
+
+- **Follow REST conventions**: Use lowercase with hyphens or slashes
+- **Capitalize HTTP methods**: `GET`, `POST`, `PUT`, `DELETE`
+
+**Contexts**:
+
+- Use lowercase for endpoint paths: `/v2/anchors`, `/v2/intents/:handle`
+- Capitalize HTTP methods: `POST /v2/anchors`
+- Use backticks for code formatting
+
+**Translation**:
+
+- **Keep in English**: API endpoints are not translated
+
+**Examples**:
+
+- ✅ "Send a `POST` request to `/v2/anchors`"
+- ✅ "Use `GET /v2/intents/:handle` to retrieve an Intent"
+- ❌ "Send a `post` request" (incorrect - HTTP methods should be uppercase)
+
+---
+
+## Common Patterns and Exceptions
+
+### Compound Terms
+
+When combining terms, follow these rules:
+
+1. **Product/Feature Names**: Capitalize all significant words
+   - ✅ "Alias Directory", "Two-Phase Commit", "Ledger API"
+
+2. **Concept Combinations**: Capitalize the main concept, lowercase the modifier
+   - ✅ "Anchor record", "Wallet balance", "Intent status"
+   - ✅ "Ledger record" (capitalize Ledger, lowercase record)
+
+3. **Technical Terms**: Keep technical terms in their standard form
+   - ✅ "alias handle", "target account", "source field"
+
+### Plural Forms
+
+- **Capitalize** when referring to the concept in plural: "Wallets", "Anchors", "Intents", "Signers"
+- **Lowercase** in code examples: `wallets: [...]`, `anchors: [...]`
+
+### Articles and Prepositions
+
+- Use lowercase for articles and prepositions in titles: "An Anchor", "The Ledger", "A Wallet"
+- Capitalize only when they're the first word in a title or heading
+
+---
+
+## Translation Guidelines
+
+### Terms to Keep in English
+
+Always keep these terms in English, regardless of language:
+
+- Product names: "Minka Ledger", "Alias Directory"
+- Core concepts: "Anchor", "Wallet", "Symbol", "Domain", "Intent", "Bridge", "Signer", "Circle", "Policy"
+- Technical terms: "handle", "hash", "luid", "schema"
+- API endpoints and field names
+- Status values in code examples (translate in descriptive text)
+
+### Terms to Translate
+
+Translate these terms to the target language:
+
+- General descriptive terms: "record", "account", "balance", "transaction"
+- Status values in descriptive text (keep English in code)
+- Common verbs and actions: "create", "update", "retrieve", "delete"
+
+### Translation Format
+
+When translating:
+
+1. **Keep English terms** for core concepts and technical terms
+2. **Translate descriptive text** around the technical terms
+3. **Maintain capitalization rules** even in translated text
+4. **Keep code examples** in English with English placeholders
+
+**Example (Spanish)**:
+
+- English: "Create an Anchor to link an alias to a payment credential"
+- Spanish: "Crea un Anchor para vincular un alias a una credencial de pago"
+  - "Anchor" stays in English (core concept)
+  - "alias" stays in English (technical term)
+  - Descriptive words are translated
+
+---
+
+## Checklist for Contributors
+
+Before submitting documentation, verify:
+
+- [ ] All core concepts (Anchor, Wallet, Symbol, etc.) are capitalized when referring to the concept
+- [ ] All core concepts are lowercase in code examples and field names
+- [ ] "Ledger" is capitalized when referring to Minka Ledger
+- [ ] "Alias Directory" is capitalized (both words) as a product name
+- [ ] "alias" is lowercase when referring to the general concept
+- [ ] Status values are lowercase: `active`, `suspended`, `pending`
+- [ ] Field names are lowercase and in backticks: `handle`, `target`, `hash`
+- [ ] API endpoints follow REST conventions
+- [ ] Compound terms follow the capitalization rules
+- [ ] Translation maintains English for core concepts and technical terms
+
+---
+
+## Future Enhancements
+
+This guide may be expanded to include:
+
+- Automated linting rules based on these guidelines
+- Integration with documentation generation tools
+- Public glossary based on these definitions
+- Language-specific translation notes
+- Additional terms as the product evolves
+
+---
+
+## Questions or Updates
+
+If you encounter a term not covered in this guide or need clarification:
+
+1. Check existing documentation for patterns
+2. Consult with the documentation team
+3. Update this guide with the new term following the established format
+
+**Last Updated**: [Date to be maintained by documentation team]
