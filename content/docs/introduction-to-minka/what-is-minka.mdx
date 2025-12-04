@@ -3,44 +3,37 @@ title: What is Minka?
 ---
 
 import { Callout } from 'fumadocs-ui/components/callout';
-import { Step, Steps } from 'fumadocs-ui/components/steps';
 
-Minka provides the technology layer for organizations to securely publish and transfer money and balances on the web. Minka's core product is the Minka Ledger, a unified transaction model designed to allow diverse companies to communicate and exchange value.
+Minka offers a technology layer that enables organizations to securely publish and transfer money and balances on the web. Minka's core product is the Minka Ledger, a unified transaction model that allows diverse companies to communicate and exchange value.
 
 The Ledger uses a common language and a small set of foundational primitives for this communication.
 
-The Ledger acts as the engine upon which Minka builds specialized solutions, such as Real-Time Payments (RTP) and Payments Hubs. These solutions support organizations in managing financial operations across different participants and networks.
+The Ledger acts as the engine upon which Minka builds specialized solutions, such as Real-Time Payments and Payments Hubs. These solutions support organizations in managing financial operations across different participants and networks.
 
 For a detailed breakdown of these components, see [Minka Solutions](./minka-solutions.mdx) page.
 
 ## Network Payments
-
-Minka supports network payments by moving money and balances published through one Minka Ledger securely to any other connected Ledger in real time. The platform uses digital signatures for every transaction, establishing trust and non-repudiation (the inability to deny that a transaction occurred).
+Minka supports network payments by moving money and balances published through one Minka Ledger securely to any other connected Ledger in real time. The platform uses digital signatures for every transaction, establishing trust and non-repudiation, which is the inability to deny that a transaction occurred.
 
 ## Fundamental Principles of Minka Solutions
-
 Minka builds all solutions on a set of core principles that govern security, reliability, and flexibility. These principles ensure the platform is both trustworthy for financial operations and adaptable for diverse use cases.
 
 ### Data Integrity and Trust
-
 The Minka Ledger ensures that all transaction records and balances are accurate, secure, and tamper-proof.
 
-- **Mechanism:** The platform achieves this integrity by implementing cryptographic chaining (blockchain principles) to secure transaction history within a centralized, auditable system.
-- **Auditability:** The Ledger cryptographically signs and verifies every operation, creating an immutable audit trail.
+- The platform achieves this integrity by implementing cryptographic chaining, which uses blockchain principles, to secure transaction history within a centralized, auditable system.
+- The Ledger cryptographically signs and verifies every operation, creating an immutable audit trail.
 
 ### Transactional Atomicity
-
-The platform enforces reliability at the transactional level to prevent partial operations.
-- **Intent and Claims:** You submit every transaction as an Intent, which packages one or more individual actions known as Claims.
-- **Guarantee:** The Intent ensures atomicity (all associated Claims must either all succeed or all fail together). This guarantee prevents situations where one part of an operation (like a debit) completes while another part (like a tax collection) fails.
+You achieve reliability at the transactional level to prevent partial operations.
+- You submit every transaction as an Intent, which packages one or more individual actions known as Claims.
+- The Intent ensures atomicity, which means all associated Claims must either all succeed or all fail together. This guarantee prevents situations where one part of an operation, such as a debit, completes while another part, such as a tax collection, fails.
 
 ### Configuration and Adaptability
 
 Minka designs its solutions for structural flexibility, allowing you to tailor the platform to your specific business and regulatory needs.
-
-- **Purpose:** Configuration refers to the structural setup and adaptability of the system, allowing you to customize and manage your deployed financial solutions.
-
-- **Customization:** You define operational rules, compliance requirements, and external connections (via Bridges) to customize the Ledger for specific regional or business requirements.
+- Configuration refers to the structural setup and adaptability of the system, allowing you to customize and manage your deployed financial solutions.
+- You define operational rules, compliance requirements, and external connections (via Bridges) to customize the Ledger for specific regional or business requirements.
 
 ## See also
 

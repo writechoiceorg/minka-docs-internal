@@ -5,13 +5,13 @@ title: Transaction Flow
 import { Callout } from 'fumadocs-ui/components/callout';
 import { Step, Steps } from 'fumadocs-ui/components/steps';
 
-This page explains how a transaction moves through the Minka platform, from its initiation by a user to its final settlement in a ledger. Understanding this flow helps you see how Minka's packaged solutions (Channels, Rails, Gateway, and Ledger) work together to create a complete payment network.
+This page explains how a transaction moves through the Minka platform, from its initiation by a user to its final settlement in a ledger. Understanding this flow helps you see how Minka's packaged solutions work together to create a complete payment network. These solutions include Channels, Rails, Gateway, and Ledger.
 
 The flow generally follows four stages:
-- **Origination (Minka Channels):** A user initiates the payment (e.g., via QR code or alias) using Minka Channels.
-- **Network Processing (Minka Rails):** The transaction is sent to a network operator (like an ACH or Central Bank) that uses Minka Rails to manage the core network.
-- **Intermediary Routing (Minka Gateway):** A participant bank or institution uses Minka Gateway to receive the transaction from the network and route it to the correct destination.
-- **Final Settlement (Minka Ledger):** The destination's Minka Ledger records the transaction, acting as the ultimate system of record.
+- **Origination:** A user initiates the payment, such as via QR code or alias, using Minka Channels.
+- **Network Processing:** Rails sends the transaction to a network operator, such as an ACH or Central Bank, that uses Minka Rails to manage the core network.
+- **Intermediary Routing:** A participant bank or institution uses Minka Gateway to receive the transaction from the network and route it to the correct destination.
+- **Final Settlement:** The destination's Minka Ledger records the transaction, acting as the ultimate system of record.
 
 ## Prerequisites
 This conceptual guide assumes you are familiar with Minka's core solutions. For a detailed breakdown of each component, please read the [Minka Solutions](./minka-solutions.mdx) page first.
@@ -55,14 +55,14 @@ sequenceDiagram
     Network-->>User: Transaction Completed
 `}/>
 
-The flow is divided into two main phases:
+The flow divides into two main phases:
 ### Phase 1: Alias Look-up
-The first phase is the Alias Look-up. Before a payment is sent, the user's application (Minka Channels) must confirm the recipient. This request travels from Channels to the Minka Rails network, which routes the query to the correct participant bank's Minka Gateway.
+The first phase is the Alias Look-up. Before a payment is sent, the user's application, Minka Channels, must confirm the recipient. This request travels from Channels to the Minka Rails network, which routes the query to the correct participant bank's Minka Gateway.
 
-The Gateway then checks its internal Minka Ledger to validate the recipient. Once confirmed, the system passes the 'Recipient Info' all the way back up this chain to the user's application.
+The Gateway then checks its internal Minka Ledger to validate the recipient. After the Gateway confirms the recipient, the system passes the 'Recipient Info' all the way back up this chain to the user's application.
 
 ### Phase 2: Payment
-Once the recipient is confirmed, the user initiates Phase 2, the Payment, by creating a transaction Intent. This action triggers a two-phase commit orchestrated by Minka Rails to ensure the transaction is atomic (meaning it either fully succeeds or fully fails).
+Once the recipient is confirmed, the user initiates Phase 2, the Payment, by creating a transaction Intent. This action triggers a two-phase commit orchestrated by Minka Rails to ensure the transaction is atomic, which means it either fully succeeds or fully fails.
 
 Rails first instructs all parties to enter a Prepare phase, where the system holds funds and validates accounts. After all parties report back that they are ready, Rails issues the Commit command.
 
@@ -79,8 +79,8 @@ A Provider is responsible for the core network infrastructure, such as a central
 
 ### Participant
 A Participant is a member of the network, such as a bank, that connects to the provider's infrastructure. Their role is to:
-    - Testing connections to channels.
-    - Processing debits received from the network. 
+    - Test connections to channels.
+    - Process debits received from the network. 
 
 ## Tools and Components
 While the diagram shows the high-level flow between packaged products, several underlying tools are required to make this flow functional. These include:
